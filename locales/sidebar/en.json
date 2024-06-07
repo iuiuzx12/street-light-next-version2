@@ -1,0 +1,12 @@
+{
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "dashboard-period": "Dashboard Period",
+    "dashboard-daily": "Dashboard Daily",
+    "control" : "Control Edit",
+    "control-group" : "Group",
+    "control-schedule" : "Schedule",
+    "control-individual" : "Individual",
+    "logout" : "Logout"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "Sidebar": {
+    "dashboard": "ภาพรวม",
+    "dashboard-period": "ภาพรวม Period",
+    "dashboard-daily": "ภาพรวม Daily",
+    "control": "ควบคุม",
+    "control-group": "แบบกลุ่ม",
+    "control-schedule": "ตั้งเวลา",
+    "control-individual": "รายโคม",
+    "logout": "ออกระบบ"
+  }
+}
