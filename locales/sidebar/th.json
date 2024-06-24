@@ -7,6 +7,9 @@
     "control-group": "แบบกลุ่ม",
     "control-schedule": "ตั้งเวลา",
     "control-individual": "รายโคม",
+    "map" : "แผนที่",
+    "map-total" : "แผนที่ทั้งหมด",
+    "map-disconnect" : "ขาดการเชื่อมต่อ",
     "logout": "ออกระบบ"
   }
 }

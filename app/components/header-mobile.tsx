@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { RuleAdminManagement, RuleAdmin } from '@/app/rules';
-import { SideNavItem } from '@/app/model/side-nav-Item';
+import { SideNavItem } from '@/app/model/side-nav-item';
 import { Icon } from '@iconify/react';
 import { motion, useCycle } from 'framer-motion';
 import { useTranslations } from "next-intl";
@@ -236,7 +236,7 @@ const MenuItemWithSubMenu: React.FC<MenuItemWithSubMenuProps> = ({
                   <Link
                     href={locale + subItem.path!}
                     onClick={() => toggleOpen()}
-                    className={` ${ pathname.includes(subItem.path!) ? 'font-bold' : ''
+                    className={` ${pathname.includes(subItem.path!) ? 'font-bold' : ''
                       }`}
                   >
                     {t(subItem.title)}

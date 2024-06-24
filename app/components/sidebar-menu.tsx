@@ -1,4 +1,4 @@
-import { SideNavItem } from "../model/side-nav-Item";
+import { SideNavItem } from "../model/side-nav-item";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -31,8 +31,9 @@ export default function MenuItem({ item }: { item: SideNavItem }) {
 
                             <Image
                                 src={item.icon!}
-                                width={25}
-                                height={25}
+                                width={0}
+                                height={0}
+                                className="w-6 h-auto"
                                 alt={item.title!}
                             />
                             <span className="font-semibold text-xl  flex">{t(item.title)}</span>
@@ -58,8 +59,9 @@ export default function MenuItem({ item }: { item: SideNavItem }) {
                                     >
                                         <Image
                                             src={subItem.icon!}
-                                            width={20}
-                                            height={20}
+                                            width={0}
+                                            height={0}
+                                            className="w-5 h-auto"
                                             alt={subItem.title!}
                                         />
                                         <span> </span>
@@ -79,8 +81,9 @@ export default function MenuItem({ item }: { item: SideNavItem }) {
                 >
                     <Image
                         src={item.icon!}
-                        width={25}
-                        height={25}
+                        width={0}
+                        height={0}
+                        className="w-6 h-auto"
                         alt={item.title!}
                     />
                     <span className="font-semibold text-xl flex">{t(item.title)}</span>

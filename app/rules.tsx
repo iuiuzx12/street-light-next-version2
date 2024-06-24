@@ -1,5 +1,17 @@
 import { Icon } from '@iconify/react';
-import { SideNavItem } from './model/side-nav-Item';
+import { SideNavItem } from './model/side-nav-item';
+import { AuthItem } from './model/auth-item';
+
+export const AuthRule : AuthItem[] =[
+    {
+        rule : "AdminManagement",
+        list : [""]
+    },
+    {
+        rule : "Admin",
+        list : ["control-group", "control-schedule", "control-individual" ]
+    },
+]
 
 export const RuleAdminManagement: SideNavItem[] = [
     {
@@ -19,9 +31,9 @@ export const RuleAdminManagement: SideNavItem[] = [
         icon: '/icon/sidebar/control.svg',
         submenu: true,
         subMenuItems: [
-            { title: 'control-group', path: '/control-group' , icon: '/icon/sidebar/control-group.svg'},
-            { title: 'control-schedule', path: '/control-schedule' ,icon: '/icon/sidebar/control-schedule.svg'},
-            { title: 'control-individual', path: '/control-individual' ,icon: '/icon/sidebar/control-individual.svg'},
+            { title: 'control-group', path: '/control-group', icon: '/icon/sidebar/control-group.svg' },
+            { title: 'control-schedule', path: '/control-schedule', icon: '/icon/sidebar/control-schedule.svg' },
+            { title: 'control-individual', path: '/control-individual', icon: '/icon/sidebar/control-individual.svg' },
         ],
     },
     {
@@ -30,8 +42,8 @@ export const RuleAdminManagement: SideNavItem[] = [
         icon: '/icon/sidebar/map.svg',
         submenu: true,
         subMenuItems: [
-            { title: 'map-total', path: '/map-total' , icon: '/icon/sidebar/map-marker.svg'},
-            { title: 'map-disconnect', path: '/map-disconnect' ,icon: '/icon/sidebar/map-disconnect.svg'},
+            { title: 'map-total', path: '/map-total', icon: '/icon/sidebar/map-marker.svg' },
+            { title: 'map-disconnect', path: '/map-disconnect', icon: '/icon/sidebar/map-disconnect.svg' },
         ],
     },
     {

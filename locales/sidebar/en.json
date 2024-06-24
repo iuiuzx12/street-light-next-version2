@@ -7,6 +7,9 @@
     "control-group" : "Group",
     "control-schedule" : "Schedule",
     "control-individual" : "Individual",
+    "map" : "Map",
+    "map-total" : "Map Total",
+    "map-disconnect" : "Map Disconnect",
     "logout" : "Logout"
   }
 }
