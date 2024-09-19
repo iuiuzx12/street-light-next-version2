@@ -1,75 +1,95 @@
-'use client';
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import {useRouter} from 'next/navigation';
-import {signIn} from 'next-auth/react';
-import {useLocale, useTranslations} from 'next-intl';
-import {FormEvent, useState} from 'react';
-//import PageLayout from '../../../components/PageLayout';
-
-export default function Login() {
-  const locale = useLocale();
-  const t = useTranslations('Login');
-  const [error, setError] = useState<string>();
+const Login = () => {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (error) setError(undefined);
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/user-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "API-Key": "1234",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          projectName: "LORALOCAL",
+        }),
+      });
 
-    const formData = new FormData(event.currentTarget);
-    signIn('credentials', {
-      username: formData.get('username'),
-      password: formData.get('password'),
-      redirect: false
-    }).then((result) => {
-      if (result?.error) {
-        setError(result.error);
+      if (res.status == 200) {
+        setIsLoading(false);
+        setError("สำเร็จ");
+        router.push("/dashboard-period");
+        router.refresh();
+        
       } else {
-        router.push('/' + locale);
+        setIsLoading(false);
+        setError("Failed to log in. Please check your credentials.");
       }
-    });
-  }
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการ login:", error);
+      setError("เกิดข้อผิดพลาดในการ login");
+    }
+  };
 
   return (
-    <div title={t('title')}>
-      <form
-        action="/api/auth/callback/credentials"
-        method="post"
-        onSubmit={onSubmit}
-        style={{display: 'flex', flexDirection: 'column', gap: 10, width: 300}}
-      >
-        <label style={{display: 'flex'}}>
-          <span style={{display: 'inline-block', flexGrow: 1, minWidth: 100}}>
-            {t('username')}
-          </span>
-          <input name="username" type="text" />
-        </label>
-        <label style={{display: 'flex'}}>
-          <span style={{display: 'inline-block', flexGrow: 1, minWidth: 100}}>
-            {t('password')}
-          </span>
-          <input name="password" type="password" />
-        </label>
-        {error && <p>{t('error', {error})}</p>}
-        <button type="submit">{t('submit')}</button>
+    <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-400 to-green-400">
+      <form className="bg-white shadow-lg rounded-lg p-8 max-w-xs w-full">
+        <h1 className="text-2xl text-center font-bold mb-6">Login Page</h1>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="username"
+          >
+            Username:
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="mb-6">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="password"
+          >
+            Password:
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        </div>
+        {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
+        <button
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          type="submit"
+          disabled={isLoading}
+          onClick={handleLogin}
+        >
+          {isLoading ? "กำลังเข้าระบบ..." : "Login"}
+        </button>
       </form>
     </div>
   );
-}
+};
 
-// import { useTranslations } from "next-intl";
-
-// export default function Home() {
-//   const t = useTranslations("MapTotal");
-
-//   // Extract the navigation object keys from the translations
-//   //const navigationKeys = Object.keys(t.raw("navigation"));
-//   return (
-//     <div >
-//       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-5">
-//           {/* <p>{t(`title`)}</p> */}
-//           <p>Home</p>
-//       </div>
-//     </div>
-//   );
-// }
+export default Login;
