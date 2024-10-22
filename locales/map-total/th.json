@@ -1,6 +1,18 @@
 {
   "MapTotal": {
     "title": "แผนที่",
-    "description": ""
+    "description": "",
+    "group": "กลุ่ม",
+    "imsi" : "เลขหลอด",
+    "last-update" : "เวลาการทำงานล่าสุด",
+    "last-command" : "คำสั่งล่าสุด",
+    "last-status" : "สถานะล่าสุด",
+    "gov" : "เลขครุภัณฑ์",
+    "streetlight-name" : "รหัสเสา",
+    "auto-mode" : "โหมดอัตโนมัติ",
+    "btn-open" : "คำสั่ง เปิด",
+    "btn-close" : "คำสั่ง ปิด",
+    "btn-read" : "อ่านข้อมูลปัจจุบัน"
+    
   }
 }

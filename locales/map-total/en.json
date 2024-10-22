@@ -1,6 +1,17 @@
 {
-  "MapDisconnect": {
-    "title": "Map Disconnect",
-    "description": ""
+  "MapTotal": {
+    "title": "Map Total",
+    "description": "",
+    "group": "Group",
+    "imsi" : "Imsi",
+    "last-update" : "Last Update",
+    "last-command" : "Last Command",
+    "last-status" : "Last Status",
+    "gov" : "GOV",
+    "streetlight-name" : "StreetLight Name",
+    "auto-mode" : "Auto Mode",
+    "btn-open" : "Command Open",
+    "btn-close" : "Command Close",
+    "btn-read" : "Read Power"
   }
 }

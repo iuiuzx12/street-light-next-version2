@@ -10,7 +10,7 @@ import VectorSource from "ol/source/Vector";
 import "ol/ol.css";
 import { Point } from "ol/geom";
 import { Style as OLStyle, Icon as OLIcon } from "ol/style";
-import "../styles/map.css"
+import "@/app/styles/map.css"
 
 const StaticMapComponent: React.FC = () => {
   useEffect(() => {

@@ -20,6 +20,7 @@ export default getRequestConfig(async ({ locale }) => {
       ...(await import(`./locales/dashboard-daily/${locale}.json`)).default,
       ...(await import(`./locales/map-total/${locale}.json`)).default,
       ...(await import(`./locales/map-disconnect/${locale}.json`)).default
+      
     }
   };
 });
