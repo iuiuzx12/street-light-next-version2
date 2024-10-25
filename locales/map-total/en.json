@@ -11,7 +11,22 @@
     "streetlight-name" : "StreetLight Name",
     "auto-mode" : "Auto Mode",
     "btn-open" : "Command Open",
+    "btn-wait-open" : "Wait Open",
     "btn-close" : "Command Close",
-    "btn-read" : "Read Power"
+    "btn-wait-close" : "Wait Close",
+    "btn-read" : "Read Power",
+    "btn-wait-read" : "Wait Read",
+    "btn-search" : "Search",
+    "btn-open-sensor" : "Open Sensor",
+    "btn-close-sensor" : "Close Sensor",
+    "select-type" : "Select Type",
+    "select-group" : "Group",
+    "select-imsi" : "Imsi",
+    "select-street-name" : "Streetlight Name",
+    "select-status": "Select Status",
+    "select-all": "All",
+    "select-broken": "Broken",
+    "select-disconnection": "Disconnection"
+
   }
 }

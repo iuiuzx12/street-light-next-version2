@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
-export async function POST(req : any) {
+export async function GET(req : any) {
   try {
     return NextResponse.json(
       { error: "Failed to get admins" },
@@ -21,36 +21,37 @@ export async function POST(req : any) {
 }
 
 // Notice the function definition:
-export async function GET(req: Request , res : Response) {
+export async function POST(req: Request , res : Response) {
   try {
-    console.log("checkLogin");
-    console.log("checkLogin");
     var token = cookies().get("token");
-    //console.log("token")
-    //console.log(token?.value)
-    //const data = await req.json();
-    const response = await fetch (process.env.API_URL + '/StreetLight/checkLogin' , {
+    const data = await req.json();
+    const response = await fetch ( process.env.API_URL + '/StreetLight/sendCommandMqtt' , {
       method: 'POST',
       headers: {
+        'Content-Type':'application/json',
         "Authorization" : "Bearer " + token?.value
       },
-      //body: JSON.stringify(data)
+      body: JSON.stringify(data)
     });
 
     const dataResponse = await response.json();
-    console.log(dataResponse);
-    //console.log(dataResponse.result);
     if(dataResponse.result === false){
       return NextResponse.json("401", {
         status: 401,
       });
     }else{
-      return NextResponse.json("200", {
-        status: 200,
-      });
+
+      return NextResponse.json( 
+        {
+            data: dataResponse.dataReturn },
+        {
+            status: 200 }
+        );
     }
     
   } catch (error) {
+    console.log("error");
+    console.log(error);
     return NextResponse.json(
       { error: "Server Error" },
       {

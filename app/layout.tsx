@@ -141,7 +141,8 @@ export default async function RootLayout({
     <html lang="th">
       <body className={`bg-white${inter.className}`}>
         <NextIntlClientProvider messages={messages}>
-          <NextUIProvider>
+          <NextUIProvider >
+            
           {CHECK_LOGIN === true ? (
             <div className="flex">
               {checkRule(USER_RULE)!}

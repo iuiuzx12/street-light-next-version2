@@ -13,7 +13,8 @@ import B from "@/app/components/test/B";
 export default function mapTotal(props: any) {
   const t = useTranslations("MapTotal");
 
-  const [data, setData] = useState<{ id: string;
+  const [data, setData] = useState<{
+    id: string;
     gateway_id: string;
     imsi: string;
     lat: string;
@@ -21,9 +22,11 @@ export default function mapTotal(props: any) {
     status: string;
     type_schedule: string;
     last_power: string;
-    using_sensor: string; } | null>(null);
+    using_sensor: string;
+  } | null>(null);
 
-  const handleSendData = (newData: { id: string;
+  const handleSendData = (newData: {
+    id: string;
     gateway_id: string;
     imsi: string;
     lat: string;
@@ -31,20 +34,19 @@ export default function mapTotal(props: any) {
     status: string;
     type_schedule: string;
     last_power: string;
-    using_sensor: string; }) => {
+    using_sensor: string;
+  }) => {
     setData(newData);
   };
-  
+
   return (
     <div>
-      <div className="p-4">
+      <div className="p-1">
         {/* <p>{t(`title`)}</p> */}
         <div className="w-full h-auto">
-          <SeachMapTotal onSendData={handleSendData}/>
-          <StaticMapComponent data={data}/>
-          <div>
-      
-    </div>
+          <SeachMapTotal onSendData={handleSendData} />
+          <StaticMapComponent data={data} />
+          
         </div>
       </div>
     </div>

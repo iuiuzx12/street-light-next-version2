@@ -11,8 +11,22 @@
     "streetlight-name" : "รหัสเสา",
     "auto-mode" : "โหมดอัตโนมัติ",
     "btn-open" : "คำสั่ง เปิด",
+    "btn-wait-open" : "รอ เปิด",
     "btn-close" : "คำสั่ง ปิด",
-    "btn-read" : "อ่านข้อมูลปัจจุบัน"
+    "btn-wait-close" : "รอ ปิด",
+    "btn-read" : "อ่านค่า",
+    "btn-wait-read" : "รอ อ่านค่า",
+    "btn-search" : "ค้นหา",
+    "btn-open-sensor" : "เปิดใช้งาน",
+    "btn-close-sensor" : "ปิดใช้งาน",
+    "select-type" : "เลือกข้อมูล",
+    "select-group" : "แบบกลุ่ม",
+    "select-imsi" : "รายโคม",
+    "select-street-name" : "เลขเสา",
+    "select-status": "เลือกสถานะ",
+    "select-all": "ทั้งหมด",
+    "select-broken": "โคมเสีย",
+    "select-disconnection": "ขาดการเชื่อมต่อ"
     
   }
 }

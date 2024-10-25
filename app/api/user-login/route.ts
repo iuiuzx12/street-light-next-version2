@@ -24,7 +24,7 @@ export async function GET(req : any) {
 export async function POST(req: Request , res : Response) {
   try {
     const data = await req.json();
-    const response = await fetch ('http://localhost:8012/StreetLight/accountLogin' , {
+    const response = await fetch (process.env.API_URL + '/StreetLight/accountLogin' , {
       method: 'POST',
       headers: {
         'Content-Type':'application/json'

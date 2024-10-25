@@ -26,7 +26,7 @@ export async function POST(req: Request, res: Response) {
     var token = cookies().get("token");
     const data = await req.json();
     const response = await fetch(
-      "http://localhost:8012/StreetLight/getListDataGroup",
+      process.env.API_URL + "/StreetLight/getListDataGroup",
       {
         method: "POST",
         headers: {

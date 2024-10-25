@@ -8,6 +8,7 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
+import { useTranslations } from "next-intl";
 
 interface AProps {
   onSendData: (data: {
@@ -24,10 +25,14 @@ interface AProps {
 }
 
 const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
+  const t = useTranslations("MapTotal");
+
   const [typeSearch, setTypeSearch] = useState("group");
+  const [typeSearchLabel, setTypeSearchLabel] = useState(t(`select-group`));
   const [typeStatus, setTypeStatus] = useState("all");
   const [dataType, setDataType] = useState([]);
   const [dataSearch, setDataSearch] = useState("ALL");
+  const [isLoading, setIsLoading] = useState(false);
   
   const fetchType = async (type: any) => {
     const res = await fetch("/api/get-data-" + type, {
@@ -66,6 +71,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
     const result = await res.json();
     if (res.status == 200) {
       onSendData(result.data)
+      setIsLoading(false)
     } else {
 
     }
@@ -77,6 +83,15 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
 
   const handleChange = async (newValue: any) => {
     setTypeSearch(newValue.target.defaultValue);
+    if(newValue.target.defaultValue === 'group'){
+      setTypeSearchLabel(t(`select-group`));
+    }else if (newValue.target.defaultValue === 'imsi'){
+      setTypeSearchLabel(t(`select-imsi`));
+    }else if (newValue.target.defaultValue === 'street-name'){
+      setTypeSearchLabel(t(`select-street-name`));
+    }else{
+
+    }
     await fetchType(newValue.target.defaultValue);
   };
 
@@ -89,6 +104,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
   };
 
   const onClick = async () => {
+    setIsLoading(true)
     fetchLatLong();
   };
 
@@ -98,31 +114,31 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
       <CardBody>
         <div className="grid grid-cols-4 gap-10">
           <RadioGroup
-            label="Select Type"
+            label={t(`select-type`)}
             orientation="horizontal"
             value={typeSearch}
             onChange={handleChange}
           >
-            <Radio value="group">Group</Radio>
-            <Radio value="imsi">IMSI</Radio>
-            <Radio value="street-name">Street Name</Radio>
+            <Radio value="group">{t(`select-group`)}</Radio>
+            <Radio value="imsi">{t(`select-imsi`)}</Radio>
+            <Radio value="street-name">{t(`select-street-name`)}</Radio>
           </RadioGroup>
 
           <RadioGroup
-            label="Select Status"
+            label={t(`select-status`)}
             orientation="horizontal"
             value={typeStatus}
             onChange={handleChangeStatus}
           >
-            <Radio value="all">All</Radio>
-            <Radio value="4">orange</Radio>
-            <Radio value="5">blue</Radio>
+            <Radio value="all">{t(`select-all`)}</Radio>
+            <Radio value="4">{t(`select-broken`)}</Radio>
+            <Radio value="5">{t(`select-disconnection`)}</Radio>
           </RadioGroup>
 
           <Autocomplete
             
-            label="Favorite Animal"
-            placeholder="Search an animal"
+            label={typeSearchLabel}
+            placeholder={t(`btn-search`)}
             className="max-w-xs"
             value={dataSearch}
             onInputChange={handleChangeType}
@@ -133,11 +149,12 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
             ))}
           </Autocomplete>
           <Button
+            isLoading={isLoading}
             radius="full"
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg"
             onClick={onClick}
           >
-            Button
+            {t(`btn-search`)}
           </Button>
         </div>
       </CardBody>

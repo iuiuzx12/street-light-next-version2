@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Feature, Map, Overlay, View } from "ol";
 import ImageLayer from "ol/layer/Image";
 import ImageStatic from "ol/source/ImageStatic";
@@ -13,9 +13,11 @@ import "@/app/styles/map.css";
 import TileLayer from "ol/layer/Tile";
 import { XYZ } from "ol/source";
 import { FLOAT } from "ol/webgl";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, Skeleton } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
+import { Icon } from "@iconify/react";
+import { tree } from "next/dist/build/templates/app-page";
 
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   const earthRadiusKm = 6371;
@@ -60,9 +62,36 @@ export type OutputDataMap = {
   last_power: string;
 };
 
+export type DetailImsi = {
+  group?: any | null;
+  imsi?: any | null;
+  gateway_id?: any | null;
+  type_schedule?: any | null;
+  using_sensor?: any | null;
+  last_update?: any | null;
+  last_command?: any | null;
+  last_status?: any | null;
+  number_gov?: any | null;
+  street_light_name: any | null;
+} | null;
+
 const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
   const t = useTranslations("MapTotal");
 
+  const mapRef = useRef(null);
+  const overlayRef = useRef(null);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isLoadingOpen, setLoadingOpen] = React.useState(false);
+  const [isLoadingClose, setLoadingClose] = React.useState(false);
+  const [isLoadingRead, setLoadingRead] = React.useState(false);
+  const [isDisabledOpen , setDisabledOpen] = React.useState(true);
+  const [isDisabledClose , setDisabledClose] = React.useState(true);
+  const [isDisabledRead , setDisabledRead] = React.useState(true);
+  const [dataDetailImsi, setDataDetailImsi] = React.useState<DetailImsi>(null);
+  const projectId = process.env.NEXT_PUBLIC_PROJECT_ID ?? "LOCAL";
+
+  var popup: any;
   useEffect(() => {
     if (data) {
     }
@@ -95,7 +124,8 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
     ];
 
     const map = new Map({
-      target: "map",
+      //target: "map",
+      target: mapRef.current!,
       layers: [
         new TileLayer({
           source: new XYZ({
@@ -128,6 +158,10 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
       const feature = new Feature({
         geometry: new Point(fromLonLat([Number(item.lng), Number(item.lat)])),
         imsi: item.imsi,
+        gateway_id : item.gateway_id,
+        type_schedule : item.type_schedule,
+        using_sensor : item.using_sensor,
+        
       });
 
       //var icon_map;
@@ -197,7 +231,7 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
           break;
       }
 
-      console.log(item);
+      //console.log(item);
       const style = new OLStyle({
         image: new OLIcon({
           src: icons[icon_map],
@@ -216,14 +250,17 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
 
     map.addLayer(vectorLayer);
 
-    const popupElement = document.createElement("div");
-    popupElement.className = "ol-popup";
-    popupElement.id = "popup";
+    const popupElement3 = document.createElement("div");
+    const popupElement = overlayRef.current;
+    popupElement3.className = "ol-popup";
+    popupElement3.id = "popup";
+
     //popupElement.innerHTML = "<p>Hello, this is a popup!</p>";
-    const popup = new Overlay({
-      element: popupElement,
+    //popupElement.innerHTML = "<p>Hello, this is a popup!</p>";
+    popup = new Overlay({
+      element: popupElement!,
       positioning: "bottom-center",
-      stopEvent: true,
+      stopEvent: false,
       offset: [0, -30],
     });
     map.addOverlay(popup);
@@ -232,19 +269,18 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
       const pixel = map.getEventPixel(event.originalEvent);
       const feature = map.getFeaturesAtPixel(pixel)[0];
 
+      //setisBtn(false);
+
       if (feature) {
         const geometry = feature.getGeometry();
         //const coordinates = feature.getGeometry()!.getCoordinates();
         if (geometry && geometry instanceof Point) {
           const coordinates = geometry.getCoordinates();
           popup.setPosition(coordinates);
-          // popupElement.innerHTML = `<div role="status">
-          //     <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-          //       <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-          //       <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-          //     </svg>
-          //     <span class="sr-only">Loading...</span>
-          //   </div>`;
+          setOverlayVisible(true);
+          setDisabledOpen(true)
+          setDisabledClose(true)
+          setDisabledRead(true)
 
           const res = await fetch("/api/get-detail-device", {
             method: "POST",
@@ -259,67 +295,28 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
 
           const result = await res.json();
           if (res.status == 200) {
-            console.log(result);
-            popupElement.innerHTML = `
-                <div >
-                  <strong>${t(`group`)}:</strong> ${result.data.group_name}<br>
-                  <strong>${t(`imsi`)}:</strong> ${result.data.imsi}<br>
-                  <strong>${t(`last-update`)}:</strong> ${result.data.last_update}<br>
-                  <strong>${t(`last-command`)}:</strong> ${result.data.last_command}<br>
-                  <strong>${t(`last-status`)}:</strong> ${result.data.last_status}<br>
-                  <strong>${t(`gov`)}:</strong> ${result.data.number_gov}<br>
-                  <strong>${t(`streetlight-name`)}:</strong> ${result.data.street_light_name}<br>
-                  <strong>${t(`auto-mode`)}:</strong> ${result.data.street_light_name}<br>
-                  <button id="popup-command-open" class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">${t(`btn-open`)}</button>
-                  <button id="popup-command-close" class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">${t(`btn-close`)}</button>
-                  <button id="popup-command-read" class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">${t(`btn-read`)}</button>
-                  <button id="popup-close" class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">Close</button>
-                </div>
-              `;
+            setIsLoaded(true);
+            setDisabledOpen(false)
+            setDisabledClose(false)
+            setDisabledRead(false)
+            setDataDetailImsi({
+              group: result.data.group_name,
+              imsi: result.data.imsi,
+              gateway_id : feature.get("gateway_id"),
+              type_schedule : feature.get("type_schedule"),
+              last_update: result.data.last_update,
+              last_status: result.data.last_status,
+              last_command: result.data.last_command,
+              number_gov: result.data.number_gov,
+              street_light_name: result.data.street_light_name,
+            });
+            
           } else {
+
           }
         }
 
-        const CommandOpenButton = popupElement.querySelector(
-          "#popup-command-open"
-        );
-        const CommandCloseButton = popupElement.querySelector(
-          "#popup-command-close"
-        );
-        const CommandReadButton = popupElement.querySelector(
-          "#popup-command-read"
-        );
-        const closeButton = popupElement.querySelector("#popup-close");
-
-        if (CommandOpenButton) {
-          CommandOpenButton.addEventListener("click", () => {
-            CommandOpenButton.textContent = "Opennnn";
-            CommandOpenButton.setAttribute("disabled", "");
-          });
-        }
-
-        if (CommandCloseButton) {
-          CommandCloseButton.addEventListener("click", () => {
-            CommandCloseButton.textContent = "Cloessss";
-            CommandCloseButton.setAttribute("disabled", "");
-          });
-        }
-
-        if (CommandReadButton) {
-          CommandReadButton.addEventListener("click", () => {
-            CommandReadButton.textContent = "Readddd";
-            CommandReadButton.setAttribute("disabled", "");
-          });
-        }
-
-        if (closeButton) {
-          closeButton.addEventListener("click", () => {
-            popup.setPosition(undefined); // Hide the popup
-          });
-        }
-        //const coordinates = feature.getGeometry()!.getCoordinates();
       } else {
-        popup.setPosition(undefined);
       }
     });
 
@@ -327,7 +324,7 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
       const pixel = map.getEventPixel(event);
       const feature = map.forEachFeatureAtPixel(pixel, (feature) => feature);
       if (feature) {
-        map.getViewport().style.cursor = "pointer"; 
+        map.getViewport().style.cursor = "pointer";
       } else {
         map.getViewport().style.cursor = "";
       }
@@ -338,10 +335,261 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
     };
   }, [data]);
 
+  const command = async (type: string, imsi : string) => {
+    
+    
+    
+    switch (type) {
+      case "open":
+        setLoadingOpen(true)
+        setDisabledClose(true)
+        setDisabledRead(true)
+        const resOpen = fetchCommand(imsi, "1","100")
+        if (await resOpen == true){
+          setLoadingOpen(false)
+          setDisabledClose(false)
+          setDisabledRead(false)
+        }
+        break;
+      case "close":
+        setLoadingClose(true)
+        setDisabledOpen(true)
+        setDisabledRead(true)
+        const resClose = fetchCommand(imsi, "0","1")
+        if (await resClose == true){
+          setLoadingClose(false)
+          setDisabledOpen(false)
+          setDisabledRead(false)
+        }
+        break;
+      case "read":
+        setLoadingRead(true)
+        setDisabledOpen(true)
+        setDisabledClose(true)
+        fetchReadPower(imsi)
+        break;
+    
+      default:
+        break;
+    }
+  };
+
+  const fetchCommand = async (imsi : string , command : string, dim : string) => {
+    const res = await fetch("/api/command-mqtt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "API-Key": "1234",
+      },
+      body: JSON.stringify({
+        type_open: "imsi",
+        imsi: imsi,
+        subscribe: projectId +"/RESPONSE/" + imsi,
+        wait_time: "20",
+        command_type: command,
+        dim_percent: dim,
+      }),
+    });
+
+    const result = await res.json();
+    if (res.status == 200) {
+      return true
+    } else {
+      setLoadingOpen(false)
+      setLoadingClose(false)
+      setLoadingRead(false)
+      setDisabledOpen(false)
+      setDisabledClose(false)
+      setDisabledRead(false)
+      return false
+    }
+  };
+
+  const fetchReadPower = async (imsi : string) => {
+    const message = {
+      Type : "GetPower",
+      TOKEN : generateRandomToken(15)
+    }
+    const res = await fetch("/api/get-data-power", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "API-Key": "1234",
+      },
+      body: JSON.stringify({
+        topic: dataDetailImsi?.gateway_id + "/" +imsi,
+        message: JSON.stringify(message),
+        subscribe: projectId + "/" + imsi,
+        wait_time: "20"
+      }),
+    });
+
+    const result = await res.json();
+    if (res.status == 200) {
+
+      setLoadingOpen(false)
+      setLoadingClose(false)
+      setLoadingRead(false)
+      setDisabledOpen(false)
+      setDisabledClose(false)
+      setDisabledRead(false)
+      
+    } else {
+
+      setLoadingOpen(false)
+      setLoadingClose(false)
+      setLoadingRead(false)
+      setDisabledOpen(false)
+      setDisabledClose(false)
+      setDisabledRead(false)
+
+    }
+  };
+
+  const generateRandomToken = (length : number) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomToken = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      randomToken += chars[randomIndex];
+    }
+    return randomToken;
+  };
+
+  const close = () => {
+    setIsLoaded(false);
+    setOverlayVisible(false);
+  };
+
+  const setModeStreetLight = (imsi : string, type : string) => {
+    
+  };
+
   return (
     <Card className="m-1">
       <CardBody className="overflow-visible p-0">
-        <div id="map" className="w-full h-[700px]"></div>
+        {/* <div id="map" className="w-full h-[700px]"></div> */}
+
+        <div>
+          <div ref={mapRef} style={{ width: "100%", height: "700px" }} />
+          <Card
+            ref={overlayRef}
+            style={{
+              display: overlayVisible ? "block" : "none",
+              background: "white",
+            }}
+            className="w-[350px] space-y-5 p-4"
+            radius="lg"
+          >
+            <Button
+              style={{ float: "right" }}
+              isIconOnly
+              size="sm"
+              radius="md"
+              className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
+              onClick={close}
+            >
+              <Icon icon="lucide:circle-x" width="auto" height="auto" />
+            </Button>
+            <div className="space-y-3">
+              <Skeleton isLoaded={isLoaded} className="w-3/5 rounded-lg">
+                <p>
+                  {t(`group`)} : {dataDetailImsi?.group}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`imsi`)} : {dataDetailImsi?.imsi}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`last-update`)} : {dataDetailImsi?.last_update}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`last-command`)} : {dataDetailImsi?.last_command}{" "}
+                  {t(`last-command`)} : {dataDetailImsi?.last_command}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`last-status`)} : {dataDetailImsi?.last_status}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`gov`)} : {dataDetailImsi?.number_gov}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
+                  {t(`auto-mode`)} : {" "}
+                  {dataDetailImsi?.type_schedule == "manual" ? (
+                    <Button
+                      size="sm"
+                      radius="sm"
+                      className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
+                      onClick={() =>
+                        setModeStreetLight(dataDetailImsi?.imsi, "time")
+                      }
+                      
+                    ><Icon icon="lucide:x" /> {t(`btn-close-sensor`)}</Button>
+                  ) : dataDetailImsi?.using_sensor == "True" ? (
+                    <Button
+                      size="sm"
+                      radius="sm"
+                      className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg"
+                      onClick={() =>
+                        setModeStreetLight(dataDetailImsi?.imsi, dataDetailImsi?.type_schedule )
+                      }
+                    ><Icon icon="lucide:check" /> {t(`btn-open-sensor`)}</Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      radius="sm"
+                      className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
+                      onClick={() =>
+                        setModeStreetLight(dataDetailImsi?.imsi, "time")
+                      }
+                    ><Icon icon="lucide:x" />{t(`btn-close-sensor`)}</Button>
+                  )}
+                </p>
+              </Skeleton>
+
+              <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-1">
+                <Button
+                  isLoading={isLoadingOpen}
+                  isDisabled={isDisabledOpen}
+                  radius="md"
+                  className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg"
+                  onClick={() => command("open", dataDetailImsi?.imsi)}
+                >
+                  {isLoadingOpen ? t(`btn-wait-open`) : t(`btn-open`)}
+                </Button>
+                <Button
+                  isLoading={isLoadingClose}
+                  isDisabled={isDisabledClose}
+                  radius="md"
+                  className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg mx-1"
+                  onClick={() => command("close", dataDetailImsi?.imsi)}
+                >
+                  {t(`btn-close`)}
+                </Button>
+                <Button
+                  isLoading={isLoadingRead}
+                  isDisabled={isDisabledRead}
+                  radius="md"
+                  className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg"
+                  onClick={() => command("read", dataDetailImsi?.imsi)}
+                >
+                  {t(`btn-read`)}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
       </CardBody>
     </Card>
   );
