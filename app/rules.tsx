@@ -47,6 +47,16 @@ export const RuleAdminManagement: SideNavItem[] = [
         ],
     },
     {
+        title: 'setting',
+        path: '/setting',
+        icon: '/icon/sidebar/setting.svg',
+        submenu: true,
+        subMenuItems: [
+            { title: 'setting-personal', path: '/setting-personal', icon: '/icon/sidebar/setting-user.svg' },
+            
+        ],
+    },
+    {
         title: 'logout',
         path: '/logout',
         icon: '/icon/sidebar/sign-out.svg',

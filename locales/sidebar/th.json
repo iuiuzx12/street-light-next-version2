@@ -10,6 +10,8 @@
     "map" : "แผนที่",
     "map-total" : "แผนที่ทั้งหมด",
     "map-disconnect" : "ขาดการเชื่อมต่อ",
+    "setting" : "ตั้งค่า",
+    "setting-personal" : "จัดการผู้ใช้งาน",
     "logout": "ออกระบบ"
   }
 }

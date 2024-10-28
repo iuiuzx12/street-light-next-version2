@@ -111,8 +111,8 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
 
   return (
     <Card className="m-1">
-      <CardBody>
-        <div className="grid grid-cols-4 gap-10">
+      <CardBody >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
           <RadioGroup
             label={t(`select-type`)}
             orientation="horizontal"

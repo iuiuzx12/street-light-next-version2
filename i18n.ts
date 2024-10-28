@@ -19,7 +19,8 @@ export default getRequestConfig(async ({ locale }) => {
       ...(await import(`./locales/dashboard-period/${locale}.json`)).default,
       ...(await import(`./locales/dashboard-daily/${locale}.json`)).default,
       ...(await import(`./locales/map-total/${locale}.json`)).default,
-      ...(await import(`./locales/map-disconnect/${locale}.json`)).default
+      ...(await import(`./locales/map-disconnect/${locale}.json`)).default,
+      ...(await import(`./locales/setting-personal/${locale}.json`)).default
       
     }
   };

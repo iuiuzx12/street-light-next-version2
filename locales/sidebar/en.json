@@ -10,6 +10,8 @@
     "map" : "Map",
     "map-total" : "Map Total",
     "map-disconnect" : "Map Disconnect",
+    "setting" : "Setting",
+    "setting-personal" : "Setting Personal",
     "logout" : "Logout"
   }
 }

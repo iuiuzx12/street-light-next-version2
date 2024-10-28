@@ -92,7 +92,7 @@ import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
 console.log("isPublicPage");
 const locales = ['en', 'th'];
-const publicPages = ['/', '/login', '/logout', '/not-auth', '/dashboard-period', '/dashboard-daily', '/map-total' ];
+const publicPages = ['/', '/login', '/logout', '/not-auth', '/dashboard-period', '/dashboard-daily', '/map-total', '/setting-personal' ];
 
 
  
