@@ -18,6 +18,7 @@ import { Button } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 import { tree } from "next/dist/build/templates/app-page";
+import { ListLatLong } from "@/app/interface/map";
 
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   const earthRadiusKm = 6371;
@@ -37,25 +38,29 @@ function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
 }
 
 interface InputDataMap {
-  data: {
-    id: string;
-    gateway_id: string;
-    imsi: string;
-    lat: string;
-    lng: string;
-    status: string;
-    type_schedule: string;
-    using_sensor: string;
-    last_power: string;
-  } | null;
+  data: ListLatLong[] | null;
+  high  : string;
 }
+// interface InputDataMap {
+//   data: {
+//     id: string;
+//     gateway_id: string;
+//     imsi: string;
+//     lat: string;
+//     lng: string;
+//     status: string;
+//     type_schedule: string;
+//     using_sensor: string;
+//     last_power: string;
+//   } | null;
+// }
 
 export type OutputDataMap = {
   id?: string;
   gateway_id?: string;
   imsi?: string;
   lat?: string;
-  lng?: string[];
+  lng?: string;
   status: string;
   type_schedule: string;
   using_sensor: string;
@@ -75,7 +80,8 @@ export type DetailImsi = {
   street_light_name: any | null;
 } | null;
 
-const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
+//const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data }: any) => {
+const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => {
   const t = useTranslations("MapTotal");
 
   const mapRef = useRef(null);
@@ -94,6 +100,7 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
   var popup: any;
   useEffect(() => {
     if (data) {
+      //console.log(data)
     }
 
     const lat = Number(process.env.NEXT_PUBLIC_MAP_LAT ?? 14.031702);
@@ -147,8 +154,8 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
       view: new View({
         center: fromLonLat([lng, lat]),
         zoom: zoom,
-        minZoom: zoom - 5,
-        maxZoom: zoom + 5,
+        minZoom: zoom - 10,
+        maxZoom: zoom + 10,
         extent: transformExtent(extent, "EPSG:4326", "EPSG:3857"),
       }),
     });
@@ -282,7 +289,7 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
           setDisabledClose(true)
           setDisabledRead(true)
 
-          const res = await fetch("/api/get-detail-device", {
+          const res = await fetch("/api/map/get-detail-device", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -471,7 +478,7 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
         {/* <div id="map" className="w-full h-[700px]"></div> */}
 
         <div>
-          <div ref={mapRef} style={{ width: "100%", height: "700px" }} />
+          <div ref={mapRef} className={high} style={{ width: "100%" }} />
           <Card
             ref={overlayRef}
             style={{
@@ -595,4 +602,4 @@ const StaticMapComponent: React.FC<InputDataMap> = ({ data }: any) => {
   );
 };
 
-export default StaticMapComponent;
+export default StaticMapXYZComponent;

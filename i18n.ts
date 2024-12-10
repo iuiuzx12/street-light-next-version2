@@ -11,6 +11,7 @@ export default getRequestConfig(async ({ locale }) => {
 
   return {
     messages: {
+      ...(await import(`./locales/login/${locale}.json`)).default,
       ...(await import(`./locales/sidebar/${locale}.json`)).default,
       ...(await import(`./locales/control-group/${locale}.json`)).default,
       ...(await import(`./locales/control-individual/${locale}.json`)).default,
@@ -20,7 +21,8 @@ export default getRequestConfig(async ({ locale }) => {
       ...(await import(`./locales/dashboard-daily/${locale}.json`)).default,
       ...(await import(`./locales/map-total/${locale}.json`)).default,
       ...(await import(`./locales/map-disconnect/${locale}.json`)).default,
-      ...(await import(`./locales/setting-personal/${locale}.json`)).default
+      ...(await import(`./locales/setting-personal/${locale}.json`)).default,
+      ...(await import(`./locales/error/${locale}.json`)).default
       
     }
   };

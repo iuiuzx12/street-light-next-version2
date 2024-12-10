@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import useScroll from '@/app/hooks/use-scroll';
 import { cn } from '@/app/lib/utils';
-import LangSwitcher from './lang-switcher';
 
 const Header = () => {
   const scrolled = useScroll(5);
@@ -31,7 +30,6 @@ const Header = () => {
             <span className="font-bold text-xl flex ">LES</span>
           </Link>
         </div>
-        <LangSwitcher />
 
         <div className="hidden md:block">
           <div className="h-8 w-8 rounded-full bg-zinc-300 flex items-center justify-center text-center">

@@ -1,0 +1,9 @@
+{
+  "Error": {
+    "title": "Total Error",
+    "description": "Notify Error",
+    "error-api": "SERVER API NOT WORKING",
+    "error-api-description": "Please try again later or contact support.",
+    "btn-error-api-retry": "Retry"
+  }
+}

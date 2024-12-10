@@ -1,0 +1,9 @@
+{
+  "Error": {
+    "title": "ข้อผิดพลาด",
+    "description": "แจ้งเตือนข้อผิดพลาด",
+    "error-api": "เซิร์ฟเวอร์ API ไม่ทำงาน",
+    "error-api-description": "ลองใหม่อีกครั้ง หรือ ติดต่อซัพพอร์ต",
+    "btn-error-api-retry": "ลองอีกครั้ง"
+  }
+}

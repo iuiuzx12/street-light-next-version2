@@ -1,6 +1,31 @@
 {
   "SettingPersonal": {
     "title": "จัดการผู้ใช้งาน",
-    "description": "เพิ่ม ลบ และดู logs การใช้งานระบบ ของผู้ใช้งาน"
+    "description": "เพิ่ม ลบ และดู logs การใช้งานระบบ ของผู้ใช้งาน",
+    "btn-add-user" : "เพิ่มผู้ใช้งาน",
+    "btn-edit-user" : "แก้ไข",
+    "btn-save-user" : "บันทึก",
+    "btn-delete-user" : "ลบ",
+    "btn-usable-user" : "ใช้งาน",
+    "btn-not-usable-user" : "ไม่ได้ใช้งาน",
+    "btn-close-user" : "ยกเลิก",
+    "btn-yes-user" : "ตกลง",
+    "name" : "ชื่อผู้ใช้งาน",
+    "f-name" : "ชื่อ",
+    "f-name-placeholder" : "กรอกชื่อที่นี้",
+    "l-name" : "นามสกุล",
+    "l-name-placeholder" : "กรอกนามสกุลที่นี้",
+    "username" : "ชื่อเข้าใช้งาน",
+    "username-placeholder" : "กรอกชื่อเข้าใช้งานที่นี้",
+    "wrong-username" : "ชื่อเข้าใช้งาน ซ้ำกันในระบบ",
+    "password" : "รหัสผ่าน",
+    "password-placeholder" : "กรอกรหัสผ่านที่นี้",
+    "wrong-password" : "รหัสผ่านต้องมากกว่า 8 ตัวอักษร",
+    "role" : "สิทธิ์การใช้งาน",
+    "time" : "เวลาเข้าใช้งานล่าสุด",
+    "action" : "คำสั่ง",
+    "edit-user" : "แก้ไขผู้ใช้งาน",
+    "delete-user" : "ลบผู้ใช้งาน",
+    "change-status" : "เปลี่ยนสถานะผู้ใช้งาน"
   }
 }

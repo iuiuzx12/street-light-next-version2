@@ -1,10 +1,10 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import {useLocale, useTranslations} from 'next-intl';
+//import {useLocale, useTranslations} from 'next-intl';
 
 export default function notAuth() {
-  const locale = useLocale();
+  //const locale = useLocale();
   //const t = useTranslations('Login');
   const router = useRouter()
   return (

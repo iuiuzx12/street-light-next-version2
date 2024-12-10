@@ -12,7 +12,7 @@ import { Point } from "ol/geom";
 import { Style as OLStyle, Icon as OLIcon } from "ol/style";
 import "@/app/styles/map.css"
 
-const StaticMapComponent: React.FC = () => {
+const StaticMapImgComponent: React.FC = () => {
   useEffect(() => {
     // ขนาดของภาพในพิกเซล
     const imageSize = [5000, 4354]; // เปลี่ยนตามขนาดภาพของคุณ
@@ -186,4 +186,4 @@ const StaticMapComponent: React.FC = () => {
   return <div id="map" className="w-full h-full"></div>;
 };
 
-export default StaticMapComponent;
+export default StaticMapImgComponent;

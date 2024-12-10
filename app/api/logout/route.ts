@@ -20,16 +20,22 @@ export async function GET(req : any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request , res : Response) {
   try {
-    console.log("logout");
-    var token = cookies().set("token","logout")
-    //router.refresh();
-    return NextResponse.json("200", {
-        status: 200,
-      });
-    
+    const cookieStore = cookies();
+    cookieStore.set('token', '', {
+      maxAge: -1,
+      path: '/',
+    });
+
+    return NextResponse.json(
+        {
+          data: true,
+        },
+        {
+          status: 200,
+        }
+      );
   } catch (error) {
     return NextResponse.json(
       { error: "Server Error" },

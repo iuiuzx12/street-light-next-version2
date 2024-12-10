@@ -1,6 +1,31 @@
 {
   "SettingPersonal": {
     "title": "Setting Personal",
-    "description": ""
+    "description": "add delete username",
+    "btn-add-user" : "Add User",
+    "btn-edit-user" : "Edit",
+    "btn-save-user" : "Save",
+    "btn-delete-user" : "Delete",
+    "btn-usable-user" : "Usable",
+    "btn-not-usable-user" : "Not Usable",
+    "btn-close-user" : "Close",
+    "btn-yes-user" : "Yes",
+    "name" : "Name",
+    "f-name" : "First name",
+    "f-name-placeholder" : "Enter your first name here",
+    "l-name" : "Last name",
+    "l-name-placeholder" : "Enter your last name here",
+    "username" : "Username",
+    "username-placeholder" : "Enter your Username here",
+    "wrong-username" : "Username is duplicated in the system.",
+    "password" : "Password",
+    "password-placeholder" : "Enter your Password here",
+    "wrong-password" : "Password must be more than 8 characters.",
+    "role" : "Role",
+    "time" : "Last Time",
+    "action" : "Action",
+    "edit-user" : "Edit User",
+    "delete-user" : "Delete User",
+    "change-status" : "Change Status User"
   }
 }

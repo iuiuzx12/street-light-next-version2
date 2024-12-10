@@ -1,0 +1,15 @@
+{
+  "Login": {
+    "username": "User Name",
+    "username-placeholder": "Enter your Username here",
+    "password": "Password",
+    "password-placeholder": "Enter your Password here",
+    "btn-login": "Login",
+    "sign-in" : "Sign in",
+    "sign-in-failed" : "Failed to log in. Please check your credentials",
+    "sign-in-error" : "Error login",
+    "logging-in" : "Logging in...",
+    "change-language" : "Change language : ",
+    "successful" : "Successful"
+  }
+}

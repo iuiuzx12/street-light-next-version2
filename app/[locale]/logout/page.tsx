@@ -1,33 +1,45 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Logout = async () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
-    const res = await fetch("/api/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "API-Key": "1234",
-      },
-    });
 
-    if (res.status == 200) {
+  const fetchGroupAll = async (): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/logout' ,
+        {
+          method: "POST",
+          body: JSON.stringify({})
+        }); 
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const res = await response.json();
       setIsLoading(false);
       setError("สำเร็จ");
       router.push("/login");
       router.refresh();
-
-    } else {
+    
+      //users.push(newUser);
+      return true;
+    } catch (error) {
       setIsLoading(false);
-      setError("Failed to log in. Please check your credentials.");
+      console.error('Error fetching users:', error);
+      return false; 
     }
+  };
+
+  useEffect(() => {
+    fetchGroupAll();
+  }, []);
+  
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-400 to-green-400"></div>
+    <div className="flex h-screen items-center justify-center bg-gradient-to-r from-blue-400 to-blue-200"></div>
   );
 };
 

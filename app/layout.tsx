@@ -13,11 +13,8 @@ import { SideNavAdminManagement, SideNavAdmin } from "@/app/components/sidebar";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { getSession } from "next-auth/react";
-import { getToken } from "next-auth/jwt";
-import { useRouter } from "next/router";
-import { NextResponse } from "next/server";
-import Login from "./[locale]/login/page";
+import Login from './[locale]/login/page';
+import ServerErrorNotification from './components/server-error';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
+
   children,
 }: {
   children: React.ReactNode;
@@ -40,7 +38,7 @@ export default async function RootLayout({
   var token = cookies().get("token");
   try {
     const response = await fetch(
-      "http://localhost:8012/StreetLight/checkLogin",
+      process.env.API_URL + "/StreetLight/checkLogin",
       {
         method: "POST",
         headers: {
@@ -50,7 +48,7 @@ export default async function RootLayout({
     );
 
     const responseUser = await fetch(
-      "http://localhost:8012/StreetLight/getDataUser",
+      process.env.API_URL + "/StreetLight/getDataUser",
       {
         method: "POST",
         headers: {
@@ -101,7 +99,10 @@ export default async function RootLayout({
     return (
       <html lang="th">
         <body className={`bg-white${inter.className}`}>
-          <p>SERVER API NOT WORKING</p>
+          {/* <p>SERVER API NOT WORKING</p> */}
+          <NextIntlClientProvider messages={messages}>
+          <ServerErrorNotification></ServerErrorNotification>
+          </NextIntlClientProvider>
         </body>
       </html>
     );
@@ -141,30 +142,31 @@ export default async function RootLayout({
     <html lang="th">
       <body className={`bg-white${inter.className}`}>
         <NextIntlClientProvider messages={messages}>
-          <NextUIProvider >
-            
-          {CHECK_LOGIN === true ? (
-            <div className="flex">
-              {checkRule(USER_RULE)!}
-              <main className="flex-1">
-                <MarginWidthWrapper>
-                  <Header />
+          <NextUIProvider>
+            {CHECK_LOGIN === true ? (
+              <div className="flex">
+                {checkRule(USER_RULE)!}
+                <main className="flex-1">
+                  <MarginWidthWrapper>
+                    <Header />
 
-                  {checkRuleMobile(USER_RULE)!}
+                    {checkRuleMobile(USER_RULE)!}
+                    <PageWrapper>{children}</PageWrapper>
+                  </MarginWidthWrapper>
+                </main>
+              </div>
+            ) : (
+              <div className="flex">
+                <main className="flex-1">
                   <PageWrapper>{children}</PageWrapper>
-                </MarginWidthWrapper>
-              </main>
-            </div>
-          ) : (
-            <div className="flex">
-              <main className="flex-1">
-                <PageWrapper>{children}</PageWrapper>
-              </main>
-            </div>
-          )}
+                </main>
+              </div>
+            )}
           </NextUIProvider>
         </NextIntlClientProvider>
       </body>
     </html>
   );
 }
+
+export const dynamic = "force-dynamic"

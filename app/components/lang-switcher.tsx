@@ -32,10 +32,10 @@ const LangSwitcher: React.FC = () => {
     <div className="flex items-center justify-center">
       <div className="relative text-lg w-30">
         <button
-          className="justify-between  w-full border border-gray-500 text-white bg-black
-          hover:bg-blue-800 focus:ring-2 focus:outline-none
-          focus:bg-slate-600 font-medium rounded-lg text-sm px-1 py-0 text-center flex items-center
-          dark:bg-slate-800 dark:hover:bg-black dark:focus:ring-blue-800"
+          className="justify-between  w-full border border-blue-200 text-white bg-blue-400
+          hover:bg-blue-300 focus:ring-2 focus:outline-none
+          focus:bg-blue-200 font-medium rounded-lg text-sm px-1 py-0 text-center flex items-center
+          dark:bg-blue-400 dark:hover:bg-blue-200 dark:focus:ring-blue-300"
           onClick={() => setIsOptionsExpanded(!isOptionsExpanded)}
           onBlur={() => setIsOptionsExpanded(false)}
         >
@@ -66,11 +66,11 @@ const LangSwitcher: React.FC = () => {
             : "translate-y-0 scale-y-100 opacity-100"
             }`}
         >
-          <ul className="absolute left-0 right-0 mb-4 bg-black divide-y rounded-lg shadow-lg overflow-hidden">
+          <ul className="absolute left-0 right-0 mb-4 bg-blue-300 divide-y rounded-lg shadow-lg overflow-hidden">
             {options.map((option, index) => (
               <li
                 key={index}
-                className="px-3 py-2 transition-colors duration-300 hover:bg-slate-600 flex items-center cursor-pointer"
+                className="px-3 py-2 transition-colors duration-300 hover:bg-blue-200 flex items-center cursor-pointer"
                 onMouseDown={(e) => {
                   e.preventDefault();
                   setOption(option);

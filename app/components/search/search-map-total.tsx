@@ -9,20 +9,25 @@ import {
   AutocompleteItem,
 } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
+import { ListLatLong } from "@/app/interface/map";
+
+// interface AProps {
+//   onSendData: (data: {
+//     id: string;
+//     gateway_id: string;
+//     imsi: string;
+//     lat: string;
+//     lng: string;
+//     status: string;
+//     type_schedule: string;
+//     using_sensor: string;
+//     last_power: string;
+//   }) => void;
+// }
 
 interface AProps {
-  onSendData: (data: {
-    id: string;
-    gateway_id: string;
-    imsi: string;
-    lat: string;
-    lng: string;
-    status: string;
-    type_schedule: string;
-    using_sensor: string;
-    last_power: string;
-  }) => void;
-}
+    onSendData: (data: ListLatLong[]) => void;
+  }
 
 const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
   const t = useTranslations("MapTotal");
@@ -35,7 +40,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   
   const fetchType = async (type: any) => {
-    const res = await fetch("/api/get-data-" + type, {
+    const res = await fetch("/api/service/get-data-" + type, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +59,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
   };
 
   const fetchLatLong = async () => {
-    const res = await fetch("/api/get-lat-long", {
+    const res = await fetch("/api/map/get-lat-long", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +126,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
           >
             <Radio value="group">{t(`select-group`)}</Radio>
             <Radio value="imsi">{t(`select-imsi`)}</Radio>
-            <Radio value="street-name">{t(`select-street-name`)}</Radio>
+            <Radio value="street_light_name">{t(`select-street-name`)}</Radio>
           </RadioGroup>
 
           <RadioGroup

@@ -1,8 +1,7 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-export default function mapTotal() {
-  const t = useTranslations("MapTotal");
+export default function settingAlert() {
+  const t = useTranslations("settingAlert");
 
   // Extract the navigation object keys from the translations
   //const navigationKeys = Object.keys(t.raw("navigation"));
