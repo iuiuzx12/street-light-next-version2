@@ -311,9 +311,6 @@ const TableListGroup: React.FC<TableProps> = ({
     <Card className="m-1">
       <CardBody className="overflow-visible p-2 h-[calc(100vh-70px)]">
         <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
-          <ScrollShadow  orientation="horizontal">
-          
-          </ScrollShadow>
 
           <Table
             isStriped

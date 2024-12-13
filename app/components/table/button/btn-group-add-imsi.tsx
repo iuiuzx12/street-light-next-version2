@@ -8,7 +8,7 @@ import {
   useDisclosure,
   Tooltip,
 } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
+import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/dist/client/components/navigation";
 import { ListDevice, ListImsi } from "@/app/interface/control";
 import TableImsiGroup from "../group-imsi";
@@ -52,7 +52,7 @@ const ButtonModelListImsi: React.FC<Props> = ({ groupName, groupCode, onDetail, 
             onClick={() => handleOpenDetail()}
           >
             {t(`add-imsi`)}
-            <Icon icon="lucide:circle-plus" width="auto" height="auto" />
+            <CirclePlus />
             
           </Button>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, Input} from "@nextui-org/react";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 
@@ -47,7 +47,7 @@ const ButtonModalAddGroup: React.FC<Props> = ({  onSendData }) => {
           aria-label="add new group"
           className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" 
           endContent={
-            <Icon icon="lucide:plus" width="auto" height="auto" /> }
+            <Plus /> }
           >
           {t(`add-new-group`)}
         </Button>

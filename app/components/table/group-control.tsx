@@ -75,9 +75,7 @@ const TableControlGroup: FC<TableProps> = ({
   const [page, setPage] = useState(1);
   var [isLoaded, setIsLoaded] = useState(true);
   var [isOpenLight, setIsOpenLight] = useState(false);
-  var [isValueSlider, setValueSlider] = useState<number | number[] | undefined>(
-    80
-  );
+  var [isValueSlider, setValueSlider] = useState<number | number[] | undefined>(80);
 
   const [isResponse, setResponse] = useState(0);
   const [isNotResponse, setNotResponse] = useState(0);

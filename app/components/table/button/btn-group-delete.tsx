@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip} from "@nextui-org/react";
-import { Icon } from "@iconify/react";
 import { useTranslations } from "next-intl";
-
+import { Trash2 } from "lucide-react";
 interface Props {
     groupName : string;
     groupCode : string;
@@ -46,7 +45,7 @@ const ButtonModelDelete: React.FC<Props> = ({groupName , groupCode, onSendData }
             onClick={() => handleOpenDelete()}
           >
             {t(`delete`)}
-            <Icon icon="lucide:trash-2" width="auto" height="auto" />
+            <Trash2 />
           </Button>
 
       <Modal size={"md"} isOpen={isOpen} onClose={onClose}>

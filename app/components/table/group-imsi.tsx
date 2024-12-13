@@ -236,7 +236,8 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
             >
               
               <ButtonConfirmEdit value={listDevice.imsi} onConfirm={handleConfirmationEdit} onClick={handleClick}></ButtonConfirmEdit>
-              {groupName === "ALL" ? "" : <ButtonConfrim  onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>}
+              {/* {groupName === "ALL" ? "" : <ButtonConfrim  onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>} */}
+              <ButtonConfrim  onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>
               
             </div>
           );

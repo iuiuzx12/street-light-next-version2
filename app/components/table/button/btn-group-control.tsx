@@ -8,7 +8,7 @@ import {
   useDisclosure,
   Tooltip,
 } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
+import { Power } from "lucide-react";
 import { ListDevice } from "@/app/interface/control";
 import TableControlGroup from "../group-control";
 import { ListLatLong } from "@/app/interface/map";
@@ -46,7 +46,7 @@ const ButtonModelControl: React.FC<Props> = ({ groupName, groupCode, onDetail , 
             onClick={() => handleOpenDetail()}
           >
             {t(`control`)}
-            <Icon icon="lucide:sun-dim" width="auto" height="auto" />
+            <Power />
             
           </Button>
       <Modal size={"5xl"} isOpen={isOpen} onClose={onClose}>
