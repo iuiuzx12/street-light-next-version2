@@ -1,7 +1,7 @@
 "use client";
 import TableListDevice from "@/app/components/table/individual-list";
 import { ListGroupAll } from "@/app/interface/control";
-import { ListDeviceInGroup } from "@/app/interface/individual";
+import { ListDeviceInGroup, ListLogDevice, ListLogDeviceUserControl } from "@/app/interface/individual";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -28,7 +28,7 @@ const controlIndividual: React.FC = () => {
       setListDevice(data);
       return data;
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching list device:", error);
       return [];
     }
   };
@@ -48,7 +48,54 @@ const controlIndividual: React.FC = () => {
       setListGroup(data);
       return data;
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching group all:", error);
+      return [];
+    }
+  };
+
+  const fetchListLogPower = async ( deviceId: string, day : string ): Promise<ListLogDevice> => {
+    try {
+      const response = await fetch("/api/individual/get-device-log", {
+        method: "POST",
+        body: JSON.stringify({
+          imsi: deviceId,
+          day: day,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const res = await response.json();
+      const data: ListLogDevice = res;
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching list log power:", error);
+      const data: ListLogDevice = {data : [{ id : 1, i : "", pf : "",ts : "" ,v : "",w : "",date : "",time : ""}], averageWatt : "", averageVolt : "", averageI : ""};
+      return data;
+    }
+  };
+
+  const fetchLogUserControl = async (deviceId: string, day : string): Promise<ListLogDeviceUserControl[]> => {
+    try {
+      const response = await fetch("/api/individual/get-device-user-control", {
+        method: "POST",
+        body: JSON.stringify({
+          imsi: deviceId,
+          day: day,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const res = await response.json();
+      const data: ListLogDeviceUserControl[] = res.data;
+      console.log(data)
+      return data;
+    } catch (error) {
+      console.error("Error fetching group all:", error);
       return [];
     }
   };
@@ -63,8 +110,9 @@ const controlIndividual: React.FC = () => {
       <TableListDevice
         listDevice={dataListDevice}
         listGroup={dataListGroup}
-        //listGroup={dataListGroup}
         onListDevice={fetchListDevice}
+        onListLogDevice={fetchListLogPower}
+        onListLogDeviceUserControl={fetchLogUserControl}
       ></TableListDevice>
     </div>
   );

@@ -43,6 +43,7 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
   if (isPublicPage) {
     return intlMiddleware(req);
   } else {
+    console.log(555)
     return (authMiddleware as any)(req);
   }
 }

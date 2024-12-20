@@ -17,16 +17,19 @@ import {
   Card,
   CardBody,
   Autocomplete,
-  AutocompleteItem
+  AutocompleteItem,
+  Switch
 } from "@nextui-org/react";
-import {Search} from 'lucide-react';
+import {MoonIcon, Search, SunIcon ,PowerOff, Power} from 'lucide-react';
 
 import { ListGroupAll } from "@/app/interface/control";
 import { useTranslations } from "next-intl";
-import { ListDeviceInGroup } from "@/app/interface/individual";
+import { ListDeviceInGroup, ListLogDevice, ListLogDeviceUserControl } from "@/app/interface/individual";
 import ButtonModelListIndividualLog from "./button/btn-individual-log";
 import ButtonModelListIndividualWorking from "./button/btn-individual-working";
 import ButtonModelIndividualCommand from "./button/btn-individual-command";
+import ButtonIndividualPower from "./button/btn-individual-power";
+import ButtonModeAuto from "../button/btn-mode-auto";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -34,18 +37,34 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["imeI_Name", "streetLightName", "streetLightSerial","streetLightGroups", "streetLightLastUpdate","lifeTime","streetLightCommand", "command" , "data", "working" , "mode"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "imeI_Name",
+  "streetLightName",
+  "streetLightSerial",
+  "streetLightGroups",
+  "streetLightLastUpdate",
+  "lifeTime",
+  "lastPower",
+  "command",
+  "data",
+  "working",
+  "mode",
+];
 
 interface TableProps {
     listGroup: ListGroupAll[];
     listDevice: ListDeviceInGroup[];
     onListDevice: (dataGroupName: string) => Promise<ListDeviceInGroup[]>;
+    onListLogDevice: (deviceId: string , day : string) => Promise<ListLogDevice>;
+    onListLogDeviceUserControl: (deviceId: string , day : string) => Promise<ListLogDeviceUserControl[]>;
   }
 
 const TableListDevice: React.FC<TableProps> = ({
   listGroup,
   listDevice,
-  onListDevice
+  onListDevice,
+  onListLogDevice,
+  onListLogDeviceUserControl
 }) => {
   
   const [filterValue, setFilterValue] = React.useState("");
@@ -58,27 +77,27 @@ const TableListDevice: React.FC<TableProps> = ({
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "imeI_Name",
+    column: "streetLightSerial",
     direction: "ascending",
   });
 
   const [page, setPage] = React.useState(1);
   const [isLoaded, setIsLoaded] = React.useState(true);
-  const t = useTranslations("ControlGroup");
+  const t = useTranslations("ControlIndividual");
   const [dataSearchGroup, setdataSearchGroup] = useState<string>("ALL");
 
   const columns = [
     //{ name: t(`group`), uid: "imeI_Name", sortable: true },
-    { name: t(`subdistrict`), uid: "streetLightName", sortable: true , align : "start" },
-    { name: t(`subdistrict`), uid: "streetLightSerial", sortable: true , align : "start" },
-    { name: t(`subdistrict`), uid: "streetLightGroups", sortable: true, align : "start"  },
-    { name: t(`subdistrict`), uid: "streetLightLastUpdate", sortable: true , align : "start" },
-    { name: t(`subdistrict`), uid: "lifeTime", sortable: true, align : "start"  },
-    { name: t(`subdistrict`), uid: "streetLightCommand", sortable: true , align : "start" },
-    { name: t(`actions`) , uid: "command" , align : "center" },
-    { name: t(`actions`) , uid: "data", align : "center"  },
-    { name: t(`actions`) , uid: "working", align : "center" },
-    { name: t(`actions`) , uid: "mode" , align : "center" },
+    { name: t(`street-light-name`), uid: "streetLightName", sortable: true , align : "start" },
+    { name: t(`gov`), uid: "streetLightSerial", sortable: true , align : "start" },
+    { name: t(`group-name`), uid: "streetLightGroups", sortable: true, align : "start"  },
+    { name: t(`last-update`), uid: "streetLightLastUpdate", sortable: true , align : "start" },
+    { name: t(`life-time`), uid: "lifeTime", sortable: true, align : "start"  },
+    { name: t(`last-power`), uid: "lastPower", sortable: true , align : "start" },
+    { name: t(`command`) , uid: "command" , align : "center" },
+    { name: t(`log-power`) , uid: "data", align : "center"  },
+    { name: t(`log-control`) , uid: "working", align : "center" },
+    { name: t(`automatic`) , uid: "mode" , align : "center" },
   ];
 
   const hasSearchFilter = Boolean(filterValue);
@@ -159,15 +178,24 @@ const TableListDevice: React.FC<TableProps> = ({
              
             </div>
           );
+        case "lastPower":
+         
+          return (
+            <ButtonIndividualPower gatewayId={deviceAll.gatewayId} deviceId={deviceAll.imeI_Name} watt={deviceAll.lastPower}></ButtonIndividualPower>
+          );
 
         case "command":
+          var arrayCommand : any = deviceAll.streetLightCommand!; 
           return (
             <div
               className="flex items-center gap-10"
               style={{ placeSelf: "center" }}
             >
               <ButtonModelIndividualCommand
+                command={arrayCommand[0]}
+                brightness={parseInt(arrayCommand[1])}
                 deviceId={deviceAll.imeI_Name}
+                gatewayId={deviceAll.gatewayId}
               ></ButtonModelIndividualCommand>
             </div>
           );
@@ -179,6 +207,7 @@ const TableListDevice: React.FC<TableProps> = ({
             >
               <ButtonModelListIndividualLog
                 deviceId={deviceAll.imeI_Name}
+                onListLogDevice={onListLogDevice}
               ></ButtonModelListIndividualLog>
             </div>
           );
@@ -187,18 +216,17 @@ const TableListDevice: React.FC<TableProps> = ({
             <div className="flex items-center" style={{ placeSelf: "center" }}>
               <ButtonModelListIndividualWorking
                 deviceId={deviceAll.imeI_Name}
+                onListLogDeviceUserControl={onListLogDeviceUserControl}
               ></ButtonModelListIndividualWorking>
             </div>
           );
         case "mode":
           return (
-            <div
+            <div 
               className="flex items-center gap-10"
               style={{ placeSelf: "center" }}
             >
-              <ButtonModelListIndividualWorking
-                deviceId={deviceAll.imeI_Name}
-              ></ButtonModelListIndividualWorking>
+              <ButtonModeAuto deviceId={deviceAll.imeI_Name} typeMode={deviceAll.typeSchedule} using={deviceAll.usingSensor}></ButtonModeAuto>
             </div>
           );
 
@@ -257,8 +285,8 @@ const TableListDevice: React.FC<TableProps> = ({
         <div className="flex justify-between gap-3 items-end">
           <Autocomplete
             size="sm"
-            label={t(`search-imsi`)}
-            placeholder={t(`select-imsi`)}
+            label={t(`search-group`)}
+            placeholder={t(`select-group`)}
             //className="max-w-xs"
             value={dataSearchGroup}
             onInputChange={handleInputChange}
@@ -273,7 +301,7 @@ const TableListDevice: React.FC<TableProps> = ({
           <Input
             isClearable
             className="w-full sm:max-w-[50%]"
-            placeholder={t(`search-by-group`)}
+            placeholder={t(`search-by-name-imsi`)}
             startContent={<Search />}
             value={filterValue}
             size="lg"
@@ -284,7 +312,7 @@ const TableListDevice: React.FC<TableProps> = ({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            {t(`total-group`)} {listDevice.length}
+            {t(`total-device`)} {listDevice.length}
           </span>
           <label className="flex items-center text-default-400 text-small">
             {t(`rows-per-page`)}
@@ -384,7 +412,7 @@ const TableListDevice: React.FC<TableProps> = ({
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody emptyContent={t(`no-group-found`)} items={sortedItems}>
+            <TableBody emptyContent={t(`device-not-found`)} items={sortedItems}>
               {(item) => (
                 <TableRow key={item.imeI_Name} >
                   {(columnKey) => (

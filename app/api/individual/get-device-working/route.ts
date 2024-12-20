@@ -26,7 +26,7 @@ export async function POST(req: Request, res: Response) {
     var token = cookies().get("token");
     const data = await req.json();
     const response = await fetch(
-      process.env.API_URL + "/StreetLight/getDataLogStreetLightDynamo",
+      process.env.API_URL + "/StreetLightSmartSolar/getDataLogStreetLightWorking",
       {
         method: "POST",
         headers: {
@@ -54,19 +54,9 @@ export async function POST(req: Request, res: Response) {
         ...value
       })).sort((a, b) => parseInt(b.ts) - parseInt(a.ts));
 
-      const totalW = dataArrayWithId.reduce((sum, item) => sum + ( parseFloat(item.w) || 0), 0);
-      const totalI = dataArrayWithId.reduce((sum, item) => sum + (parseFloat(item.i) || 0), 0);
-      const totalV = dataArrayWithId.reduce((sum, item) => sum + (parseFloat(item.v) || 0), 0);
-
-      const averageWatt = totalW / dataArrayWithId.length;
-      const averageVolt = totalV / dataArrayWithId.length;
-      const averageI = totalI / dataArrayWithId.length;
       return NextResponse.json(
         {
           data: dataArrayWithId,
-          averageWatt: averageWatt.toFixed(2).toString(),
-          averageVolt: averageVolt.toFixed(2).toString(),
-          averageI: averageI.toFixed(2).toString(),
         },
         {
           status: 200,

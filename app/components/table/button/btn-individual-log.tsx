@@ -9,14 +9,21 @@ import {
 } from "@nextui-org/react";
 
 import { FileText } from "lucide-react";
+import { ListLogDevice } from "@/app/interface/individual";
+import TableIndividualLog from "../individual-log";
 interface Props {
   deviceId: string;
+  onListLogDevice: (deviceId: string , day : string) => Promise<ListLogDevice>;
 }
 
-const ButtonModelListIndividualLog: React.FC<Props> = ({ deviceId }) => {
+const ButtonModelListIndividualLog: React.FC<Props> = ({ deviceId, onListLogDevice }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [dataListLogDevice, setListLogDevice] = useState<ListLogDevice>({data : [{ id : 1, i : "", pf : "",ts : "" ,v : "",w : "",date : "",time : ""}], averageWatt : "", averageVolt : "", averageI : ""});
   const handleOpenDetail = async () => {
-   
+    let dataListLogDevice = await onListLogDevice(deviceId, "1");
+    setListLogDevice(dataListLogDevice)
+    //console.log(dataListLogDevice)
+    //console.log(averageWatt)
     onOpen();
   };
 
@@ -41,13 +48,16 @@ const ButtonModelListIndividualLog: React.FC<Props> = ({ deviceId }) => {
           {(onClose) => (
             <>
               <ModalBody>
-                <div className="flex w-full flex-col">
-                <h1>{"FFFF"}</h1>
+              <div className="flex w-full flex-col">
+              <div className="grid grid-cols-12 gap-2">
+                <h1>{deviceId}</h1>
                         <div className="col-span-full">
-                          
+                          <TableIndividualLog deviceId={deviceId} onListLogDevice={onListLogDevice} listLogDevice={dataListLogDevice}></TableIndividualLog>
                         </div>
                 </div>
+                </div>
               </ModalBody>
+             
               <ModalFooter>
                
               </ModalFooter>

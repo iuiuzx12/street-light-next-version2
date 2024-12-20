@@ -382,7 +382,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
   };
 
   const fetchCommand = async (imsi : string , command : string, dim : string) => {
-    const res = await fetch("/api/command-mqtt", {
+    const res = await fetch("/api/command/control", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -417,7 +417,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
       Type : "GetPower",
       TOKEN : generateRandomToken(15)
     }
-    const res = await fetch("/api/get-data-power", {
+    const res = await fetch("/api/command/get-data-power", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

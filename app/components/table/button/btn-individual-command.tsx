@@ -9,41 +9,81 @@ import {
   Slider,
   ButtonGroup,
   Progress,
-  Autocomplete,
-  AutocompleteItem,
 } from "@nextui-org/react";
 
-import { Power, SendIcon, StopCircle } from "lucide-react";
+import {MoonIcon, SunIcon , Power, SendIcon, StopCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 interface Props {
+  gatewayId: string;
   deviceId: string;
+  command: string;
+  brightness: number;
 }
 
-const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
+const ButtonModelIndividualCommand: React.FC<Props> = ({gatewayId, deviceId ,command , brightness}) => {
+  const t = useTranslations("ControlIndividual");
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [percentage, setPercentage] = useState(50);
-  const [value, setValue] = React.useState(0);
+  const [isCommand, setCommand] = useState(command);
   var [isValueSlider, setValueSlider] = useState<number | number[] | undefined>(
-    80
+    brightness
   );
 
   const [seconds, setSeconds] = useState<number>(0);
-  const [countCommand, setCountCommand] = useState<number>(0);
+  const [countCommand, setCountCommand] = useState<number >(0);
+  const [isControl, setControl] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const projectId = process.env.NEXT_PUBLIC_PROJECT_ID ?? "LOCAL";
+
+  const fetchCommand =  useCallback( async (imsi : string , command : string, dim : string) => {
+    const res = await fetch("/api/command/control", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "API-Key": "1234",
+      },
+      body: JSON.stringify({
+        type_open: "imsi",
+        imsi: imsi,
+        subscribe: projectId +"/RESPONSE/" + imsi,
+        wait_time: "10",
+        command_type: command,
+        dim_percent: dim,
+      }),
+    });
+
+    const result = await res.json();
+    if (res.status == 200) {
+      if(result.data === ""){
+        setControl(false)
+        return false
+      }
+      else{
+        setControl(true)
+        setSeconds(100)
+        stopTimer(intervalId)
+        return true
+      }
+      
+    } else {
+      setControl(false)
+      return false
+    }
+  }, [isControl, intervalId, isValueSlider]);
 
   const startTimer = useCallback(() => {
     setSeconds(0);
     setIsRunning(true);
+    fetchCommand(deviceId, (isValueSlider === 0 ? "0" : "1") , (isValueSlider === 0 ? "1" : isValueSlider + "" ) )
     //setData([]);
     const id = setInterval(() => {
       setSeconds((prev) => prev + 10);
-      console.log(seconds)
+      //console.log(seconds)
     }, 1000);
     setIntervalId(id);
-    console.log(id);
+    //console.log(id);
     return id;
-  }, [intervalId, isRunning, seconds]);
+  }, [intervalId, isRunning, seconds, isValueSlider]);
 
   const stopTimer = useCallback(
     (id: NodeJS.Timeout | null) => {
@@ -52,12 +92,18 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
         setIsRunning(false);
       }
     },
-    [intervalId, isRunning]
+    [intervalId, isRunning ,isControl]
   );
 
   const resetTimer = (id: NodeJS.Timeout | null) => {
     setCountCommand(countCommand+1)
     setSeconds(0);
+    if(isControl === false){
+      fetchCommand(deviceId, (isValueSlider === 0 ? "0" : "1") , (isValueSlider === 0 ? "1" : isValueSlider + "" ) )
+    }
+    else{
+      
+    }
     return 0;
   };
 
@@ -65,6 +111,7 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
     onOpen();
     setSeconds(0);
     setCountCommand(0);
+    setControl(false)
     stopTimer(intervalId)
   };
 
@@ -86,14 +133,8 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
 
   var handleSlider = (value: number | number[]) => {
     setValueSlider(value);
+    setCommand(value.toString())
     stopTimer(intervalId);
-  };
-
-  const handleInputChange = async (newValue: string) => {
-    //setdataSearchGroup(newValue); 
-    //onListDevice(newValue)
-    //console.log(newValue)
-    //setFilterValue(newValue);
   };
 
   return (
@@ -104,17 +145,18 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
           isDisabled
           size="md"
           radius="md"
-          className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
+          className={isCommand === '0' ? "bg-gradient-to-tr text-white shadow-lg -m-15 from-gray-500 to-gray-300" : "bg-gradient-to-tr text-white shadow-lg -m-15 from-green-500 to-green-300"}
           aria-label="Percentage Button"
         >
-          {percentage}%
+          {isValueSlider === 1 ? command === "0" ? 0 : 1 : isValueSlider}%
         </Button>
         <Button
           isIconOnly
           onClick={() => handleOpenDetail()}
-          className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
+          className={isCommand === '0' ? "bg-gradient-to-tr text-white shadow-lg -m-15 from-gray-500 to-gray-300" : "bg-gradient-to-tr text-white shadow-lg -m-15 from-green-500 to-green-300"}
         >
-          <Power />
+          {isCommand === '0' ? <MoonIcon/> : <SunIcon />}
+          
         </Button>
       </ButtonGroup>
 
@@ -124,14 +166,14 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
             <>
               <ModalBody>
                 <div className="flex w-full flex-col">
-                  <h1 className="text-center">{"Control"}</h1>
+                  <h1 className="text-center">{t(`control`)}</h1>
                  
                   <div className="grid grid-cols-6 gap-4">
 
                   <Slider
                       step={10}
                       size="md"
-                      label={"Brightness"}
+                      label={t(`brightness`)}
                       defaultValue={isValueSlider}
                       onChange={handleSlider}
                       className="col-span-6"
@@ -151,8 +193,6 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
                       )}
                     />
 
-        
-
                     <Button
                       isLoading={isRunning}
                       onClick={handleCommand}
@@ -161,19 +201,19 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
                       size="md"
                       //onClick={() => handleSend()}
                     >
-                      <h1>{"Send"}</h1>
+                      <h1>{t(`send`)}</h1>
                       <SendIcon> </SendIcon>
                     </Button>
 
                     <Button
                       isDisabled={!isRunning}
                       onClick={handleStop}
-                      aria-label="send"
+                      aria-label="stop"
                       className="col-end-7 col-span-2 bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg w-full"
                       size="md"
                       //onClick={() => handleSend()}
                     >
-                      <h1>{"Stop"}</h1>
+                      <h1>{t(`stop`)}</h1>
                       <StopCircle> </StopCircle>
                     </Button>
 
@@ -181,7 +221,7 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({ deviceId }) => {
                       aria-label="Downloading..."
                       className="col-start-1 col-end-7 w-full"
                       color="success"
-                      label={"Count : "+countCommand}
+                      label={ t(`count`) + "" + countCommand +" "+ (isControl === true ? t(`successes`) : t(`unsuccessful`))}
                       showValueLabel={true}
                       size="md"
                       value={seconds === 100 ? resetTimer(intervalId) : seconds}
