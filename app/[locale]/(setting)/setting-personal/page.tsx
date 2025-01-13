@@ -141,9 +141,8 @@ const settingPersonal: React.FC = () => {
 
   return (
     <div>
-      <div className="p-1">
-        <div className="w-full h-auto">
-          <div className="p-1">
+      <div className="w-full h-auto">
+          <div className="p-2">
             <ButtonModalUserAdd
               dataRule={dataListRole}
               onSendData={fetchSaveDataUser}
@@ -151,7 +150,7 @@ const settingPersonal: React.FC = () => {
             
           </div>
 
-          <div className="p-1">
+          <div className="w-full h-auto p-1">
             <TableListUser
               listUser={dataListUser}
               dataRule={dataListRole}
@@ -161,7 +160,6 @@ const settingPersonal: React.FC = () => {
             />
           </div>
         </div>
-      </div>
     </div>
   );
 };

@@ -31,10 +31,8 @@ const ButtonModalUserUsing: React.FC<ButtonProps> = ({ userId, usable, onSetUsab
       <div className="flex flex-wrap gap-3">
         {usable == "Y" ? <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15" endContent={
           <Check width="25px" height="25px" />}>
-          {t(`btn-usable-user`)}
         </Button> : <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
           <OctagonX width="25px" height="25px" />}>
-          {t(`btn-not-usable-user`)}
         </Button>}
         
       </div>

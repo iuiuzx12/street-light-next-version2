@@ -9,8 +9,10 @@ const controlIndividual: React.FC = () => {
   const t = useTranslations("ControlIndividual");
   const [dataListDevice, setListDevice] = useState<ListDeviceInGroup[]>([]);
   const [dataListGroup, setListGroup] = useState<ListGroupAll[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchListDevice = async ( dataGroupName: string ): Promise<ListDeviceInGroup[]> => {
+    setLoading(true);
     try {
       const response = await fetch("/api/individual/device-in-group", {
         method: "POST",
@@ -26,6 +28,7 @@ const controlIndividual: React.FC = () => {
       const res = await response.json();
       const data: ListDeviceInGroup[] = res.data;
       setListDevice(data);
+      setLoading(false);
       return data;
     } catch (error) {
       console.error("Error fetching list device:", error);
@@ -92,7 +95,6 @@ const controlIndividual: React.FC = () => {
       }
       const res = await response.json();
       const data: ListLogDeviceUserControl[] = res.data;
-      console.log(data)
       return data;
     } catch (error) {
       console.error("Error fetching group all:", error);
@@ -110,6 +112,7 @@ const controlIndividual: React.FC = () => {
       <TableListDevice
         listDevice={dataListDevice}
         listGroup={dataListGroup}
+        loading={loading}
         onListDevice={fetchListDevice}
         onListLogDevice={fetchListLogPower}
         onListLogDeviceUserControl={fetchLogUserControl}

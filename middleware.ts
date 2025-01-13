@@ -4,7 +4,7 @@ import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
 console.log("isPublicPage1");
 const locales = ['en', 'th'];
-const publicPages = ['/', '/login', '/logout', '/not-auth', '/dashboard-period', '/dashboard-daily', '/map-total', '/setting-personal' ,'/control-group' , '/control-individual' ];
+const publicPages = ['/', '/login', '/logout', '/not-auth', '/dashboard-period', '/dashboard-daily', '/map-total', '/setting-personal' ,'/control-group' , '/control-individual' ,'/control-schedule' ];
 
 const intlMiddleware = createIntlMiddleware({
   locales,

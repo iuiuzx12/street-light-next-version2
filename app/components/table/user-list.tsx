@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Skeleton} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Skeleton, Card, CardBody} from "@nextui-org/react";
 import ButtonModalUserDelete from "./button/btn-user-delete";
 import ButtonModalUserEdit from "./button/btn-user-edit";
 import ButtonModalUserUsing from "./button/btn-user-using";
@@ -53,14 +53,33 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
         </div>
         );
 
-      case "actions":
+      case "edit":
         
         return (
           <div className="flex items-center gap-10" style={{
             placeSelf: "center",
           }}>
             <ButtonModalUserEdit detailUser={listUser} dataListRule={dataRule} onEditUser={onEditUser}></ButtonModalUserEdit>
+        </div>
+        );
+
+        case "delete":
+        
+        return (
+          <div className="flex items-center gap-10" style={{
+            placeSelf: "center",
+          }}>
             <ButtonModalUserDelete userId={listUser.personal_id} onDelete={onDeleteUser}></ButtonModalUserDelete>
+        </div>
+        );
+
+        case "use":
+        
+        return (
+          <div className="flex items-center gap-10" style={{
+            placeSelf: "center",
+          }}>
+           
             <ButtonModalUserUsing userId={listUser.personal_id } usable={listUser.usable} onSetUsable={onSetUsable}></ButtonModalUserUsing>
         </div>
         );
@@ -72,13 +91,19 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
   }, []);
 
   return (
-
-        <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+    <Card className="m-1">
+      <CardBody className="overflow-visible p-2 h-[calc(100vh-120px)]">
+        <div className="flex w-full flex-col">
+          <div className="grid grid-cols-12 gap-2">
+        <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg col-span-full">
           <Table
+            radius="none"
+            shadow="none"
             isStriped
+            layout="auto"
             aria-label="Example table with client side pagination"
             bottomContent={
-              <div className="flex w-full justify-center">
+              <div className="py-2 px-2 flex justify-between items-center">
                 <Pagination
                   isCompact
                   showControls
@@ -91,7 +116,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
               </div>
             }
             classNames={{
-              wrapper: "h-[calc(100vh-120px)]",
+              wrapper: "h-[calc(100vh-140px)]",
             }}
           >
             <TableHeader>
@@ -99,7 +124,9 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
               <TableColumn key="personal_username">{t(`username`)}</TableColumn>
               <TableColumn key="roleName">{t(`role`)}</TableColumn>
               <TableColumn key="last_login">{t(`time`)}</TableColumn>
-              <TableColumn className="text-center" key="actions">{t(`action`)}</TableColumn>
+              <TableColumn className="text-center" key="edit">{t(`btn-edit-user`)}</TableColumn>
+              <TableColumn className="text-center" key="delete">{t(`btn-delete-user`)}</TableColumn>
+              <TableColumn className="text-center" key="use">{t(`btn-usable-user`)}</TableColumn>
             </TableHeader>
             <TableBody items={items}>
               {(item) => (
@@ -112,6 +139,10 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
             </TableBody>
           </Table>
         </Skeleton>
+        </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 }
 

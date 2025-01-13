@@ -428,76 +428,66 @@ const TableControlGroup: FC<TableProps> = ({
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-2">
-        <div >
-          <Card className="col-span-12">
-            <CardBody className="grid grid-cols-12 gap-10">
-              <div className="col-span-12 md:col-span-5">
-                <Slider
-                  size="md"
-                  label={t(`select-brightness`)}
-                  defaultValue={isValueSlider}
-                  onChange={handleSlider}
-                  classNames={{
-                    base: "max-w-md gap-3",
-                    track: "border-s-secondary-100",
-                    filler:
-                      "bg-gradient-to-r from-secondary-100 to-secondary-600",
-                  }}
-                  renderThumb={(props) => (
-                    <div
-                      {...props}
-                      className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
-                    >
-                      <span className="transition-transform bg-gradient-to-br shadow-small from-secondary-100 to-secondary-600 rounded-full w-5 h-5 block group-data-[dragging=true]:scale-80" />
-                    </div>
-                  )}
-                />
+      <div>
+        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-5 grid-rows-3 md:grid-rows-1 gap-2 m-2">
+          <Slider
+            className="col-span-2"
+            size="md" 
+            label={t(`select-brightness`)}
+            defaultValue={isValueSlider}
+            onChange={handleSlider}
+            classNames={{
+              base: "max-w-md gap-3",
+              track: "border-s-secondary-100",
+              filler: "bg-gradient-to-r from-secondary-100 to-secondary-600",
+            }}
+            renderThumb={(props) => (
+              <div
+                {...props}
+                className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
+              >
+                <span className="transition-transform bg-gradient-to-br shadow-small from-secondary-100 to-secondary-600 rounded-full w-5 h-5 block group-data-[dragging=true]:scale-80" />
               </div>
+            )}
+          />
 
-              <div className="col-span-6 md:col-span-2 self-center">
-                <Button
-                  aria-label="send"
-                  className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
-                  size="md"
-                  onClick={() => handleSend()}
-                >
-                   <h1>{t(`send`)}</h1>
-                  <SendIcon> </SendIcon>
-                </Button>
-              </div>
-
-              <div className="col-span-6 md:col-span-5 self-center">
-                <Input
-                  isClearable
-                  className="w-full"
-                  placeholder={t(`search-by-name-imsi`)}
-                  startContent={<Search />}
-                  value={filterValue}
-                  onClear={() => onClear()}
-                  onValueChange={onSearchChange}
-                />
-              </div>
-            </CardBody>
-          </Card>
+          <Button
+            aria-label="send"
+            className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15 self-center"
+            size="lg"
+            onClick={() => handleSend()}
+          >
+            <h1>{t(`send`)}</h1>
+            <SendIcon> </SendIcon>
+          </Button>
+          <Input
+          size="lg"
+            isClearable
+            className="w-full col-span-2 self-center"
+            placeholder={t(`search-by-name-imsi`)}
+            startContent={<Search />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-default-400 text-small">
+              {t(`total-device`)} {getListDevice.length}
+            </span>
+            <label className="flex items-center text-default-400 text-small">
+              {t(`rows-per-page`)}
+              <select
+                className="bg-transparent outline-none text-default-400 text-small"
+                onChange={onRowsPerPageChange}
+              >
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </label>
+          </div>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">
-            {t(`total-device`)} {getListDevice.length}
-          </span>
-          <label className="flex items-center text-default-400 text-small">
-            {t(`rows-per-page`)}
-            <select
-              className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
-          </label>
-        </div>
-      </div>
     );
   }, [
     filterValue,

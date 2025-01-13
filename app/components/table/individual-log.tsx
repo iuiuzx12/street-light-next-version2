@@ -122,7 +122,7 @@ const TableIndividualLog: FC<TableProps> = ({ listLogDevice , onListLogDevice ,d
 
         case "date":
           return (
-            <div className="flex flex-col">
+            <div className="min-w-40">
               {listDevice.date}  {listDevice.time}
             </div>
           );
@@ -187,12 +187,11 @@ const TableIndividualLog: FC<TableProps> = ({ listLogDevice , onListLogDevice ,d
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-2">
-        <div>
-          <Card className="col-span-12">
-            <CardBody className="grid grid-cols-3 gap-4">
+      <div>
+        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 grid-rows-5 md:grid-rows-2 gap-2 m-1">
               <Autocomplete
-                className="col-span-2"
+                className="md:col-span-2"
+                size="sm"
                 label={t(`search-day`)}
                 placeholder={t(`select-day`)}
                 value={"1"}
@@ -205,18 +204,16 @@ const TableIndividualLog: FC<TableProps> = ({ listLogDevice , onListLogDevice ,d
                 <AutocompleteItem key={"30"}>{"30 "+ t(`day`)}</AutocompleteItem>
               </Autocomplete>
 
-              <div className="self-center">
-                <Input
+              <Input
                   isClearable
                   size="lg"
-                  className="w-full"
+                  className="w-full self-center"
                   placeholder={t(`search-by-v-w-i-pf`)}
                   startContent={<Search />}
                   value={filterValue}
                   onClear={() => onClear()}
                   onValueChange={onSearchChange}
                 />
-              </div>
 
               <ButtonGroup isDisabled>
                 <Button className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg ">{t(`avg-volt`)}</Button>
@@ -236,8 +233,7 @@ const TableIndividualLog: FC<TableProps> = ({ listLogDevice , onListLogDevice ,d
                 <Button className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg ">mA</Button>
               </ButtonGroup>
               
-            </CardBody>
-          </Card>
+            
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">

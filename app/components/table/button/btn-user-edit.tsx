@@ -81,7 +81,6 @@ const ButtonModalUserEdit: React.FC<AProps> = ({ detailUser , dataListRule , onE
       <div className="flex flex-wrap gap-3">
         <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" endContent={
           <UserPen width="25px" height="25px" />}>
-          {t(`btn-edit-user`)}
         </Button>
       </div>
       <Modal 

@@ -16,17 +16,16 @@ import {
   Skeleton,
   Card,
   CardBody,
-  ScrollShadow
+  ScrollShadow,
+  Progress
 } from "@nextui-org/react";
 import {Search} from 'lucide-react';
 
-import { ListGroupAll, ListDevice, ListImsi } from "@/app/interface/control";
-import ButtonModalAddGroup from "./button/btn-group-add";
-import ButtonModelControl from "./button/btn-group-control";
-import ButtonModelDelete from "./button/btn-group-delete";
-import ButtonModelListImsi from "./button/btn-group-add-imsi";
-import { ListLatLong } from "@/app/interface/map";
+import { ListSchedule, } from "@/app/interface/schedule";
 import { useTranslations } from "next-intl";
+import ButtonModelDeleteSchedule from "./button/btn-schedule-delete";
+import ButtonModelEditAddSchedule from "./button/btn-schedule-edit-add";
+import ButtonModelResponseSchedule from "./button/btn-schedule-response";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -34,35 +33,22 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["group_name", "sub_district", "total_rtu", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["scheduleName", "typeSchedule", "edit", "response" , "delete"];
 
 interface TableProps {
-    listGroup: ListGroupAll[];
-    onAddGroup : (dataGroupName: string) => void;
-    onAddImsiGroup : (dataGroupName: string ,dataGroupCode: string, dataImsi: string) => Promise<ListDevice[]>;
-    onDeleteGroup : (dataGroupName: string, dataGroupCode: string) => void;
-    onDataImsiAll : () => Promise<ListImsi[]>;
-    onDeleteImsiInGroup : (dataGroupName: string,dataGroupCode: string, dataImsi : string) => Promise<ListDevice[]>;
-    onSaveDataDevice : (dataGroupName : string ,imsi : string , latLamp : string, longLamp : string , namePole : string , nameGov : string) => Promise<ListDevice[]>;
-    onReloadLatLong : (typeSearch : string, dataSearch : string) => Promise<ListLatLong[]>;
-    onSendCommand : (typeOpen : string , value : string, commandType : string , dimPercent : string) => Promise<ListLatLong[]>;
-    onDetailGroup : (
-        group_name : string) => Promise<ListDevice[]>;
+    loading: boolean;
+    listSchedule: ListSchedule[];
+    onSendDataDelete: (
+      dataGroupName: string,
+      dataGroupCode : string) => void;
   }
 
   
 
-const TableListGroup: React.FC<TableProps> = ({
-  listGroup,
-  onAddGroup,
-  onAddImsiGroup,
-  onDeleteGroup,
-  onDeleteImsiInGroup,
-  onDetailGroup,
-  onDataImsiAll,
-  onSendCommand,
-  onSaveDataDevice,
-  onReloadLatLong
+const TableListSchedule: React.FC<TableProps> = ({
+    loading,
+    listSchedule,
+    onSendDataDelete
 }) => {
   
   const [filterValue, setFilterValue] = React.useState("");
@@ -75,7 +61,7 @@ const TableListGroup: React.FC<TableProps> = ({
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "group_name",
+    column: "scheduleName",
     direction: "ascending",
   });
 
@@ -84,9 +70,11 @@ const TableListGroup: React.FC<TableProps> = ({
   const t = useTranslations("ControlGroup");
 
   const columns = [
-    { name: t(`group`), uid: "group_name", sortable: true },
-    { name: t(`subdistrict`), uid: "sub_district", sortable: true },
-    { name: t(`actions`) , uid: "actions" },
+    { name: "name", uid: "scheduleName", sortable: true , align : "start" },
+    { name: "type", uid: "typeSchedule", sortable: true , align : "start" },
+    { name: "edit", uid: "edit" , align : "center" },
+    { name: "response", uid: "response" , align : "center"},
+    { name: "delete" , uid: "delete", align : "center" },
   ];
 
   const hasSearchFilter = Boolean(filterValue);
@@ -100,16 +88,16 @@ const TableListGroup: React.FC<TableProps> = ({
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredGruop = [...listGroup];
+    let filteredGruop = [...listSchedule];
 
     if (hasSearchFilter) {
       filteredGruop = filteredGruop.filter((data) =>
-        data.group_name.toLowerCase().includes(filterValue.toLowerCase())
+        data.scheduleName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
     return filteredGruop;
-  }, [listGroup, filterValue, statusFilter]);
+  }, [listSchedule, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -121,9 +109,9 @@ const TableListGroup: React.FC<TableProps> = ({
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: ListGroupAll, b: ListGroupAll) => {
-      const first = a[sortDescriptor.column as keyof ListGroupAll] as string;
-      const second = b[sortDescriptor.column as keyof ListGroupAll] as string;
+    return [...items].sort((a: ListSchedule, b: ListSchedule) => {
+      const first = a[sortDescriptor.column as keyof ListSchedule] as string;
+      const second = b[sortDescriptor.column as keyof ListSchedule] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -132,23 +120,21 @@ const TableListGroup: React.FC<TableProps> = ({
   
 
   const renderCell = React.useCallback(
-    
-    (groupAll: ListGroupAll, columnKey: React.Key) => {
-        
-      const cellValue = groupAll[columnKey as keyof ListGroupAll];
+    (data: ListSchedule, columnKey: React.Key) => {
+      const cellValue = data[columnKey as keyof ListSchedule];
 
       switch (columnKey) {
-        case "group_name":
+        case "scheduleName":
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">{cellValue}</p>
               <p className="text-bold text-sm capitalize text-default-400">
-                {groupAll.group_code}
+                {data.groupCode}
               </p>
             </div>
           );
 
-        case "actions":
+        case "edit":
           return (
             <div
               className="flex items-center gap-10"
@@ -156,37 +142,37 @@ const TableListGroup: React.FC<TableProps> = ({
                 placeSelf: "center",
               }}
             >
-              <ButtonModelControl
-                groupName={groupAll.group_name}
-                groupCode={groupAll.group_code}
-                onDetail={onDetailGroup}
-                onReloadLatLong={onReloadLatLong}
-                onSendCommand={onSendCommand}
-              />
+              <ButtonModelEditAddSchedule type="edit"></ButtonModelEditAddSchedule>
+            </div>
+          );
 
-              <ButtonModelListImsi
-                groupName={groupAll.group_name}
-                groupCode={groupAll.group_code}
-                onDetail={onDetailGroup}
-                onAddImsiGroup={onAddImsiGroup}
-                onDataImsiAll={onDataImsiAll}
-                onDeleteImsiInGroup={onDeleteImsiInGroup}
-                onSaveDataDevice={onSaveDataDevice}
-              />
+        case "response":
+          return (
+            <div
+              className="flex items-center gap-10"
+              style={{
+                placeSelf: "center",
+              }}
+            >
+              <ButtonModelResponseSchedule type=""></ButtonModelResponseSchedule>
+            </div>
+          );
 
-              <ButtonModelDelete
-                groupName={groupAll.group_name}
-                groupCode={groupAll.group_code}
-                onSendData={onDeleteGroup}
-              />
-
-             
+        case "delete":
+          return (
+            <div
+              className="flex items-center gap-10"
+              style={{
+                placeSelf: "center",
+              }}
+            >
+              <ButtonModelDeleteSchedule groupName={data.scheduleName} groupCode={data.groupCode} onSendData={onSendDataDelete}></ButtonModelDeleteSchedule>
             </div>
           );
 
         default:
-            //setIsLoaded(true)
-            return cellValue;
+          //setIsLoaded(true)
+          return cellValue;
       }
     },
     []
@@ -229,8 +215,9 @@ const TableListGroup: React.FC<TableProps> = ({
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
+        <div className="flex justify-between gap-3 ">
           <Input
+            size="md"
             isClearable
             className="w-full sm:max-w-[44%]"
             placeholder={t(`search-by-group`)}
@@ -239,13 +226,14 @@ const TableListGroup: React.FC<TableProps> = ({
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
-            <ButtonModalAddGroup onSendData={onAddGroup}></ButtonModalAddGroup>
+          <div className="flex gap-3 self-end">
+          <ButtonModelEditAddSchedule type="add"></ButtonModelEditAddSchedule>
+            {/* <ButtonModalAddGroup onSendData={onAddGroup}></ButtonModalAddGroup> */}
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            {t(`total-group`)} {listGroup.length}
+            {t(`total-group`)} {listSchedule.length}
           </span>
           <label className="flex items-center text-default-400 text-small">
             {t(`rows-per-page`)}
@@ -267,7 +255,7 @@ const TableListGroup: React.FC<TableProps> = ({
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    listGroup.length,
+    listSchedule.length,
     hasSearchFilter,
   ]);
 
@@ -338,16 +326,20 @@ const TableListGroup: React.FC<TableProps> = ({
               {(column) => (
                 <TableColumn
                   key={column.uid}
-                  align={column.uid === "actions" ? "center" : "start"}
+                  align={column.align === "start" ? "start" : "center"}
                   allowsSorting={column.sortable}
                 >
                   {column.name}
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody emptyContent={t(`no-group-found`)} items={sortedItems}>
+            <TableBody 
+              isLoading={loading}
+              loadingContent={<Progress isIndeterminate aria-label="Loading..." className="w-full mt-auto" size="sm" />}
+              emptyContent={t(`no-group-found`)} 
+              items={sortedItems}>
               {(item) => (
-                <TableRow key={item.group_code}>
+                <TableRow key={item.groupCode}>
                   {(columnKey) => (
                     <TableCell>{renderCell(item, columnKey)}</TableCell>
                   )}
@@ -363,4 +355,4 @@ const TableListGroup: React.FC<TableProps> = ({
   );
 };
 
-export default TableListGroup;
+export default TableListSchedule;

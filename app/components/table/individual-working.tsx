@@ -117,7 +117,7 @@ const TableIndividualWorking: FC<TableProps> = ({ listLogDeviceUserControl , onL
 
         case "date":
           return (
-            <div className="flex flex-col">
+            <div className="min-w-40">
               {listDevice.date}  {listDevice.time}
             </div>
           );
@@ -190,12 +190,9 @@ const TableIndividualWorking: FC<TableProps> = ({ listLogDeviceUserControl , onL
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-2">
-        <div>
-          <Card className="col-span-12">
-            <CardBody className="grid grid-cols-3 gap-4">
+      <div>
+        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-2 m-2">
               <Autocomplete
-                className="col-span-1"
                 label={t(`search-day`)}
                 placeholder={t(`select-day`)}
                 value={"1"}
@@ -208,7 +205,7 @@ const TableIndividualWorking: FC<TableProps> = ({ listLogDeviceUserControl , onL
                 <AutocompleteItem key={"30"}>{"30 "+ t(`day`)}</AutocompleteItem>
               </Autocomplete>
 
-              <div className="self-center col-span-2">
+              <div className="self-center">
                 <Input
                   isClearable
                   size="lg"
@@ -220,9 +217,6 @@ const TableIndividualWorking: FC<TableProps> = ({ listLogDeviceUserControl , onL
                   onValueChange={onSearchChange}
                 />
               </div>
-              
-            </CardBody>
-          </Card>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">

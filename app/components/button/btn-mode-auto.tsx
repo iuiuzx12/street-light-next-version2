@@ -26,7 +26,6 @@ const ButtonModeAuto: React.FC<Props> = ({ deviceId , typeMode , using }) => {
   const handleOpenDetail = async () => {
     setLoading(false)
     setSuccess("")
-    console.log(selected)
     onOpen();
   };
 

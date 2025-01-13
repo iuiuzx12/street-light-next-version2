@@ -157,7 +157,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
                 labelPlacement="outside-left"
                 type="text"
                 defaultValue={cellValue}
-                className="max-w-xs"
+                className="min-w-40"
               />
             </div>
           );
@@ -173,7 +173,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
                 labelPlacement="outside-left"
                 type="text"
                 defaultValue={cellValue}
-                className="max-w-80"
+                className="min-w-20"
               />
             </div>
           );
@@ -191,7 +191,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
                   min={0}
                   step={0.01}
                   defaultValue={cellValue}
-                  className="max-w-xs"
+                  className="min-w-20"
                 />
               </div>
             );
@@ -209,7 +209,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
                 min={0}
                 step={0.01}
                 defaultValue={cellValue}
-                className="max-w-xs"
+                className="min-w-20"
               />
             </div>
           );
@@ -348,57 +348,45 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-2">
-        <div >
-          <Card className="col-span-12">
-            <CardBody className="grid grid-cols-12 gap-10">
-              <div className="col-span-12 md:col-span-5">
-                <Autocomplete
-                
-                  label={t(`search-imsi`)}
-                  placeholder={t(`select-imsi`)}
-                  //className="max-w-xs"
-                  value={dataSearchImsi}
-                  onInputChange={handleInputChange}
-                >
-                  {onDataImsiAll.map((data: any) => (
-                    <AutocompleteItem key={data.key}>
-                      {data.value}
-                    </AutocompleteItem>
-                  ))}
-                </Autocomplete>
-              </div>
+      <div>
+        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 grid-rows-3 md:grid-rows-1 gap-2 m-2">
+          
 
-              <div className="col-span-6 md:col-span-2 self-center">
-             
-                {groupName === "ALL" ? "" : <Button 
-                  aria-label="add imsi"
-                  size="md" 
-                  isLoading={isAddDeviceLoading}
-                  className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15" 
-                  onClick={() => handleSend()}>
-                  {t(`add-imsi`)}
-                  <Icon icon="lucide:plus" width="auto" height="auto" />
-                </Button>
-                }
-                
-                
+          <Autocomplete
+            label={t(`search-imsi`)}
+            placeholder={t(`select-imsi`)}
+            //className="max-w-xs"
+            value={dataSearchImsi}
+            onInputChange={handleInputChange}
+          >
+            {onDataImsiAll.map((data: any) => (
+              <AutocompleteItem key={data.key}>{data.value}</AutocompleteItem>
+            ))}
+          </Autocomplete>
 
-              </div>
+          <Button
+            isDisabled={groupName === "ALL" ? true : false}
+            aria-label="add imsi"
+            size="lg"
+            isLoading={isAddDeviceLoading}
+            className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15 self-center"
+            onClick={() => handleSend()}
+          >
+            {t(`add-imsi`)}
+            <Icon icon="lucide:plus" width="auto" height="auto" />
+          </Button>
 
-              <div className="col-span-6 md:col-span-5 self-center">
-                <Input
-                  isClearable
-                  className="w-full sm:max-w-[100%]"
-                  placeholder={t(`search-by-name-imsi`)}
-                  startContent={<Search />}
-                  value={filterValue}
-                  onClear={() => onClear()}
-                  onValueChange={onSearchChange}
-                />
-              </div>
-            </CardBody>
-          </Card>
+          <Input
+            isClearable
+            size="lg"
+            className="w-full sm:max-w-[100%] self-center"
+            placeholder={t(`search-by-name-imsi`)}
+            startContent={<Search />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">

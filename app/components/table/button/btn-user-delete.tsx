@@ -31,7 +31,6 @@ const ButtonModalUserDelete: React.FC<ButtonProps> = ({ userId, onDelete }) => {
       <div className="flex flex-wrap gap-3">
         <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
           <Trash2 width="25px" height="25px" />}>
-          {t(`btn-delete-user`)}
         </Button>
       </div>
       <Modal 

@@ -18,9 +18,15 @@ import {
   CardBody,
   Autocomplete,
   AutocompleteItem,
-  Switch
+  Switch,
+  Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Spinner,
+  Progress
 } from "@nextui-org/react";
-import {MoonIcon, Search, SunIcon ,PowerOff, Power} from 'lucide-react';
+import {MousePointerClick, Search,} from 'lucide-react';
 
 import { ListGroupAll } from "@/app/interface/control";
 import { useTranslations } from "next-intl";
@@ -53,6 +59,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 interface TableProps {
     listGroup: ListGroupAll[];
+    loading: boolean;
     listDevice: ListDeviceInGroup[];
     onListDevice: (dataGroupName: string) => Promise<ListDeviceInGroup[]>;
     onListLogDevice: (deviceId: string , day : string) => Promise<ListLogDevice>;
@@ -61,6 +68,7 @@ interface TableProps {
 
 const TableListDevice: React.FC<TableProps> = ({
   listGroup,
+  loading,
   listDevice,
   onListDevice,
   onListLogDevice,
@@ -82,10 +90,9 @@ const TableListDevice: React.FC<TableProps> = ({
   });
 
   const [page, setPage] = React.useState(1);
-  const [isLoaded, setIsLoaded] = React.useState(true);
   const t = useTranslations("ControlIndividual");
   const [dataSearchGroup, setdataSearchGroup] = useState<string>("ALL");
-
+  
   const columns = [
     //{ name: t(`group`), uid: "imeI_Name", sortable: true },
     { name: t(`street-light-name`), uid: "streetLightName", sortable: true , align : "start" },
@@ -135,6 +142,7 @@ const TableListDevice: React.FC<TableProps> = ({
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
+    
     return [...items].sort((a: ListDeviceInGroup, b: ListDeviceInGroup) => {
       const first = a[sortDescriptor.column as keyof ListDeviceInGroup] as string;
       const second = b[sortDescriptor.column as keyof ListDeviceInGroup] as string;
@@ -150,7 +158,6 @@ const TableListDevice: React.FC<TableProps> = ({
     (deviceAll: ListDeviceInGroup, columnKey: React.Key) => {
         
       const cellValue = deviceAll[columnKey as keyof ListDeviceInGroup];
-
       switch (columnKey) {
         case "streetLightName":
           return (
@@ -165,17 +172,27 @@ const TableListDevice: React.FC<TableProps> = ({
           );
 
         case "streetLightGroups":
-          var ff : any = cellValue;
-          ff.forEach((element : any) => {
-            
-          });
+          
+          var dataGroup: any = cellValue;
+          var newView = (
+            <Popover placement="right">
+              <PopoverTrigger>
+                <Button className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15 self-center" isIconOnly> <MousePointerClick/></Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="px-1 py-2">
+                  <div className="text-small font-bold">{t(`group-name`)}</div>
+                  {dataGroup.map((element: any) => (
+                    <div key={Math.random()} className="text-tiny">{element}</div >
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          );
+
           return (
             <div className="flex flex-col">
-              
-              <p className="text-bold text-sm capitalize">
-                {cellValue}
-              </p>
-             
+              {newView}
             </div>
           );
         case "lastPower":
@@ -183,7 +200,11 @@ const TableListDevice: React.FC<TableProps> = ({
           return (
             <ButtonIndividualPower gatewayId={deviceAll.gatewayId} deviceId={deviceAll.imeI_Name} watt={deviceAll.lastPower}></ButtonIndividualPower>
           );
-
+        case "lifeTime":
+         
+          return (
+            <h1>{ parseInt(deviceAll.lifeTime) <= 999 ? deviceAll.lifeTime : deviceAll.lifeTime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }</h1>
+          );
         case "command":
           var arrayCommand : any = deviceAll.streetLightCommand!; 
           return (
@@ -231,7 +252,6 @@ const TableListDevice: React.FC<TableProps> = ({
           );
 
         default:
-          //setIsLoaded(true)
           return cellValue;
       }
     },
@@ -268,10 +288,7 @@ const TableListDevice: React.FC<TableProps> = ({
   }, []);
 
   const handleInputChange = async (newValue: string) => {
-    //setdataSearchGroup(newValue); 
     onListDevice(newValue)
-    //console.log(newValue)
-    //setFilterValue(newValue);
   };
 
   const onClear = React.useCallback(() => {
@@ -378,52 +395,60 @@ const TableListDevice: React.FC<TableProps> = ({
   return (
     <Card className="m-1">
       <CardBody className="overflow-visible p-2 h-[calc(100vh-70px)]">
-        <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
-
-          <Table
-            isStriped
-            layout="auto"
-            //fullWidth={false}
-            aria-label="Example table with custom cells, pagination and sorting"
-            isHeaderSticky
-            bottomContent={bottomContent}
-            bottomContentPlacement="outside"
-            classNames={{
-              wrapper: "h-[calc(100vh-250px)]",
+        <div className="flex w-full flex-col">
+          <div className="grid grid-cols-12 gap-2">
+           
+            <Table
               
-            }}
-            selectedKeys={selectedKeys}
-            sortDescriptor={sortDescriptor}
-            topContent={topContent}
-            topContentPlacement="outside"
-            onSelectionChange={setSelectedKeys}
-            onSortChange={setSortDescriptor}
-          >
-            <TableHeader columns={headerColumns}>
-              {(column) => (
-                <TableColumn
-                  minWidth={100}
-                  key={column.uid}
-                  align={column.align === "start" ? "start" : "center"}
-                  allowsSorting={column.sortable}
-
-                >
-                  {column.name}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody emptyContent={t(`device-not-found`)} items={sortedItems}>
-              {(item) => (
-                <TableRow key={item.imeI_Name} >
-                  {(columnKey) => (
-                    <TableCell >{renderCell(item, columnKey)}</TableCell>
+                className="col-span-full"
+                radius="none"
+                shadow="none"
+                isStriped
+                layout="auto"
+                aria-label="Example table with custom cells, pagination and sorting"
+                isHeaderSticky
+                bottomContent={bottomContent}
+                bottomContentPlacement="outside"
+                classNames={{
+                  wrapper: "h-[calc(100vh-250px)]",
+                }}
+                selectedKeys={selectedKeys}
+                sortDescriptor={sortDescriptor}
+                topContent={topContent}
+                topContentPlacement="outside"
+                onSelectionChange={setSelectedKeys}
+                onSortChange={setSortDescriptor}
+              >
+                <TableHeader columns={headerColumns}>
+                  {(column) => (
+                    <TableColumn
+                      key={column.uid}
+                      align={column.align === "start" ? "start" : "center"}
+                      allowsSorting={column.sortable}
+                    >
+                      {column.name}
+                    </TableColumn>
                   )}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          
-        </Skeleton>
+                </TableHeader>
+                <TableBody
+                  isLoading={loading}
+                  loadingContent={<Progress isIndeterminate aria-label="Loading..." className="w-full mt-auto" size="sm" />}
+                  emptyContent={t(`device-not-found`)}
+                  items={sortedItems}
+                >
+                  
+                  {(item) => (
+                    <TableRow key={item.imeI_Name}>
+                      {(columnKey) => (
+                        
+                        <TableCell>{renderCell(item, columnKey)}</TableCell>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+          </div>
+        </div>
       </CardBody>
     </Card>
   );
