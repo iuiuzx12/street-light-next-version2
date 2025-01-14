@@ -37,7 +37,7 @@ export default function dashboardPeriod() {
 
   return (
     <div className="w-full h-auto p-1">
-      <TableListSchedule listSchedule={dataListSchedule} loading={loading}></TableListSchedule>
+      <TableListSchedule listSchedule={dataListSchedule} loading={loading} onSendDataDelete={fetchListSchedule}></TableListSchedule>
     </div>
   );
 }

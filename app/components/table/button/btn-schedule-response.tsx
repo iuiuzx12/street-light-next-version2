@@ -15,6 +15,7 @@ import {
   TableCell,
   getKeyValue,
   Table,
+  Input,
 } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { ListChecks, X } from "lucide-react";
@@ -31,137 +32,50 @@ const ButtonModelResponseSchedule: React.FC<Props> = ({ type }) => {
     onOpen();
   };
 
-  const handleAddData = () => {
-    setRows( [ {
-      key: "1",
-      name: "Tony Reichert",
-      role: "CEO",
-      status: "Active",
-    },
-    {
-      key: "2",
-      name: "Zoey Lang",
-      role: "Technical Lead",
-      status: "Paused",
-    },
-    {
-      key: "3",
-      name: "Jane Fisher",
-      role: "Senior Developer",
-      status: "Active",
-    },
-    {
-      key: "4",
-      name: "William Howard",
-      role: "Community Manager",
-      status: "Vacation",
-    },])
+  const handleSave = () => {
+     console.log(data)
   };
 
-  
 
-  const [rows, setRows] = useState<Array<Group>>([]);
-
-  const confirmDelete = useCallback( (data : string) => {
-    //setLoadingDelete(true);
-    //setLoadingDelete(true);
-    //let result = onSendData(groupName, groupCode)
-    //if(result! == true){
-    //    setLoadingDelete(false)
-    //    onClose()
-    //}
-    console.log(rows)
-
-    const updatedListGroup = rows.filter((item : Group) => item.key !== data);
-    setRows(updatedListGroup);
-  }, [rows]);
-
-  const rows2 = [
+  const initialData = [
     {
-      key: "1",
-      name: "Tony Reichert",
-      role: "CEO",
-      status: "Active",
+      id: 1,
+      A: "Data A1",
+      B: "Data B1",
+      C: "Data C1",
+      D: "Data D1",
+      F: "Data F1",
     },
     {
-      key: "2",
-      name: "Zoey Lang",
-      role: "Technical Lead",
-      status: "Paused",
+      id: 2,
+      A: "Data A2",
+      B: "Data B2",
+      C: "Data C2",
+      D: "Data D2",
+      F: "Data F2",
     },
     {
-      key: "3",
-      name: "Jane Fisher",
-      role: "Senior Developer",
-      status: "Active",
-    },
-    {
-      key: "4",
-      name: "William Howard",
-      role: "Community Manager",
-      status: "Vacation",
+      id: 3,
+      A: "Data A3",
+      B: "Data B3",
+      C: "Data C3",
+      D: "Data D3",
+      F: "Data F3",
     },
   ];
 
-  type Group = {
-    key: string;
-    name: string;
-    status: string;
-    role: string;
+  // สร้าง state สำหรับจัดการข้อมูล
+  const [data, setData] = useState(initialData);
+
+  const handleInputChange = (id: number, field: string, value: string) => {
+    setData((prevData) =>
+      prevData.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+    );
   };
 
-  const columns = [
-    {
-      key: "name",
-      label: "NAME",
-    },
-    {
-      key: "role",
-      label: "ROLE",
-    },
-    {
-      key: "status",
-      label: "STATUS",
-    },
-    {
-      key: "key",
-      label: "STATUS",
-    },
-  ];
-
-  const renderCellGroup = React.useCallback(
-    
-    (groupAll: Group, columnKey: React.Key) => {
-        
-      const cellValue = groupAll[columnKey as keyof Group];
-
-      switch (columnKey) {
-        case "name":
-          return (
-            <div className="flex flex-col h-10">
-              <p className="text-bold h-10 text-sm capitalize">{cellValue}</p>
-            </div>
-          );
-
-        case "key":
-          return (
-            <div
-              className="flex items-center gap-10"
-              style={{
-                placeSelf: "center",
-              }}
-            >
-             <Button className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg" size="sm" isIconOnly onClick={() => confirmDelete(cellValue)}> <X/> </Button>
-            </div>
-          );
-
-        default:
-            //setIsLoaded(true)
-            return cellValue;
-      }
-    },
-    [rows]
-  );
+  const handleDeleteRow = (id: number) => {
+    setData((prevData) => prevData.filter((row) => row.id !== id));
+  };
 
   return (
     <>
@@ -185,38 +99,42 @@ const ButtonModelResponseSchedule: React.FC<Props> = ({ type }) => {
                 {t(`delete`)}
               </ModalHeader>
               <ModalBody>
-              <div className="grid grid-flow-row auto-rows-max gap-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <Table 
-                  classNames={{
-                    wrapper: "h-[calc(100vh-510px)] md:h-[calc(100vh-590px)]",
-                  }}
-                  className="w-full" aria-label="Example table with dynamic content">
-                    <TableHeader columns={columns}>
-                      {(column) => (
-                        <TableColumn key={column.key}>
-                          {column.label}
-                        </TableColumn>
-                      )}
-                    </TableHeader>
-                    <TableBody items={rows}>
-                      {(item) => (
-                        <TableRow key={item.key}>
-                          {(columnKey) => (
+                <div className="grid grid-flow-row auto-rows-max gap-2">
+                  <div className="grid grid-cols-1 gap-2">
+                    <Table aria-label="Editable Table">
+                      <TableHeader>
+                        <TableColumn>A</TableColumn>
+                        <TableColumn>B</TableColumn>
+                        <TableColumn>C</TableColumn>
+                        <TableColumn>D</TableColumn>
+                        <TableColumn>F</TableColumn>
+                        <TableColumn>Actions</TableColumn>
+                      </TableHeader>
+                      <TableBody>
+                        {data.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell>{row.A}</TableCell>
+                            <TableCell>{row.B}</TableCell>
+                            <TableCell>{row.C}</TableCell>
                             <TableCell>
-                              {/* {getKeyValue(item, columnKey)} */}
-                              {renderCellGroup(item, columnKey)}
+                              <Input
+                                value={row.D}
+                                onChange={(e) =>
+                                  handleInputChange(row.id, "D", e.target.value)
+                                }
+                              />
                             </TableCell>
-                          )}
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-
-                <div>
-                  <Button onClick={handleAddData}></Button>
-                </div>
+                            <TableCell>{row.F}</TableCell>
+                            <TableCell>
+                              <Button onClick={() => handleDeleteRow(row.id)}>
+                                ลบ
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -232,7 +150,7 @@ const ButtonModelResponseSchedule: React.FC<Props> = ({ type }) => {
                   aria-label="yes"
                   isLoading={isLoadingDelete}
                   color="primary"
-                  //onPress={confirmDelete}
+                  onPress={handleSave}
                 >
                   {t(`yes`)}
                 </Button>
