@@ -25,7 +25,7 @@ export async function POST(req: Request, res: Response) {
     var token = cookies().get("token");
     const data = await req.json();
     const response = await fetch(
-      process.env.API_URL + "/StreetLight/settingScheduleMultiSensorLocal",
+      process.env.API_URL + "/StreetLight/setModeResend",
       {
         method: "POST",
         headers: {
@@ -37,7 +37,7 @@ export async function POST(req: Request, res: Response) {
     );
 
     const dataResponse = await response.json();
-    //console.log(dataResponse.dataReturn)
+    console.log(dataResponse.dataReturn)
     if (dataResponse.result === false) {
       return NextResponse.json("401", {
         status: 401,

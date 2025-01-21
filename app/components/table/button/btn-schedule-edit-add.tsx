@@ -24,23 +24,39 @@ import {
 } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Plus, Edit, Delete, Group, X } from "lucide-react";
+import { ListSchedule, SaveSchedule } from "@/app/interface/schedule";
+import { ListGroupAll } from "@/app/interface/control";
 interface Props {
   type: string;
+  dataDetail: ListSchedule | null;
+  dataListGroup: () => Promise<ListGroupAll[]>;
+  onSaveData: (data: SaveSchedule) => void;
 }
 
-const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
-
-  let listGroup = [
-    { code: "C1", name: "CatCatCatCatCatCatCa 14" },
-    { code: "D1", name: "Dog 13" },
-    { code: "F1", name: "Fog 12 FF" },
-    { code: "G1", name: "Goggggggggggggggggggg-GG 33" },
-  ];
+const ButtonModelEditAddSchedule: React.FC<Props> = ({
+  type,
+  dataDetail,
+  dataListGroup,
+  onSaveData,
+}) => {
+  const [listGroup, setListGroup] = useState<{ name: string; code: string }[]>(
+    []
+  );
+  const t = useTranslations("ControlSchedule");
+  const handleOpenEdit = async () => {
+    const getDataListGroup = await dataListGroup();
+    const listGroup = (getDataListGroup ?? []).map((data, index) => ({
+      name: data.group_name,
+      code: data.group_code,
+    }));
+    setListGroup(listGroup);
+    onOpen();
+  };
 
   const listType = [
-    { code: "1", name: "Time" },
-    { code: "2", name: "Daylight" },
-    { code: "3", name: "Manual" },
+    { code: "time", name: t(`time`) },
+    { code: "light", name: t(`light`) },
+    { code: "manual", name: t(`manual`) },
   ];
 
   type Time = {
@@ -61,34 +77,90 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
     name: string;
   };
 
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const t = useTranslations("ControlGroup");
-  const [selectedDay, setSelectedDay] = React.useState(["mon", "tue", "wed" ,"thu" ,"fri" ,"sat" , "sun"]);
-  const [nameSchedule, setNameSchedule] = React.useState("");
-  const [rowsNull, setRowsNull] = useState<Array<any>>([]);
-  const [selectedType, setSelectedType] = useState("time");
-  const [rowsGroup, setRowsGroup] = useState<Array<Group>>([]);
-  const [rowsTime, setRowsTime] = useState<Array<Time>>([]);
-  const [rowsDaylight, setRowsDaylight] = useState<Array<Daylight>>([
-    {
-      key: "1",
-      command: "open",
-      lux: "0",
-      percent: "100",
-    },
-    {
-      key: "2",
-      command: "close",
-      lux: "4000",
-      percent: "0",
-    },
-  ]);
-
-  const handleOpenDelete = () => {
-    onOpen();
-  };
   
+  const [selectedDay, setSelectedDay] = React.useState(
+    dataDetail?.listDays ?? ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+  );
+  const [nameSchedule, setNameSchedule] = React.useState(
+    dataDetail?.scheduleName ?? ""
+  );
+  const [rowsNull, setRowsNull] = useState<Array<any>>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const [selectedType, setSelectedType] = useState(
+    dataDetail?.typeSchedule ?? ""
+  );
+  const [codeName, setCodeName] = useState(dataDetail?.groupCode ?? "new");
+  const [rowsGroup, setRowsGroup] = useState<Array<Group>>(
+    (dataDetail?.dataGroupCode ?? []).map((code, index) => ({
+      code: code,
+      name: dataDetail?.dataGroupName[index] || "",
+    }))
+  );
+  const [rowsTime, setRowsTime] = useState<Array<Time>>(
+    (dataDetail?.listScenes ?? []).map((scene: any, index) => ({
+      key: (index + 1).toString(),
+      time: scene.time,
+      dim: scene.dim,
+    }))
+  );
+  const [rowsDaylight, setRowsDaylight] = useState<Array<Daylight>>(
+    dataDetail?.listScenes && dataDetail.listScenes.length > 0
+      ? [
+          {
+            key: "1",
+            command: "open",
+            lux: dataDetail?.listScenes[0].open_volt,
+            percent: dataDetail?.listScenes[0].open_time,
+          },
+          {
+            key: "2",
+            command: "close",
+            lux: dataDetail?.listScenes[0].close_volt,
+            percent: dataDetail?.listScenes[0].close_time,
+          },
+        ]
+      : [
+          {
+            key: "1",
+            command: "open",
+            lux: "300",
+            percent: "100",
+          },
+          {
+            key: "2",
+            command: "close",
+            lux: "3900",
+            percent: "0",
+          },
+        ]
+  );
+
+  const isFormValid = useCallback(() => {
+    switch (selectedType) {
+      case "time":
+        return (
+          nameSchedule == "" ||
+          selectedDay.length == 0 ||
+          rowsTime.length == 0 ||
+          rowsGroup.length == 0
+        );
+
+      case "light":
+        return (
+          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0
+        );
+
+      case "manual":
+        return (
+          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0
+        );
+
+      default:
+        return true;
+    }
+  }, [selectedType, nameSchedule, rowsTime, rowsGroup, selectedDay]);
 
   const handleInputGroupChange = useCallback(
     async (newValue: Key | null) => {
@@ -106,7 +178,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
         setRowsGroup((prevRows) => [...prevRows, rowsGroupNew]);
       }
     },
-    [rowsGroup]
+    [rowsGroup, listGroup, dataListGroup]
   );
 
   const handleAddTime = useCallback(async () => {
@@ -126,7 +198,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
     (key: string, value: string) => {
       const index = rowsTime.findIndex((item) => item["key"] === key);
       rowsTime[index] = { ...rowsTime[index], ["time"]: value };
-      setRowsTime(rowsTime)
+      setRowsTime(rowsTime);
     },
     [rowsTime]
   );
@@ -142,9 +214,11 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
   );
 
   const handleChangeDimSetDaylight = useCallback(
-    (key: string , command : string , value: any) => {
+    (key: string, command: string, value: any) => {
       const updatedDim = rowsDaylight.map((item) =>
-        item.key === key && item.command === command ? { ...item, percent: value.toString() } : item
+        item.key === key && item.command === command
+          ? { ...item, percent: value.toString() }
+          : item
       );
       setRowsDaylight(updatedDim);
     },
@@ -152,34 +226,81 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
   );
 
   const handleChangeLuxSetDaylight = useCallback(
-    (key: string , command : string , value: any) => {
+    (key: string, command: string, value: any) => {
       const updatedDim = rowsDaylight.map((item) =>
-        item.key === key && item.command === command ? { ...item, lux: value.toString() } : item
+        item.key === key && item.command === command
+          ? { ...item, lux: value.toString() }
+          : item
       );
       setRowsDaylight(updatedDim);
     },
     [rowsDaylight]
   );
 
-  const handleSave = useCallback(() => {
-    console.log(rowsGroup);
-    console.log(rowsTime);
-    console.log(rowsDaylight);
-    console.log(selectedDay)
-    console.log(nameSchedule)
-  }, [rowsTime, rowsGroup, rowsDaylight, selectedDay, nameSchedule]);
+  const handleSave = useCallback(async () => {
+    setLoading(true);
+    //console.log(rowsGroup);
+    //console.log(rowsTime);
+    //console.log(rowsDaylight);
+    //console.log(selectedDay);
+    //console.log(nameSchedule);
+    //console.log(selectedType);
+
+    const resultGroupNameCode = rowsGroup.map(
+      (item) => `${item.name.trim()}$${item.code}`
+    );
+    const resultTime = rowsTime.map(({ key, ...rest }) => rest);
+    //open_volt = lux
+    //open_time = dim
+    const transformedDataDayLight = {
+      open_volt:
+        rowsDaylight.find((item) => item.command === "open")?.lux ?? "0",
+      open_time:
+        rowsDaylight.find((item) => item.command === "open")?.percent ?? "0",
+      close_volt:
+        rowsDaylight.find((item) => item.command === "close")?.lux ?? "0",
+      close_time:
+        rowsDaylight.find((item) => item.command === "close")?.percent ?? "0",
+    };
+
+    //console.log(transformedDataDayLight);
+
+    let save = await onSaveData({
+      code_name: codeName,
+      list_days: JSON.stringify(selectedDay),
+      list_group_name_code: JSON.stringify(resultGroupNameCode),
+      list_scenes_light:
+        selectedType == "time"
+          ? JSON.stringify(resultTime)
+          : selectedType == "light"
+          ? JSON.stringify(transformedDataDayLight)
+          : "[]",
+      name_schedule: nameSchedule,
+      type_schedule: selectedType,
+      type_set: "group",
+      version_light_sensor: "1",
+    });
+    if (save! == true) {
+      setLoading(false);
+      onClose();
+    } else {
+      setLoading(false);
+    }
+  }, [
+    rowsTime,
+    rowsGroup,
+    rowsDaylight,
+    selectedDay,
+    nameSchedule,
+    selectedType,
+  ]);
 
   const handleChangeType = useCallback(
     (e: any) => {
-      setSelectedType(
-        e.target.value == "1" ? "time"
-          : e.target.value == "2" ? "daylight" 
-          : e.target.value == "3" ? "manual" 
-          : "notSet"
-      );
-
+      setSelectedType(e.target.value);
     },
-    [selectedType, rowsGroup, rowsTime]
+    [rowsDaylight, rowsTime]
+    //[listGroup, dataListGroup]
   );
 
   const handleDeleteGroup = useCallback(
@@ -199,7 +320,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
     },
     [rowsTime]
   );
-  
+
   return (
     <>
       <Button
@@ -208,9 +329,9 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
         size="md"
         radius={type === "edit" ? "md" : "md"}
         className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
-        onClick={() => handleOpenDelete()}
+        onClick={() => handleOpenEdit()}
       >
-        {type === "edit" ? "" : t(`delete`)}
+        {type === "edit" ? "" : t(`add`)}
         {type === "edit" ? <Edit /> : <Plus />}
       </Button>
 
@@ -219,7 +340,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
           {(onCloseDelete) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {"Add Schedule"}
+                {t(`add`)}
               </ModalHeader>
               <ModalBody>
                 <div className="grid grid-flow-row auto-rows-max gap-2">
@@ -228,9 +349,9 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                       className="w-full"
                       onValueChange={setNameSchedule}
                       value={nameSchedule}
-                      errorMessage="Please enter a valid Name"
+                      errorMessage={t(`error-valid-name`)}
                       isInvalid={nameSchedule == "" ? true : false}
-                      label="Name Schedule"
+                      label={t(`setting-name`)}
                       type="text"
                       variant="bordered"
                     />
@@ -239,8 +360,10 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                       className="w-full"
                       onChange={(e) => handleChangeType(e)}
                       items={listType}
-                      label="List Type"
-                      placeholder="Select an Type"
+                      label={t(`select-type`)}
+                      isInvalid={selectedType == "" ? true : false}
+                      placeholder={t(`error-select-type`)}
+                      defaultSelectedKeys={[selectedType]}
                     >
                       {(type) => (
                         <SelectItem value={type.name} key={type.code}>
@@ -254,26 +377,29 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                     color="success"
                     onValueChange={setSelectedDay}
                     value={selectedDay}
-                    label="Select Day"
+                    isInvalid={selectedDay.length == 0 ? true : false}
+                    label={t(`select-day`)}
                     orientation="horizontal"
                   >
-                    <Checkbox value="mon">MON</Checkbox>
-                    <Checkbox value="tue">TUE</Checkbox>
-                    <Checkbox value="wed">WED</Checkbox>
-                    <Checkbox value="thu">THU</Checkbox>
-                    <Checkbox value="fri">FRI</Checkbox>
-                    <Checkbox value="sat">SAT</Checkbox>
-                    <Checkbox value="sun">SUN</Checkbox>
+                    <Checkbox value="mon">{t(`mon`)}</Checkbox>
+                    <Checkbox value="tue">{t(`tue`)}</Checkbox>
+                    <Checkbox value="wed">{t(`wed`)}</Checkbox>
+                    <Checkbox value="thu">{t(`thu`)}</Checkbox>
+                    <Checkbox value="fri">{t(`fri`)}</Checkbox>
+                    <Checkbox value="sat">{t(`sat`)}</Checkbox>
+                    <Checkbox value="sun">{t(`sun`)}</Checkbox>
                   </CheckboxGroup>
 
                   <div className="grid grid-cols-2 gap-2 items-center">
                     <Autocomplete
                       className="w-full"
                       size="md"
+                      isLoading={listGroup.length == 0 ? true : false}
+                      isInvalid={rowsGroup.length == 0 ? true : false}
                       defaultItems={listGroup}
                       onSelectionChange={handleInputGroupChange}
-                      label="Favorite Animal"
-                      placeholder="Search an animal"
+                      label={t(`select-group`)}
+                      placeholder={t(`search-group`)}
                     >
                       {(animal) => (
                         <AutocompleteItem key={animal.code}>
@@ -287,12 +413,11 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                       size="lg"
                       className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
                     >
-                      เพิ่มงาน
+                      {t(`add-task`)}
                     </Button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
-
                     <Table
                       layout="auto"
                       aria-label="table select group"
@@ -305,13 +430,13 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                       }}
                     >
                       <TableHeader>
-                        <TableColumn align="start">Name</TableColumn>
-                        <TableColumn align="center">X</TableColumn>
+                        <TableColumn align="start">{t(`name`)}</TableColumn>
+                        <TableColumn align="center">{t(`delete-row`)}</TableColumn>
                       </TableHeader>
-                      <TableBody emptyContent={t(`no-device-found`)}>
+                      <TableBody emptyContent={t(`no-group-found`)}>
                         {rowsGroup.map((row) => (
                           <TableRow key={row.code}>
-                            <TableCell className="">{row.name}</TableCell>
+                            <TableCell>{row.name}</TableCell>
                             <TableCell>
                               <Button
                                 size="sm"
@@ -333,7 +458,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                           return (
                             <Table
                               layout="auto"
-                              aria-label="table select group"
+                              aria-label="table select Time"
                               className="w-full"
                               isHeaderSticky
                               isStriped
@@ -343,13 +468,13 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                               }}
                             >
                               <TableHeader>
-                                <TableColumn className="min-w-32" align="start">
-                                  DD
+                                <TableColumn className="min-w-10" align="start">
+                                  {t(`time`)}
                                 </TableColumn>
-                                <TableColumn align="start">D2</TableColumn>
-                                <TableColumn align="center">FF</TableColumn>
+                                <TableColumn align="start">{t(`dim`)}</TableColumn>
+                                <TableColumn align="center">{t(`delete-row`)}</TableColumn>
                               </TableHeader>
-                              <TableBody emptyContent={t(`no-device-found`)}>
+                              <TableBody emptyContent={t(`no-time-found`)}>
                                 {rowsTime.map((row) => (
                                   <TableRow key={row.key}>
                                     <TableCell className="flex flex-col">
@@ -370,7 +495,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                                     <TableCell className="">
                                       <Slider
                                         className="min-w-16"
-                                        defaultValue={0}
+                                        defaultValue={parseInt(row.dim)}
                                         step={5}
                                         onChange={(value) =>
                                           handleChangeDim(row.key, value)
@@ -400,11 +525,11 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                             </Table>
                           );
 
-                        case "daylight":
+                        case "light":
                           return (
                             <Table
                               layout="auto"
-                              aria-label="table select group"
+                              aria-label="table select light"
                               className="w-full"
                               isHeaderSticky
                               isStriped
@@ -414,45 +539,52 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                               }}
                             >
                               <TableHeader>
-                                <TableColumn align="start">CC</TableColumn>
-                                <TableColumn align="start">GG</TableColumn>
-                                <TableColumn align="center">FF</TableColumn>
+                                <TableColumn align="start">{t(`command`)}</TableColumn>
+                                <TableColumn align="start">{t(`lux`)}</TableColumn>
+                                <TableColumn align="center">{t(`dim`)}</TableColumn>
                               </TableHeader>
                               <TableBody>
                                 {rowsDaylight.map((row) => (
                                   <TableRow key={row.key}>
-                                    <TableCell >
-                                      {row.command}
-                                    </TableCell>
-                                    <TableCell >
-                                     
+                                    <TableCell>{t(row.command)}</TableCell>
+                                    <TableCell>
                                       <Slider
                                         className="min-w-16"
-                                        defaultValue={0}
+                                        defaultValue={parseInt(row.lux)}
                                         step={100}
                                         onChange={(value) =>
-                                          handleChangeLuxSetDaylight(row.key , row.command, value)
+                                          handleChangeLuxSetDaylight(
+                                            row.key,
+                                            row.command,
+                                            value
+                                          )
                                         }
                                         minValue={0}
                                         maxValue={4000}
                                         showTooltip={true}
-                                        aria-label="Slider Time Dim"
+                                        aria-label="Slider Lux light"
                                         size="sm"
                                       />
                                     </TableCell>
-                                    <TableCell><Slider
+                                    <TableCell>
+                                      <Slider
                                         className="min-w-16"
-                                        defaultValue={0}
+                                        defaultValue={parseInt(row.percent)}
                                         step={5}
                                         onChange={(value) =>
-                                          handleChangeDimSetDaylight(row.key,row.command, value)
+                                          handleChangeDimSetDaylight(
+                                            row.key,
+                                            row.command,
+                                            value
+                                          )
                                         }
                                         minValue={0}
                                         maxValue={100}
                                         showTooltip={true}
-                                        aria-label="Slider Time Dim"
+                                        aria-label="Slider Dim light"
                                         size="sm"
-                                      /></TableCell>
+                                      />
+                                    </TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
@@ -463,7 +595,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                           return (
                             <Table
                               layout="fixed"
-                              aria-label="table select group"
+                              aria-label="table manual"
                               className="w-full"
                               isHeaderSticky
                               isStriped
@@ -474,10 +606,10 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                             >
                               <TableHeader>
                                 <TableColumn align="center">
-                                  ปิดเซ็นเซอร์ทั้งหมด
+                                  {t(`manual`)}
                                 </TableColumn>
                               </TableHeader>
-                              <TableBody emptyContent={t(`no-device-found`)}>
+                              <TableBody emptyContent={t(`manual`)}>
                                 {rowsNull.map((row) => (
                                   <TableRow key={row.key}>
                                     <TableCell className="">
@@ -485,15 +617,6 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                                     </TableCell>
                                     <TableCell className="">
                                       {row.dim}
-                                    </TableCell>
-                                    <TableCell>
-                                      <Button
-                                        onClick={() =>
-                                          handleDeleteTime(row.key)
-                                        }
-                                      >
-                                        ลบ
-                                      </Button>
                                     </TableCell>
                                   </TableRow>
                                 ))}
@@ -505,7 +628,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                           return (
                             <Table
                               layout="fixed"
-                              aria-label="table select group"
+                              aria-label="table notset"
                               className="w-full"
                               isHeaderSticky
                               isStriped
@@ -516,16 +639,13 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                             >
                               <TableHeader>
                                 <TableColumn align="center">
-                                  ไม่ได้เลือกการตั้งค่า
+                                {t(`no-setting-found`)}
                                 </TableColumn>
                               </TableHeader>
-                              <TableBody emptyContent={t(`no-device-found`)}>
-                              {rowsNull.map((row) => (
+                              <TableBody emptyContent={t(`no-setting-found`)}>
+                                {rowsNull.map((row) => (
                                   <TableRow key={row.key}>
-                                    <TableCell >
-                                      {row.time}
-                                    </TableCell>
-                                    
+                                    <TableCell>{row.time}</TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
@@ -533,16 +653,17 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({ type }) => {
                           );
                       }
                     })()}
-
                   </div>
                 </div>
               </ModalBody>
               <ModalFooter>
                 <Button
+                  isDisabled={isFormValid()}
+                  isLoading={isLoading}
                   className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg"
                   onPress={handleSave}
                 >
-                  Save
+                  {t(`save`)}
                 </Button>
               </ModalFooter>
             </>

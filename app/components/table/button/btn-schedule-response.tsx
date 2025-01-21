@@ -1,4 +1,4 @@
-import React, { Key, useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -7,128 +7,128 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Tooltip,
   TableHeader,
   TableColumn,
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Table,
-  Input,
+  Pagination,
 } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
-import { ListChecks, X } from "lucide-react";
+import { ListChecks } from "lucide-react";
+import { ListResponseSchedule } from "@/app/interface/schedule";
+import ButtonResend from "./btn-schedule-resend";
 interface Props {
   type: string;
+  groupCode: string;
+  listResponseSchedule : (groupCode : string) => Promise<ListResponseSchedule[]>;
+  resendCommad : (imsi: string , mode : string , lastUpdate : string) => Promise<string>;
 }
 
-const ButtonModelResponseSchedule: React.FC<Props> = ({ type }) => {
+const ButtonModelResponseSchedule: React.FC<Props> = ({ type , groupCode , listResponseSchedule , resendCommad  }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isLoadingDelete, setLoadingDelete] = useState(false);
-  const t = useTranslations("ControlGroup");
-
-  const handleOpenDelete = () => {
+  const t = useTranslations("ControlSchedule");
+  
+  const handleOpenResponse = async () => {
+    var listData = await listResponseSchedule(groupCode)
+    setData(listData)
     onOpen();
   };
 
-  const handleSave = () => {
-     console.log(data)
-  };
-
-
-  const initialData = [
-    {
-      id: 1,
-      A: "Data A1",
-      B: "Data B1",
-      C: "Data C1",
-      D: "Data D1",
-      F: "Data F1",
-    },
-    {
-      id: 2,
-      A: "Data A2",
-      B: "Data B2",
-      C: "Data C2",
-      D: "Data D2",
-      F: "Data F2",
-    },
-    {
-      id: 3,
-      A: "Data A3",
-      B: "Data B3",
-      C: "Data C3",
-      D: "Data D3",
-      F: "Data F3",
-    },
-  ];
-
-  // สร้าง state สำหรับจัดการข้อมูล
-  const [data, setData] = useState(initialData);
-
-  const handleInputChange = (id: number, field: string, value: string) => {
-    setData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+  const setResponse = async (imsi: string) => {
+    setData(prevData => 
+      prevData.map((row) => 
+        row.imsi === imsi ? { ...row, status : 'respone' } : row
+      )
     );
   };
 
-  const handleDeleteRow = (id: number) => {
-    setData((prevData) => prevData.filter((row) => row.id !== id));
+  const formattedDate = (timestamp: string): string => {
+    const date = new Date(parseInt(timestamp) * 1000); 
+  
+    return date.toLocaleString(t(`locale-string`), {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
   };
+
+  const [data, setData] = useState<ListResponseSchedule[]>([]);
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 8;
+  const pages = Math.ceil(data.length / rowsPerPage);
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return data.slice(start, end);
+  }, [page, data]);
 
   return (
     <>
       <Button
-        isLoading={isLoadingDelete}
         aria-label="Response Schedule"
         isIconOnly
         size="md"
         radius="md"
         className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-        onClick={() => handleOpenDelete()}
+        onClick={() => handleOpenResponse()}
       >
         <ListChecks />
       </Button>
 
-      <Modal size={"4xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           {(onCloseDelete) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                {t(`delete`)}
+              <ModalHeader className="flex flex-col gap-1 items-center">
+                {t(`response`)} : { data.filter(item => item.status === "respone").length } / {t(`not-response`)} : {data.filter(item => item.status === "wait response").length}
               </ModalHeader>
               <ModalBody>
                 <div className="grid grid-flow-row auto-rows-max gap-2">
                   <div className="grid grid-cols-1 gap-2">
-                    <Table aria-label="Editable Table">
+                    <Table 
+                      isStriped 
+                      aria-label="Response Table"
+                      bottomContentPlacement="outside"
+                      bottomContent={
+                        <div className="flex w-full justify-center">
+                          <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="secondary"
+                            page={page}
+                            total={pages}
+                            onChange={(page) => setPage(page)}
+                          />
+                        </div>
+                      }
+                      classNames={{
+                        wrapper: "h-[calc(100vh-420px)]",
+                      }}
+                      >
                       <TableHeader>
-                        <TableColumn>A</TableColumn>
-                        <TableColumn>B</TableColumn>
-                        <TableColumn>C</TableColumn>
-                        <TableColumn>D</TableColumn>
-                        <TableColumn>F</TableColumn>
-                        <TableColumn>Actions</TableColumn>
+                        <TableColumn>{t(`device`)}</TableColumn>
+                        <TableColumn>{t(`last-update`)}</TableColumn>
+                        <TableColumn>{t(`status`)}</TableColumn>
+                        <TableColumn>{t(`resend`)}</TableColumn>
                       </TableHeader>
-                      <TableBody>
-                        {data.map((row) => (
-                          <TableRow key={row.id}>
-                            <TableCell>{row.A}</TableCell>
-                            <TableCell>{row.B}</TableCell>
-                            <TableCell>{row.C}</TableCell>
+                      <TableBody 
+                        
+                        emptyContent={t(`no-setting-found`)} >
+                        {items.map((row) => (
+                          <TableRow key={row.imsi}>
+                            <TableCell>{row.imsi}</TableCell>
+                            <TableCell>{formattedDate(row.last_update)}</TableCell>
+                            <TableCell>{t(row.status)}</TableCell>
                             <TableCell>
-                              <Input
-                                value={row.D}
-                                onChange={(e) =>
-                                  handleInputChange(row.id, "D", e.target.value)
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>{row.F}</TableCell>
-                            <TableCell>
-                              <Button onClick={() => handleDeleteRow(row.id)}>
-                                ลบ
-                              </Button>
+                              <ButtonResend imsi={row.imsi} lastUpdate={row.last_update} mode={type} status={row.status} resendCommad={resendCommad} setResponse={setResponse}> </ButtonResend>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -138,22 +138,7 @@ const ButtonModelResponseSchedule: React.FC<Props> = ({ type }) => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button
-                  color="danger"
-                  aria-label="close"
-                  variant="light"
-                  onPress={onCloseDelete}
-                >
-                  {t(`close`)}
-                </Button>
-                <Button
-                  aria-label="yes"
-                  isLoading={isLoadingDelete}
-                  color="primary"
-                  onPress={handleSave}
-                >
-                  {t(`yes`)}
-                </Button>
+               
               </ModalFooter>
             </>
           )}

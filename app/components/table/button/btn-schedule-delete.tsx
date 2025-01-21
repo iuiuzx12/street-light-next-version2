@@ -1,50 +1,70 @@
 import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip} from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
+import { SaveSchedule } from "@/app/interface/schedule";
 interface Props {
-    groupName : string;
-    groupCode : string;
-    onSendData: (
-        dataGroupName: string,
-        dataGroupCode : string) => void;
+  nameSchedule: string;
+  groupCode: string;
+  nameCode : string;
+  onDeleteData: (codeName: string) => void;
+  onSaveData: ( data : SaveSchedule) => void;
 }
-
-const ButtonModelDeleteSchedule: React.FC<Props> = ({groupName , groupCode, onSendData }) => {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+const ButtonModelDeleteSchedule: React.FC<Props> = ({
+  nameSchedule,
+  groupCode,
+  nameCode,
+  onSaveData
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
-  const t = useTranslations("ControlGroup");
-
+  const t = useTranslations("ControlSchedule");
   const handleOpenDelete = () => {
-    onOpen()
-  }
-
-  const confirmDelete = () => {
-    setLoadingDelete(true)
-    setLoadingDelete(true)
-    let result = onSendData(groupName, groupCode)
-    if(result! == true){
-        setLoadingDelete(false)
-        onClose()
+    onOpen();
+  };
+  const confirmDelete = async () => {
+    setLoadingDelete(true);
+  
+    let save = await onSaveData({
+      code_name : groupCode,
+      list_days : JSON.stringify(["sun", "mon", "tue", "wed", "thu", "fri", "sat"]),
+      list_group_name_code : nameCode,
+      list_scenes_light : "[]",
+      name_schedule : nameSchedule,
+      type_schedule : "manual",
+      type_set : "delete",
+      version_light_sensor : "1"
+    })
+    if(save! == true){
+      setLoadingDelete(false)
+      onClose()
     }
-  }
+    else{
+      setLoadingDelete(false)
+    }
+  };
 
   return (
     <>
-      
       <Button
-            style={{ float: "right" , cursor: groupName === "ALL" ? 'not-allowed ' : 'pointer' }}
-            isIconOnly
-            isDisabled={groupName === "ALL" ? true : false}
-            isLoading={isLoadingDelete}
-            aria-label="delete Schedule"
-            size="md"
-            radius="md"
-            className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDelete()}
-          >
-            <Trash2 />
-          </Button>
+        isIconOnly
+        isLoading={isLoadingDelete}
+        aria-label="delete Schedule"
+        size="md"
+        radius="md"
+        className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
+        onClick={() => handleOpenDelete()}
+      >
+        <Trash2 />
+      </Button>
 
       <Modal size={"md"} isOpen={isOpen} onClose={onClose}>
         <ModalContent>
@@ -53,18 +73,22 @@ const ButtonModelDeleteSchedule: React.FC<Props> = ({groupName , groupCode, onSe
               <ModalHeader className="flex flex-col gap-1">
                 {t(`delete`)}
               </ModalHeader>
-              <ModalBody>
-                
-              </ModalBody>
+              <ModalBody></ModalBody>
               <ModalFooter>
-                <Button color="danger" aria-label="close" variant="light" onPress={onCloseDelete}>
+                <Button
+                  color="danger"
+                  aria-label="close"
+                  variant="light"
+                  onPress={onCloseDelete}
+                >
                   {t(`close`)}
                 </Button>
-                <Button 
+                <Button
                   aria-label="yes"
                   isLoading={isLoadingDelete}
-                  color="primary" 
-                  onPress={confirmDelete}>
+                  color="danger"
+                  onPress={confirmDelete}
+                >
                   {t(`yes`)}
                 </Button>
               </ModalFooter>
@@ -74,5 +98,5 @@ const ButtonModelDeleteSchedule: React.FC<Props> = ({groupName , groupCode, onSe
       </Modal>
     </>
   );
-}
+};
 export default ButtonModelDeleteSchedule;

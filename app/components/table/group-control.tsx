@@ -14,8 +14,6 @@ import {
   Selection,
   SortDescriptor,
   Skeleton,
-  Card,
-  CardBody,
   Snippet,
   Slider,
   Progress,
@@ -59,12 +57,13 @@ const TableControlGroup: FC<TableProps> = ({
   const t = useTranslations("ControlGroup");
   const [filterValue, setFilterValue] = useState("");
   const [getListDevice, setListDevice] = useState(listDevice);
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState<Selection>("all");
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [disCommand, setDisCommand] = useState(listDevice.length == 0 ?true : false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "street_light_name",
     direction: "ascending",
@@ -355,9 +354,15 @@ const TableControlGroup: FC<TableProps> = ({
   const handleSelectionChange = useCallback(
     (newSelection: any) => {
       setSelectedKeys(newSelection);
+      if(newSelection.size == 0){
+        setDisCommand(true)
+      }
+      else{
+        setDisCommand(false)
+      }
     },
 
-    [selectedKeys]
+    [selectedKeys ,disCommand]
   );
 
   var handleSlider = (value: number | number[]) => {
@@ -453,6 +458,7 @@ const TableControlGroup: FC<TableProps> = ({
 
           <Button
             aria-label="send"
+            isDisabled={disCommand}
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15 self-center"
             size="lg"
             onClick={() => handleSend()}
