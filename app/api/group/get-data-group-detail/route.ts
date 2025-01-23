@@ -22,7 +22,6 @@ export async function GET(req: any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request, res: Response) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -67,34 +66,81 @@ export async function POST(req: Request, res: Response) {
       });
     } else {
 
-      const updatedData = dataResponse.dataReturn.map((item : ListDevice)  => {
-        
-        if (parseInt(item.time_stamp) < ( timestamp + 86400)) { 
-          item.status = "day";
-        } else if(parseInt(item.time_stamp) < ( timestamp + 3600)){
-          item.status = "dis";
-        } else if(parseInt(item.last_power) >= 5 ){
-          item.status = "open";
-        } else if(parseInt(item.last_power) < 5 ){
-          item.status = "close";
-        } else {
-          item.status = "?";
-        }
-    
-        return item;
-      });
-
-      const mergedData = updatedData.map((listDevice : ListDevice) => {
+      const mergedData = dataResponse.dataReturn.map((listDevice : ListDevice) => {
         const dataLatlong = dataLatLong.dataReturn.find((listLatLong : ListLatLong) => listLatLong.imsi === listDevice.imsi);
         if (dataLatlong) {
-          return { ...listDevice, lat: dataLatlong.lat, long: dataLatlong.lng };
+          let icon_map;
+          switch (dataLatlong.status) {
+            case "0":
+              if (
+                dataLatlong.type_schedule !== "manual" &&
+                dataLatlong.using_sensor.toLowerCase() !== "false"
+              ) {
+                icon_map = 0;
+              } else {
+                icon_map = 1;
+              }
+              break;
+            case "1":
+              if (
+                dataLatlong.type_schedule !== "manual" &&
+                dataLatlong.using_sensor.toLowerCase() !== "false"
+              ) {
+                icon_map = 4;
+              } else {
+                icon_map = 5;
+              }
+              break;
+            case "2":
+              if (
+                dataLatlong.type_schedule !== "manual" &&
+                dataLatlong.using_sensor.toLowerCase() !== "false"
+              ) {
+                icon_map = 0;
+              } else {
+                icon_map = 1;
+              }
+              break;
+            case "3":
+              if (parseInt(dataLatlong.last_power) > 5) {
+                icon_map = 6;
+              } else {
+                icon_map = 2;
+              }
+              break;
+            case "4":
+              if (
+                dataLatlong.type_schedule !== "manual" &&
+                dataLatlong.using_sensor.toLowerCase() !== "false"
+              ) {
+                icon_map = 10;
+              } else {
+                icon_map = 10;
+              }
+              break;
+            case "5":
+              if (parseInt(dataLatlong.last_power) > 5) {
+                icon_map = 7;
+              } else {
+                icon_map = 3;
+              }
+              break;
+            case "6":
+              if (parseInt(dataLatlong.last_power) > 5) {
+                icon_map = 7;
+              } else {
+                icon_map = 3;
+              }
+              break;
+          }
+
+          return { ...listDevice, lat: dataLatlong.lat, long: dataLatlong.lng , status : icon_map};
         }
         return listDevice;
       });
       
       return NextResponse.json(
         {
-          //data: dataResponse.dataReturn,
           data: mergedData,
         },
         {

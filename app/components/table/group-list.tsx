@@ -16,7 +16,8 @@ import {
   Skeleton,
   Card,
   CardBody,
-  ScrollShadow
+  ScrollShadow,
+  Progress
 } from "@nextui-org/react";
 import {Search} from 'lucide-react';
 
@@ -37,6 +38,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 const INITIAL_VISIBLE_COLUMNS = ["group_name", "sub_district", "total_rtu", "actions"];
 
 interface TableProps {
+    loading : boolean;
     listGroup: ListGroupAll[];
     onAddGroup : (dataGroupName: string) => void;
     onAddImsiGroup : (dataGroupName: string ,dataGroupCode: string, dataImsi: string) => Promise<ListDevice[]>;
@@ -53,6 +55,7 @@ interface TableProps {
   
 
 const TableListGroup: React.FC<TableProps> = ({
+  loading,
   listGroup,
   onAddGroup,
   onAddImsiGroup,
@@ -312,9 +315,9 @@ const TableListGroup: React.FC<TableProps> = ({
       <CardBody className="overflow-visible p-2 h-[calc(100vh-70px)]">
         <div className="flex w-full flex-col">
           <div className="grid grid-cols-12 gap-2">
-        <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg col-span-full">
 
           <Table
+            className="col-span-full"
             radius="none"
             shadow="none"
             isStriped
@@ -345,7 +348,10 @@ const TableListGroup: React.FC<TableProps> = ({
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody emptyContent={t(`no-group-found`)} items={sortedItems}>
+            <TableBody 
+                isLoading={loading}
+                loadingContent={<Progress isIndeterminate aria-label="Loading..." className="w-full mt-auto" size="sm" />}
+                emptyContent={t(`no-group-found`)} items={sortedItems}>
               {(item) => (
                 <TableRow key={item.group_code}>
                   {(columnKey) => (
@@ -355,7 +361,6 @@ const TableListGroup: React.FC<TableProps> = ({
               )}
             </TableBody>
           </Table>
-        </Skeleton>
         </div>
         </div>
       </CardBody>

@@ -271,43 +271,11 @@ const TableControlGroup: FC<TableProps> = ({
           );
 
         case "status":
-          switch (cellValue) {
-            case "day":
-              return (
-                <div className="flex flex-col">
-                  {" "}
-                  <img src={icons[3]} width={30} height={30}></img>
-                </div>
-              );
-            case "dis":
-              return (
-                <div className="flex flex-col">
-                  {" "}
-                  <img src={icons[10]} width={30} height={30}></img>
-                </div>
-              );
-            case "open":
-              return (
-                <div className="flex flex-col">
-                  {" "}
-                  <img src={icons[10]} width={30} height={30}></img>
-                </div>
-              );
-            case "close":
-              return (
-                <div className="flex flex-col">
-                  {" "}
-                  <img src={icons[10]} width={30} height={30}></img>
-                </div>
-              );
-            default:
-              return (
-                <div className="flex flex-col">
-                  {" "}
-                  <img src={icons[10]} width={30} height={30}></img>
-                </div>
-              );
-          }
+          return (
+            <div className="flex flex-col">
+              <img src={icons[Number(cellValue)]} width={30} height={30}></img>
+            </div>
+          );
 
         default:
           //setIsLoaded(true);

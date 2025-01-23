@@ -338,9 +338,9 @@ const TableListSchedule: React.FC<TableProps> = ({
       <CardBody className="overflow-visible p-2 h-[calc(100vh-70px)]">
         <div className="flex w-full flex-col">
           <div className="grid grid-cols-12 gap-2">
-        <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg col-span-full">
 
           <Table
+            className="col-span-full"
             radius="none"
             shadow="none"
             isStriped
@@ -384,7 +384,6 @@ const TableListSchedule: React.FC<TableProps> = ({
               )}
             </TableBody>
           </Table>
-        </Skeleton>
         </div>
         </div>
       </CardBody>

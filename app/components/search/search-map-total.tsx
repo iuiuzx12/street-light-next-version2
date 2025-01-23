@@ -11,20 +11,6 @@ import {
 import { useTranslations } from "next-intl";
 import { ListLatLong } from "@/app/interface/map";
 
-// interface AProps {
-//   onSendData: (data: {
-//     id: string;
-//     gateway_id: string;
-//     imsi: string;
-//     lat: string;
-//     lng: string;
-//     status: string;
-//     type_schedule: string;
-//     using_sensor: string;
-//     last_power: string;
-//   }) => void;
-// }
-
 interface AProps {
     onSendData: (data: ListLatLong[]) => void;
   }
@@ -87,7 +73,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
   }, []);
 
   const handleChange = async (newValue: any) => {
-    setTypeSearch(newValue.target.defaultValue);
+    setTypeSearch(newValue.target.defaultValue === "street-name" ? "street_light_name" : newValue.target.defaultValue);
     if(newValue.target.defaultValue === 'group'){
       setTypeSearchLabel(t(`select-group`));
     }else if (newValue.target.defaultValue === 'imsi'){
@@ -126,7 +112,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
           >
             <Radio value="group">{t(`select-group`)}</Radio>
             <Radio value="imsi">{t(`select-imsi`)}</Radio>
-            <Radio value="street_light_name">{t(`select-street-name`)}</Radio>
+            <Radio value="street-name">{t(`select-street-name`)}</Radio>
           </RadioGroup>
 
           <RadioGroup

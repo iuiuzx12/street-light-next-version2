@@ -299,12 +299,12 @@ const TableListDevice: React.FC<TableProps> = ({
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
+        <div className="flex justify-between gap-3">
           <Autocomplete
-            size="sm"
-            label={t(`search-group`)}
+            size="md"
+            disableSelectorIconRotation
             placeholder={t(`select-group`)}
-            //className="max-w-xs"
+            aria-label="select-group"
             value={dataSearchGroup}
             onInputChange={handleInputChange}
           >
@@ -321,7 +321,7 @@ const TableListDevice: React.FC<TableProps> = ({
             placeholder={t(`search-by-name-imsi`)}
             startContent={<Search />}
             value={filterValue}
-            size="lg"
+            size="md"
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />

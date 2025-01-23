@@ -1,9 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { Feature, Map, Overlay, View } from "ol";
-import ImageLayer from "ol/layer/Image";
-import ImageStatic from "ol/source/ImageStatic";
-import { fromLonLat, Projection, transformExtent } from "ol/proj";
-import { getCenter } from "ol/extent";
+import { fromLonLat, transformExtent } from "ol/proj";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import "ol/ol.css";
@@ -12,13 +9,13 @@ import { Style as OLStyle, Icon as OLIcon } from "ol/style";
 import "@/app/styles/map.css";
 import TileLayer from "ol/layer/Tile";
 import { XYZ } from "ol/source";
-import { FLOAT } from "ol/webgl";
 import { Card, CardBody, Skeleton } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
-import { tree } from "next/dist/build/templates/app-page";
 import { ListLatLong } from "@/app/interface/map";
+import ButtonModeAuto from "../button/btn-mode-auto";
+import Attribution from 'ol/control/Attribution';
 
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   const earthRadiusKm = 6371;
@@ -41,19 +38,6 @@ interface InputDataMap {
   data: ListLatLong[] | null;
   high  : string;
 }
-// interface InputDataMap {
-//   data: {
-//     id: string;
-//     gateway_id: string;
-//     imsi: string;
-//     lat: string;
-//     lng: string;
-//     status: string;
-//     type_schedule: string;
-//     using_sensor: string;
-//     last_power: string;
-//   } | null;
-// }
 
 export type OutputDataMap = {
   id?: string;
@@ -80,7 +64,6 @@ export type DetailImsi = {
   street_light_name: any | null;
 } | null;
 
-//const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data }: any) => {
 const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => {
   const t = useTranslations("MapTotal");
 
@@ -95,6 +78,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
   const [isDisabledClose , setDisabledClose] = React.useState(true);
   const [isDisabledRead , setDisabledRead] = React.useState(true);
   const [dataDetailImsi, setDataDetailImsi] = React.useState<DetailImsi>(null);
+  const [btnMode, setBtnMode] = React.useState<ReactElement<any, any>>();
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID ?? "LOCAL";
 
   var popup: any;
@@ -158,6 +142,11 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
         maxZoom: zoom + 10,
         extent: transformExtent(extent, "EPSG:4326", "EPSG:3857"),
       }),
+      controls: [
+        new Attribution({
+          collapsible: false, 
+        }),
+      ],
     });
 
     const vectorSource = new VectorSource();
@@ -262,8 +251,6 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
     popupElement3.className = "ol-popup";
     popupElement3.id = "popup";
 
-    //popupElement.innerHTML = "<p>Hello, this is a popup!</p>";
-    //popupElement.innerHTML = "<p>Hello, this is a popup!</p>";
     popup = new Overlay({
       element: popupElement!,
       positioning: "bottom-center",
@@ -276,11 +263,9 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
       const pixel = map.getEventPixel(event.originalEvent);
       const feature = map.getFeaturesAtPixel(pixel)[0];
 
-      //setisBtn(false);
-
       if (feature) {
         const geometry = feature.getGeometry();
-        //const coordinates = feature.getGeometry()!.getCoordinates();
+        
         if (geometry && geometry instanceof Point) {
           const coordinates = geometry.getCoordinates();
           popup.setPosition(coordinates);
@@ -311,12 +296,14 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
               imsi: result.data.imsi,
               gateway_id : feature.get("gateway_id"),
               type_schedule : feature.get("type_schedule"),
+              using_sensor : feature.get("using_sensor"),
               last_update: result.data.last_update,
               last_status: result.data.last_status,
               last_command: result.data.last_command,
               number_gov: result.data.number_gov,
               street_light_name: result.data.street_light_name,
             });
+            setBtnMode(<ButtonModeAuto deviceId={result.data.imsi} typeMode={feature.get("type_schedule")} using={feature.get("using_sensor")}></ButtonModeAuto>);
             
           } else {
 
@@ -343,8 +330,6 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
   }, [data]);
 
   const command = async (type: string, imsi : string) => {
-    
-    
     
     switch (type) {
       case "open":
@@ -468,15 +453,9 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
     setOverlayVisible(false);
   };
 
-  const setModeStreetLight = (imsi : string, type : string) => {
-    
-  };
-
   return (
     <Card className="m-1">
       <CardBody className="overflow-visible p-0">
-        {/* <div id="map" className="w-full h-[700px]"></div> */}
-
         <div>
           <div ref={mapRef} className={high} style={{ width: "100%" }} />
           <Card
@@ -499,14 +478,15 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
               <Icon icon="lucide:circle-x" width="auto" height="auto" />
             </Button>
             <div className="space-y-3">
-              <Skeleton isLoaded={isLoaded} className="w-3/5 rounded-lg">
+              
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
                 <p>
-                  {t(`group`)} : {dataDetailImsi?.group}
+                  {t(`imsi`)} : {dataDetailImsi?.imsi}
                 </p>
               </Skeleton>
               <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
                 <p>
-                  {t(`imsi`)} : {dataDetailImsi?.imsi}
+                  {t(`group`)} : {dataDetailImsi?.group}
                 </p>
               </Skeleton>
               <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
@@ -532,36 +512,13 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
               </Skeleton>
               <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
                 <p>
+                  {t(`streetlight-name`)} : {dataDetailImsi?.street_light_name}
+                </p>
+              </Skeleton>
+              <Skeleton isLoaded={isLoaded} className="w-5/5 rounded-lg">
+                <p>
                   {t(`auto-mode`)} : {" "}
-                  {dataDetailImsi?.type_schedule == "manual" ? (
-                    <Button
-                      size="sm"
-                      radius="sm"
-                      className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
-                      onClick={() =>
-                        setModeStreetLight(dataDetailImsi?.imsi, "time")
-                      }
-                      
-                    ><Icon icon="lucide:x" /> {t(`btn-close-sensor`)}</Button>
-                  ) : dataDetailImsi?.using_sensor == "True" ? (
-                    <Button
-                      size="sm"
-                      radius="sm"
-                      className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg"
-                      onClick={() =>
-                        setModeStreetLight(dataDetailImsi?.imsi, dataDetailImsi?.type_schedule )
-                      }
-                    ><Icon icon="lucide:check" /> {t(`btn-open-sensor`)}</Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      radius="sm"
-                      className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
-                      onClick={() =>
-                        setModeStreetLight(dataDetailImsi?.imsi, "time")
-                      }
-                    ><Icon icon="lucide:x" />{t(`btn-close-sensor`)}</Button>
-                  )}
+                  {btnMode}
                 </p>
               </Skeleton>
 

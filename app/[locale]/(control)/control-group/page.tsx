@@ -9,10 +9,9 @@ import { ListLatLong } from "@/app/interface/map";
 const controlGroup: React.FC = () => {
   const t = useTranslations("ControlGroup");
   const [dataListGroup, setListGroup] = useState<ListGroupAll[]>([]);
-  //const [dataListImsi, setListImsi] = useState<ListImsi[]>([]);
-  //const [dataListDevice, setListDevice] = useState<ListGroupDetail[]>([]);
-  //const [dataDetailGroup, setDetailGroup] = useState<ListGroupDetail[]>([]);
+  const [loading, setLoading] = useState(true);
   const fetchGroupAll = async (): Promise<ListGroupAll[]> => {
+    setLoading(true);
     try {
       const response = await fetch('/api/group/get-data-group-all' ,
         {
@@ -26,10 +25,12 @@ const controlGroup: React.FC = () => {
       const res = await response.json();
       const data: ListGroupAll[] = res.data;
       setListGroup(data);
+      setLoading(false);
       //users.push(newUser);
       return data;
     } catch (error) {
       console.error('Error fetching users:', error);
+      setLoading(false);
       return []; 
     }
   };
@@ -46,7 +47,6 @@ const controlGroup: React.FC = () => {
         throw new Error('Network response was not ok');
       }
       const res = await response.json();
-      //setListImsi(res.data)
       return res.data;
       
     } catch (error) {
@@ -130,8 +130,6 @@ const controlGroup: React.FC = () => {
   
       const result = await res.json();
       const data: ListDevice[] = result.data;
-      //setListDevice(data)
-      //setDetailGroup(data);
       return data;
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -335,6 +333,7 @@ const controlGroup: React.FC = () => {
   return (
     <div className="w-full h-auto p-1">
         <TableListGroup 
+          loading={loading}
           listGroup={dataListGroup}
           onAddGroup={fetchPushDataGroup} 
           onAddImsiGroup={fetchPushImsiToGroup} 
