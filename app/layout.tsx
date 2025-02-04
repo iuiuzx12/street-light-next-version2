@@ -3,13 +3,11 @@ import "@/app/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/app/components/header";
-import {
-  HeaderMobileAdminManagement,
-  HeaderMobileAdmin,
+import {HeaderMobile,
 } from "@/app/components/header-mobile";
 import MarginWidthWrapper from "@/app/components/margin-width-wrapper";
 import PageWrapper from "@/app/components/page-wrapper";
-import { SideNavAdminManagement, SideNavAdmin } from "@/app/components/sidebar";
+import { SideNav } from "@/app/components/sidebar";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -29,11 +27,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  //localStorage.setItem("favoriteNumber", "favoriteNumber")
 
-  console.log("RootLayout");
   var CHECK_LOGIN = true;
-  var USER_RULE = "";
+  var USER_RULE;
   const messages = await getMessages();
   var token = cookies().get("token");
   try {
@@ -59,18 +55,7 @@ export default async function RootLayout({
 
     if (responseUser.status === 200) {
       var DataUser = await responseUser.json().finally();
-      console.log(DataUser);
-
-      switch (DataUser.userRoleId) {
-        case "1":
-          var USER_RULE = "AdminManagement";
-          //var USER_RULE = "Admin";
-          break;
-        case "2":
-          var USER_RULE = "Admin";
-        default:
-          break;
-      }
+      USER_RULE = DataUser
     }
 
     if (response.status === 200) {
@@ -108,36 +93,6 @@ export default async function RootLayout({
     );
   }
 
-  const checkRule = (rule: string) => {
-    switch (rule) {
-      case "AdminManagement": {
-        return <SideNavAdminManagement />;
-      }
-      case "Admin": {
-        return <SideNavAdmin />;
-      }
-      default: {
-        console.log("do nothing");
-      }
-    }
-  };
-
-  const checkRuleMobile = (rule: string) => {
-    switch (rule) {
-      case "AdminManagement": {
-        return <HeaderMobileAdminManagement />;
-      }
-      case "Admin": {
-        return <HeaderMobileAdmin />;
-      }
-      default: {
-        console.log("do nothing");
-      }
-    }
-  };
-
-  console.log(CHECK_LOGIN);
-
   return (
     <html lang="th">
       <body className={`bg-white${inter.className}`}>
@@ -145,12 +100,11 @@ export default async function RootLayout({
           <NextUIProvider>
             {CHECK_LOGIN === true ? (
               <div className="flex">
-                {checkRule(USER_RULE)!}
+                <SideNav data={USER_RULE}></SideNav>
                 <main className="flex-1">
                   <MarginWidthWrapper>
                     <Header />
-
-                    {checkRuleMobile(USER_RULE)!}
+                    <HeaderMobile data={USER_RULE}></HeaderMobile>
                     <PageWrapper>{children}</PageWrapper>
                   </MarginWidthWrapper>
                 </main>

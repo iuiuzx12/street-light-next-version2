@@ -3,11 +3,12 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { RuleAdminManagement, RuleAdmin } from '@/app/rules';
+import { AuthRules } from '@/app/rules';
 import { SideNavItem } from '@/app/model/side-nav-item';
 import { Icon } from '@iconify/react';
 import { motion, useCycle } from 'framer-motion';
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 type MenuItemWithSubMenuProps = {
   item: SideNavItem;
@@ -33,7 +34,7 @@ const sidebar = {
   },
 };
 
-export function HeaderMobileAdminManagement() {
+export function HeaderMobile(data : any) {
   const pathname = usePathname();
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -57,8 +58,8 @@ export function HeaderMobileAdminManagement() {
         variants={variants}
         className="absolute grid w-full gap-3 px-10 py-16 max-h-screen overflow-y-auto"
       >
-        {RuleAdminManagement.map((item, idx) => {
-          const isLastItem = idx === RuleAdminManagement.length - 1; // Check if it's the last item
+        {AuthRules(data).map((item, idx) => {
+          const isLastItem = idx === AuthRules(data).length - 1; // Check if it's the last item
 
           return (
             <div key={idx}>
@@ -67,12 +68,21 @@ export function HeaderMobileAdminManagement() {
               ) : (
                 <MenuItem>
                   <Link
-                    href={locale + item.path!}
-                    onClick={() => toggleOpen()}
-                    className={`flex w-full text-2xl ${item.path === locale + pathname ? 'font-bold' : ''
-                      }`}
+                    href={item.path!}
+                    className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:bg-zinc-100 ${
+                      item.path === locale + pathname ? "bg-zinc-100" : ""
+                    }`}
                   >
-                    {item.title}
+                    <Image
+                      src={item.icon!}
+                      width={0}
+                      height={0}
+                      className="w-6 h-auto"
+                      alt={item.title!}
+                    />
+                    <span className="font-semibold text-xl flex">
+                      {t(item.title)}
+                    </span>
                   </Link>
                 </MenuItem>
               )}
@@ -88,63 +98,6 @@ export function HeaderMobileAdminManagement() {
     </motion.nav>
   );
 };
-
-export function HeaderMobileAdmin() {
-  const pathname = usePathname();
-  const containerRef = useRef(null);
-  const { height } = useDimensions(containerRef);
-  const [isOpen, toggleOpen] = useCycle(false, true);
-  const t = useTranslations('Sidebar');
-  const locale = pathname.slice(0, 3);
-  return (
-    <motion.nav
-      initial={false}
-      animate={isOpen ? 'open' : 'closed'}
-      custom={height}
-      className={`fixed inset-0 z-50 w-full md:hidden ${isOpen ? '' : 'pointer-events-none'
-        }`}
-      ref={containerRef}
-    >
-      <motion.div
-        className="absolute inset-0 right-0 w-full bg-white"
-        variants={sidebar}
-      />
-      <motion.ul
-        variants={variants}
-        className="absolute grid w-full gap-3 px-10 py-16 max-h-screen overflow-y-auto"
-      >
-        {RuleAdminManagement.map((item, idx) => {
-          const isLastItem = idx === RuleAdminManagement.length - 1; // Check if it's the last item
-
-          return (
-            <div key={idx}>
-              {item.submenu ? (
-                <MenuItemWithSubMenu item={item} toggleOpen={toggleOpen} />
-              ) : (
-                <MenuItem>
-                  <Link
-                    href={locale + item.path!}
-                    onClick={() => toggleOpen()}
-                    className={`flex w-full text-2xl ${item.path === locale + pathname ? 'font-bold' : ''
-                      }`}
-                  >
-                    {item.title}
-                  </Link>
-                </MenuItem>
-              )}
-
-              {!isLastItem && (
-                <MenuItem className="my-3 h-px w-full bg-gray-300" />
-              )}
-            </div>
-          );
-        })}
-      </motion.ul>
-      <MenuToggle toggle={toggleOpen} />
-    </motion.nav>
-  );
-};
-
 
 const MenuToggle = ({ toggle }: { toggle: any }) => (
   <button
@@ -216,12 +169,19 @@ const MenuItemWithSubMenu: React.FC<MenuItemWithSubMenuProps> = ({
           onClick={() => setSubMenuOpen(!subMenuOpen)}
         >
           <div className="flex flex-row justify-between w-full items-center">
-            <span
-              className={`${pathname.includes(item.path!) ? 'font-bold' : ''}`}
-            >
-              {t(item.title)}
-            </span>
-            <div className={`${subMenuOpen && 'rotate-180'}`}>
+            <div className="flex flex-row space-x-4 items-center">
+              <Image
+                src={item.icon!}
+                width={0}
+                height={0}
+                className="w-6 h-auto"
+                alt={item.title!}
+              />
+              <span className="font-semibold text-xl  flex">
+                {t(item.title)}
+              </span>
+            </div>
+            <div className={`${subMenuOpen && "rotate-180"}`}>
               <Icon icon="lucide:chevron-down" width="24" height="24" />
             </div>
           </div>
@@ -233,14 +193,25 @@ const MenuItemWithSubMenu: React.FC<MenuItemWithSubMenuProps> = ({
             {item.subMenuItems?.map((subItem, subIdx) => {
               return (
                 <MenuItem key={subIdx}>
-                  <Link
-                    href={locale + subItem.path!}
-                    onClick={() => toggleOpen()}
-                    className={` ${pathname.includes(subItem.path!) ? 'font-bold' : ''
+                  {subItem.status == true ? (
+                    <Link
+                      href={locale + subItem.path!}
+                      onClick={() => toggleOpen()}
+                      className={`flex space-x-2 ${
+                        locale + subItem.path === pathname ? "font-bold" : ""
                       }`}
-                  >
-                    {t(subItem.title)}
-                  </Link>
+                    >
+                      <Image
+                        src={subItem.icon!}
+                        width={0}
+                        height={0}
+                        className="w-5 h-auto"
+                        alt={subItem.title!}
+                      />
+                      <span> </span>
+                      <p>{t(subItem.title)}</p>
+                    </Link>
+                  ) : null}
                 </MenuItem>
               );
             })}

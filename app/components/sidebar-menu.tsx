@@ -50,7 +50,7 @@ export default function MenuItem({ item }: { item: SideNavItem }) {
                 {item.subMenuItems?.map((subItem, idx) => {
                   //subItem.path = locale + subItem.path
                   //subItem.path = locale + subItem.path
-                  return (
+                  return subItem.status == true ? (
                     <Link
                       key={idx}
                       href={locale + subItem.path}
@@ -68,7 +68,7 @@ export default function MenuItem({ item }: { item: SideNavItem }) {
                       <span> </span>
                       <p>{t(subItem.title)}</p>
                     </Link>
-                  );
+                  ) : null;
                 })}
               </div>
             )}

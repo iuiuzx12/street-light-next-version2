@@ -36,6 +36,7 @@ import ButtonModelListIndividualWorking from "./button/btn-individual-working";
 import ButtonModelIndividualCommand from "./button/btn-individual-command";
 import ButtonIndividualPower from "./button/btn-individual-power";
 import ButtonModeAuto from "../button/btn-mode-auto";
+import { RuleUserItem } from "@/app/model/rule";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -58,6 +59,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 interface TableProps {
+    dataRule: RuleUserItem;
     listGroup: ListGroupAll[];
     loading: boolean;
     listDevice: ListDeviceInGroup[];
@@ -67,6 +69,7 @@ interface TableProps {
   }
 
 const TableListDevice: React.FC<TableProps> = ({
+  dataRule,
   listGroup,
   loading,
   listDevice,
@@ -155,7 +158,7 @@ const TableListDevice: React.FC<TableProps> = ({
 
   const renderCell = React.useCallback(
     
-    (deviceAll: ListDeviceInGroup, columnKey: React.Key) => {
+    (deviceAll: ListDeviceInGroup, columnKey: React.Key, dataRule : RuleUserItem) => {
         
       const cellValue = deviceAll[columnKey as keyof ListDeviceInGroup];
       switch (columnKey) {
@@ -198,7 +201,7 @@ const TableListDevice: React.FC<TableProps> = ({
         case "lastPower":
          
           return (
-            <ButtonIndividualPower gatewayId={deviceAll.gatewayId} deviceId={deviceAll.imeI_Name} watt={deviceAll.lastPower}></ButtonIndividualPower>
+            <ButtonIndividualPower disabled={dataRule.control ?? false} gatewayId={deviceAll.gatewayId} deviceId={deviceAll.imeI_Name} watt={deviceAll.lastPower}></ButtonIndividualPower>
           );
         case "lifeTime":
          
@@ -213,6 +216,7 @@ const TableListDevice: React.FC<TableProps> = ({
               style={{ placeSelf: "center" }}
             >
               <ButtonModelIndividualCommand
+                disabled={dataRule.control ?? false}
                 command={arrayCommand[0]}
                 brightness={parseInt(arrayCommand[1])}
                 deviceId={deviceAll.imeI_Name}
@@ -247,7 +251,7 @@ const TableListDevice: React.FC<TableProps> = ({
               className="flex items-center gap-10"
               style={{ placeSelf: "center" }}
             >
-              <ButtonModeAuto deviceId={deviceAll.imeI_Name} typeMode={deviceAll.typeSchedule} using={deviceAll.usingSensor}></ButtonModeAuto>
+              <ButtonModeAuto disabled={dataRule.control ?? false} deviceId={deviceAll.imeI_Name} typeMode={deviceAll.typeSchedule} using={deviceAll.usingSensor}></ButtonModeAuto>
             </div>
           );
 
@@ -441,7 +445,7 @@ const TableListDevice: React.FC<TableProps> = ({
                     <TableRow key={item.imeI_Name}>
                       {(columnKey) => (
                         
-                        <TableCell>{renderCell(item, columnKey)}</TableCell>
+                        <TableCell>{renderCell(item, columnKey, dataRule)}</TableCell>
                       )}
                     </TableRow>
                   )}

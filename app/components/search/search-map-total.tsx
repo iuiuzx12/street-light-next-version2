@@ -55,7 +55,7 @@ const SeachMapTotal: React.FC<AProps> = ({ onSendData }: any) => {
         type_search: typeSearch,
         list_value: JSON.stringify([dataSearch]),
         status_lamp: typeStatus,
-        type_gps: "mobile_pole_rtu",
+        type_gps: process.env.NEXT_PUBLIC_MAP_TYPE,
       }),
     });
 

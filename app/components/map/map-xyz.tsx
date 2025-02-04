@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react";
 import { ListLatLong } from "@/app/interface/map";
 import ButtonModeAuto from "../button/btn-mode-auto";
 import Attribution from 'ol/control/Attribution';
+import { RuleUserItem } from "@/app/model/rule";
 
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   const earthRadiusKm = 6371;
@@ -34,10 +35,7 @@ function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   };
 }
 
-interface InputDataMap {
-  data: ListLatLong[] | null;
-  high  : string;
-}
+
 
 export type OutputDataMap = {
   id?: string;
@@ -64,7 +62,13 @@ export type DetailImsi = {
   street_light_name: any | null;
 } | null;
 
-const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => {
+interface InputDataMap {
+  dataRule : RuleUserItem
+  data: ListLatLong[] | null;
+  high  : string;
+}
+
+const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}) => {
   const t = useTranslations("MapTotal");
 
   const mapRef = useRef(null);
@@ -287,10 +291,19 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
 
           const result = await res.json();
           if (res.status == 200) {
-            setIsLoaded(true);
-            setDisabledOpen(false)
-            setDisabledClose(false)
-            setDisabledRead(false)
+            if(dataRule.config === false){
+              setIsLoaded(true);
+              setDisabledOpen(true)
+              setDisabledClose(true)
+              setDisabledRead(true)
+
+            }
+            else{
+              setIsLoaded(true);
+              setDisabledOpen(false)
+              setDisabledClose(false)
+              setDisabledRead(false)
+            }
             setDataDetailImsi({
               group: result.data.group_name,
               imsi: result.data.imsi,
@@ -303,7 +316,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ({ data , high }: any) => 
               number_gov: result.data.number_gov,
               street_light_name: result.data.street_light_name,
             });
-            setBtnMode(<ButtonModeAuto deviceId={result.data.imsi} typeMode={feature.get("type_schedule")} using={feature.get("using_sensor")}></ButtonModeAuto>);
+            setBtnMode(<ButtonModeAuto disabled={dataRule.control ?? false} deviceId={result.data.imsi} typeMode={feature.get("type_schedule")} using={feature.get("using_sensor")}></ButtonModeAuto>);
             
           } else {
 

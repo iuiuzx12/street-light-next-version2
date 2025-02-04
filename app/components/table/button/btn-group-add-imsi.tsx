@@ -15,6 +15,7 @@ import TableImsiGroup from "../group-imsi";
 import { useTranslations } from "next-intl";
 
 interface Props {
+  disabled: boolean;
   groupName: string;
   groupCode: string;
   onDetail: (group_name: string) => Promise<ListDevice[]>;
@@ -24,7 +25,7 @@ interface Props {
   onAddImsiGroup : (dataGroupName: string, dataGroupCode: string, dataImsi : string) => Promise<ListDevice[]>;
 }
 
-const ButtonModelListImsi: React.FC<Props> = ({ groupName, groupCode, onDetail, onDeleteImsiInGroup, onDataImsiAll ,onAddImsiGroup ,onSaveDataDevice }) => {
+const ButtonModelListImsi: React.FC<Props> = ({disabled, groupName, groupCode, onDetail, onDeleteImsiInGroup, onDataImsiAll ,onAddImsiGroup ,onSaveDataDevice }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
   const [dataListDevice, setListDevice] = useState<ListDevice[]>([]);
@@ -65,6 +66,7 @@ const ButtonModelListImsi: React.FC<Props> = ({ groupName, groupCode, onDetail, 
                 <h1>{t(`add-imsi`)}</h1>
                         <div className="col-span-full">
                           <TableImsiGroup
+                            disabled={disabled}
                             groupName={groupName}
                             groupCode={groupCode}
                             listDevice={dataListDevice}

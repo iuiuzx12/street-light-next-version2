@@ -27,6 +27,7 @@ import { Plus, Edit, Delete, Group, X } from "lucide-react";
 import { ListSchedule, SaveSchedule } from "@/app/interface/schedule";
 import { ListGroupAll } from "@/app/interface/control";
 interface Props {
+  disabled: boolean;
   type: string;
   dataDetail: ListSchedule | null;
   dataListGroup: () => Promise<ListGroupAll[]>;
@@ -34,6 +35,7 @@ interface Props {
 }
 
 const ButtonModelEditAddSchedule: React.FC<Props> = ({
+  disabled,
   type,
   dataDetail,
   dataListGroup,
@@ -144,17 +146,18 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
           nameSchedule == "" ||
           selectedDay.length == 0 ||
           rowsTime.length == 0 ||
-          rowsGroup.length == 0
+          rowsGroup.length == 0 || 
+          disabled == false
         );
 
       case "light":
         return (
-          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0
+          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0 || disabled == false
         );
 
       case "manual":
         return (
-          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0
+          nameSchedule == "" || selectedDay.length == 0 || rowsGroup.length == 0 || disabled == false
         );
 
       default:

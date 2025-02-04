@@ -2,15 +2,13 @@ import {withAuth} from 'next-auth/middleware';
 import createIntlMiddleware from 'next-intl/middleware';
 import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
-console.log("isPublicPage1");
 const locales = ['en', 'th'];
-const publicPages = ['/', '/login', '/logout', '/not-auth', '/dashboard-period', '/dashboard-daily', '/map-total', '/setting-personal' ,'/control-group' , '/control-individual' ,'/control-schedule' ];
 
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale: 'th'
 });
- 
+
 const authMiddleware = withAuth(
   function onSuccess(req) {
     console.log("onSuccess")
@@ -27,23 +25,58 @@ const authMiddleware = withAuth(
   }
 );
 
+let publicPages = ['/', '/login', '/logout', '/not-auth'];
 
 export default async function middleware(req: NextRequest, event: NextFetchEvent) {
+  
+  const cookies = req.cookies;
+  const authToken = cookies.get("token");
+  const responseUser = await fetch(
+    process.env.API_URL + "/StreetLight/getDataUser",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + authToken?.value,
+      },
+    }
+  );
+
+  if (responseUser.status === 200) {
+    publicPages = ['/', '/login', '/logout', '/not-auth'];
+    var DataUser = await responseUser.json().finally();
+
+    DataUser.dashboard[0] === 1 && publicPages.push("/dashboard-period");
+    DataUser.groupDashboard[0] === 1 && publicPages.push("/dashboard-daily");
+    DataUser.groupConfig[0] === 1 && publicPages.push("/control-group");
+    DataUser.settingSchedule[0] === 1 && publicPages.push("/control-schedule");
+    DataUser.streetLight[0] === 1 && publicPages.push("/control-individual");
+    DataUser.mapGlobal[0] === 1 && publicPages.push("/map-total");
+    DataUser.mapDisconnect[0] === 1 && publicPages.push("/map-disconnect");
+    DataUser.personal[0] === 1 &&  publicPages.push("/setting-personal");
+
+  }
+
+
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages
       .flatMap((p) => (p === '/' ? ['', '/'] : p))
       .join('|')})/?$`,
     'i'
   );
+  
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-  console.log("isPublicPage2");
   console.log(isPublicPage);
+  console.log("publicPages")
+    
+    
   console.log(req.nextUrl.pathname);
+  
+  console.log(publicPages)
 
   if (isPublicPage) {
     return intlMiddleware(req);
   } else {
-    console.log(555)
+    
     return (authMiddleware as any)(req);
   }
 }

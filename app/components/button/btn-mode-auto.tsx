@@ -12,12 +12,13 @@ import {
 import { X, Check, Power, PowerOff, Sunset, Timer, Hand } from "lucide-react";
 import { useTranslations } from "next-intl";
 interface Props {
+  disabled: boolean;
   deviceId: string;
   typeMode: string;
   using: boolean;
 }
 
-const ButtonModeAuto: React.FC<Props> = ({ deviceId, typeMode, using }) => {
+const ButtonModeAuto: React.FC<Props> = ({ disabled ,deviceId, typeMode, using }) => {
   const t = useTranslations("ControlIndividual");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selected, setSelected] = useState(using);
@@ -87,6 +88,7 @@ const ButtonModeAuto: React.FC<Props> = ({ deviceId, typeMode, using }) => {
     <>
       <Switch
         isSelected={selected}
+        isDisabled={!disabled}
         onClick={handleOpenDetail}
         color="success"
         endContent={<PowerOff color="white" />}

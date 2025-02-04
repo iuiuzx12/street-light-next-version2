@@ -13,8 +13,10 @@ import { ListDevice } from "@/app/interface/control";
 import TableControlGroup from "../group-control";
 import { ListLatLong } from "@/app/interface/map";
 import { useTranslations } from "next-intl";
+import { RuleUserItem } from "@/app/model/rule";
 
 interface Props {
+  disabled : boolean | false;
   groupName: string;
   groupCode: string;
   onReloadLatLong : (typeSearch : string, dataSearch : string) => Promise<ListLatLong[]>;
@@ -22,11 +24,10 @@ interface Props {
   onSendCommand : (typeOpen : string , value : string, commandType : string , dimPercent : string) => Promise<ListLatLong[]>;
 }
 
-const ButtonModelControl: React.FC<Props> = ({ groupName, groupCode, onDetail , onSendCommand, onReloadLatLong}) => {
+const ButtonModelControl: React.FC<Props> = ({disabled, groupName, groupCode, onDetail , onSendCommand, onReloadLatLong}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [dataListDevice, setListDevice] = useState<ListDevice[]>([]);
   const t = useTranslations("ControlGroup");
- 
 
   const handleOpenDetail = async () => {
     let dataListDevice = await onDetail(groupName);
@@ -40,6 +41,7 @@ const ButtonModelControl: React.FC<Props> = ({ groupName, groupCode, onDetail , 
       <Button
             style={{ float: "right" }}
             aria-label="control group"
+            isDisabled={!disabled}
             size="md"
             radius="md"
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"

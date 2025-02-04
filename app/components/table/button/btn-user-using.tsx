@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 interface ButtonProps {
+  disabled : boolean
   userId: string;
   usable : string;
   onSetUsable : (userId : string, status : string) => void;
 }
 
-const ButtonModalUserUsing: React.FC<ButtonProps> = ({ userId, usable, onSetUsable }) => {
+const ButtonModalUserUsing: React.FC<ButtonProps> = ({disabled, userId, usable, onSetUsable }) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [isLoadingSet, setLoadingSet] = useState(false);
   const t = useTranslations("SettingPersonal");
@@ -29,9 +30,9 @@ const ButtonModalUserUsing: React.FC<ButtonProps> = ({ userId, usable, onSetUsab
   return (
         <>
       <div className="flex flex-wrap gap-3">
-        {usable == "Y" ? <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15" endContent={
+        {usable == "Y" ? <Button isDisabled={!disabled} onPress={() => handleOpen()} className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15" endContent={
           <Check width="25px" height="25px" />}>
-        </Button> : <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
+        </Button> : <Button isDisabled={!disabled}  onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
           <OctagonX width="25px" height="25px" />}>
         </Button>}
         

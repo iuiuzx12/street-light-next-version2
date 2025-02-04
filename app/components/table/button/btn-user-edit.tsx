@@ -5,6 +5,7 @@ import { ListUser } from "@/app/interface/personal";
 import { useTranslations } from "next-intl";
 
 interface AProps {
+  disabled : boolean
   detailUser : ListUser
   dataListRule : []
   onEditUser: (
@@ -17,7 +18,7 @@ interface AProps {
     type : string ) => void;
 }
 
-const ButtonModalUserEdit: React.FC<AProps> = ({ detailUser , dataListRule , onEditUser }) => {
+const ButtonModalUserEdit: React.FC<AProps> = ({ disabled ,detailUser , dataListRule , onEditUser }) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [isLoadingSave, setLoadingSave] = useState(false);
   const [isInvalidPass, setInvalidPass] = useState(false);
@@ -79,7 +80,7 @@ const ButtonModalUserEdit: React.FC<AProps> = ({ detailUser , dataListRule , onE
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" endContent={
+        <Button isDisabled={!disabled} onPress={() => handleOpen()} className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" endContent={
           <UserPen width="25px" height="25px" />}>
         </Button>
       </div>

@@ -40,6 +40,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 interface TableProps {
+  disabled : boolean
   groupName : string
   groupCode : string
   listDevice: ListDevice[];
@@ -50,7 +51,7 @@ interface TableProps {
 
 }
 
-const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDeleteImsiInGroup, onDataImsiAll, onAddImsiGroup ,onSaveDataDevice }) => {
+const TableImsiGroup: FC<TableProps> = ({disabled, groupName ,groupCode ,listDevice, onDeleteImsiInGroup, onDataImsiAll, onAddImsiGroup ,onSaveDataDevice }) => {
   const t = useTranslations("ControlGroup");
   const [filterValue, setFilterValue] = useState("");
   const [getListDevice, setListDevice] = useState(listDevice);
@@ -138,7 +139,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
 
   const renderCell = useCallback(
     
-    (listDevice: ListDevice, columnKey: React.Key) => {
+    (listDevice: ListDevice, columnKey: React.Key , disabled : boolean) => {
       const cellValue = listDevice[columnKey as keyof ListDevice];
       //setIsLoaded(true);
       if (columnKey == "status") {
@@ -235,9 +236,8 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
               }}
             >
               
-              <ButtonConfirmEdit value={listDevice.imsi} onConfirm={handleConfirmationEdit} onClick={handleClick}></ButtonConfirmEdit>
-              {/* {groupName === "ALL" ? "" : <ButtonConfrim  onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>} */}
-              <ButtonConfrim  onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>
+              <ButtonConfirmEdit disabled={disabled} value={listDevice.imsi} onConfirm={handleConfirmationEdit} onClick={handleClick}></ButtonConfirmEdit>
+              <ButtonConfrim disabled={disabled} onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>
               
             </div>
           );
@@ -365,7 +365,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
           </Autocomplete>
 
           <Button
-            isDisabled={groupName === "ALL" ? true : false}
+            isDisabled={groupName === "ALL" ? true : !disabled}
             aria-label="add imsi"
             size="lg"
             isLoading={isAddDeviceLoading}
@@ -496,7 +496,7 @@ const TableImsiGroup: FC<TableProps> = ({ groupName ,groupCode ,listDevice, onDe
           {(item) => (
             <TableRow key={item.imsi}>
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey, disabled)}</TableCell>
               )}
             </TableRow>
           )}

@@ -4,11 +4,13 @@ import TableListSchedule from "@/app/components/table/schedule-list";
 import { ListResponseSchedule, ListSchedule, SaveSchedule } from "@/app/interface/schedule";
 import { useEffect, useState } from "react";
 import { ListGroupAll } from "@/app/interface/control";
+import { RuleUserItem } from "@/app/model/rule";
 
 export default function dashboardPeriod() {
   const t = useTranslations("ControlSchedule");
   const [loading, setLoading] = useState(true);
   const [dataListSchedule, setListSchedule] = useState<ListSchedule[]>([]);
+  const [dataRule, setDataRule] = useState<RuleUserItem>({});
 
   const fetchSaveData = async (data : SaveSchedule) => {
     const res = await fetch("/api/schedule/save-data", {
@@ -144,13 +146,41 @@ export default function dashboardPeriod() {
     }
   };
 
+  const fetchRule = async () : Promise<RuleUserItem> => {
+        const res = await fetch("/api/service/get-data-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "API-Key": "1234",
+          },
+          body: JSON.stringify({}),
+        });
+    
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await res.json();
+        if (res.status == 200) {
+          const data: RuleUserItem = {config : result.data.settingSchedule[1] === 1 ? true : false , control : result.data.settingSchedule[2] === 1 ? true : false};
+          setDataRule(data);
+          console.log(data)
+          return data;
+        } else {
+          const dataFalse: RuleUserItem = {config : false , control : false};
+          setDataRule(dataFalse);
+          return dataFalse
+        }
+      };
+
   useEffect(() => {
     fetchListSchedule();
+    fetchRule();
   }, []);
 
   return (
     <div className="w-full h-auto p-1">
       <TableListSchedule
+        dataRule={dataRule}
         listSchedule={dataListSchedule}
         loading={loading}
         listResponseSchedule={fetchListResponse}

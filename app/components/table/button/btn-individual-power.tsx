@@ -7,12 +7,13 @@ import {
 import { Lightbulb, RefreshCcw } from "lucide-react";
 import { escape } from "querystring";
 interface Props {
+    disabled: boolean;
     gatewayId: string;
     deviceId: string;
     watt: string;
 }
 
-const ButtonIndividualPower: React.FC<Props> = ({gatewayId, deviceId , watt}) => {
+const ButtonIndividualPower: React.FC<Props> = ({disabled ,gatewayId, deviceId , watt}) => {
 
   const [value, setValue] = React.useState(0);
   var [isWatt, setWatt] = useState<string>(watt);
@@ -93,6 +94,7 @@ const ButtonIndividualPower: React.FC<Props> = ({gatewayId, deviceId , watt}) =>
         </Button>
         <Button
           isIconOnly
+          isDisabled={!disabled}
           isLoading={isLoading}
           onClick={() => fetchReadPower()}
           className="bg-gradient-to-tr text-white shadow-lg -m-15 from-blue-500 to-blue-300"

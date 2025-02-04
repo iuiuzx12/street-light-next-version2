@@ -2,6 +2,7 @@
 import TableListDevice from "@/app/components/table/individual-list";
 import { ListGroupAll } from "@/app/interface/control";
 import { ListDeviceInGroup, ListLogDevice, ListLogDeviceUserControl } from "@/app/interface/individual";
+import { RuleUserItem } from "@/app/model/rule";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -10,6 +11,7 @@ const controlIndividual: React.FC = () => {
   const [dataListDevice, setListDevice] = useState<ListDeviceInGroup[]>([]);
   const [dataListGroup, setListGroup] = useState<ListGroupAll[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dataRule, setDataRule] = useState<RuleUserItem>({});
 
   const fetchListDevice = async ( dataGroupName: string ): Promise<ListDeviceInGroup[]> => {
     setLoading(true);
@@ -102,7 +104,33 @@ const controlIndividual: React.FC = () => {
     }
   };
 
+  const fetchRule = async () : Promise<RuleUserItem> => {
+      const res = await fetch("/api/service/get-data-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "API-Key": "1234",
+        },
+        body: JSON.stringify({}),
+      });
+  
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await res.json();
+      if (res.status == 200) {
+        const data: RuleUserItem = {config : result.data.streetLight[1] === 1 ? true : false , control : result.data.streetLight[2] === 1 ? true : false};
+        setDataRule(data);
+        return data;
+      } else {
+        const dataFalse: RuleUserItem = {config : false , control : false};
+        setDataRule(dataFalse);
+        return dataFalse
+      }
+    };
+
   useEffect(() => {
+    fetchRule();
     fetchListDevice("ALL");
     fetchGroupAll();
   }, []);
@@ -110,6 +138,7 @@ const controlIndividual: React.FC = () => {
   return (
     <div className="w-full h-auto p-1">
       <TableListDevice
+        dataRule={dataRule}
         listDevice={dataListDevice}
         listGroup={dataListGroup}
         loading={loading}

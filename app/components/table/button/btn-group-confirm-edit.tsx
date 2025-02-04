@@ -3,12 +3,13 @@ import { Button} from "@nextui-org/react";
 import { Save , CheckCheck, Loader , CircleX } from "lucide-react";
 
 interface Props {
+  disabled : boolean
   value : string
   onClick: (click: boolean) => void; 
   onConfirm: (confirmed: boolean, value : string) => void; 
 }
 
-const ButtonConfirmEdit: React.FC<Props> = ({ onClick , onConfirm , value }) => {
+const ButtonConfirmEdit: React.FC<Props> = ({ disabled , onClick , onConfirm , value }) => {
   const [isConfirming, setIsConfirming] = useState(false);
 
   const handleClick = () => {
@@ -30,6 +31,7 @@ const ButtonConfirmEdit: React.FC<Props> = ({ onClick , onConfirm , value }) => 
     <div className="grid grid-flow-col auto-cols-max gap-1">
       <Button 
         isIconOnly 
+        isDisabled={!disabled}
         onClick={handleClick}
         aria-label="Confirming Edit"
         size="md"

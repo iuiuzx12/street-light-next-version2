@@ -26,9 +26,11 @@ import ButtonModelDeleteSchedule from "./button/btn-schedule-delete";
 import ButtonModelEditAddSchedule from "./button/btn-schedule-edit-add";
 import ButtonModelResponseSchedule from "./button/btn-schedule-response";
 import { ListGroupAll } from "@/app/interface/control";
+import { RuleUserItem } from "@/app/model/rule";
 
 const INITIAL_VISIBLE_COLUMNS = ["scheduleName", "typeSchedule", "edit", "response" , "delete"];
 interface TableProps {
+    dataRule: RuleUserItem;
     loading: boolean;
     listSchedule: ListSchedule[];
     listGroup : () => Promise<ListGroupAll[]>;
@@ -39,6 +41,7 @@ interface TableProps {
   }
 
 const TableListSchedule: React.FC<TableProps> = ({
+    dataRule,
     loading,
     listSchedule,
     resendCommad,
@@ -116,7 +119,7 @@ const TableListSchedule: React.FC<TableProps> = ({
   }, [sortDescriptor, items ,listGroup]);
   
   const renderCell = React.useCallback(
-    (data: ListSchedule, columnKey: React.Key) => {
+    (data: ListSchedule, columnKey: React.Key , dataRule : RuleUserItem) => {
       const cellValue = data[columnKey as keyof ListSchedule];
 
       switch (columnKey) {
@@ -140,6 +143,7 @@ const TableListSchedule: React.FC<TableProps> = ({
             >
               <ButtonModelEditAddSchedule
                 type="edit"
+                disabled={dataRule.config ?? false}
                 dataDetail={data}
                 dataListGroup={listGroup}
                 onSaveData={onSaveData}
@@ -199,6 +203,7 @@ const TableListSchedule: React.FC<TableProps> = ({
               }}
             >
               <ButtonModelDeleteSchedule
+                disabled={dataRule.config ?? false}
                 nameSchedule={data.scheduleName}
                 groupCode={data.groupCode}
                 nameCode={JSON.stringify(resultGroupNameCode)}
@@ -265,7 +270,7 @@ const TableListSchedule: React.FC<TableProps> = ({
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3 self-end">
-          <ButtonModelEditAddSchedule type="add" dataDetail={null} dataListGroup={listGroup} onSaveData={onSaveData}></ButtonModelEditAddSchedule>
+          <ButtonModelEditAddSchedule disabled={dataRule.config ?? false} type="add" dataDetail={null} dataListGroup={listGroup} onSaveData={onSaveData}></ButtonModelEditAddSchedule>
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -378,7 +383,7 @@ const TableListSchedule: React.FC<TableProps> = ({
               {(item) => (
                 <TableRow key={item.groupCode}>
                   {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    <TableCell>{renderCell(item, columnKey, dataRule)}</TableCell>
                   )}
                 </TableRow>
               )}

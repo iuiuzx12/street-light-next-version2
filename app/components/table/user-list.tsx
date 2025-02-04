@@ -6,8 +6,10 @@ import ButtonModalUserEdit from "./button/btn-user-edit";
 import ButtonModalUserUsing from "./button/btn-user-using";
 import { ListUser } from "@/app/interface/personal";
 import { useTranslations } from "next-intl";
+import { RuleUserItem } from "@/app/model/rule";
 
 interface TableProps {
+  rule : RuleUserItem
   listUser: ListUser[];
   dataRule : [];
   onSetUsable : (userId : string, status : string) => void;
@@ -22,7 +24,7 @@ interface TableProps {
     type : string) => void;
 }
 
-const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser , onEditUser , onSetUsable }) => {
+const TableListUser: React.FC<TableProps> =  ({rule, listUser, dataRule, onDeleteUser , onEditUser , onSetUsable }) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const rowsPerPage = 10;
   const [page, setPage] = React.useState(1);
@@ -41,7 +43,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
     return listUser.slice(start, end);
   }, [page, listUser]);
 
-  const renderCell = React.useCallback((listUser: ListUser, dataRule : [] , columnKey: React.Key) => {
+  const renderCell = React.useCallback((listUser: ListUser, dataRule : [] , columnKey: React.Key , rule : RuleUserItem) => {
     const cellValue = listUser[columnKey as keyof ListUser];
     
     switch (columnKey) {
@@ -59,7 +61,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
           <div className="flex items-center gap-10" style={{
             placeSelf: "center",
           }}>
-            <ButtonModalUserEdit detailUser={listUser} dataListRule={dataRule} onEditUser={onEditUser}></ButtonModalUserEdit>
+            <ButtonModalUserEdit disabled={rule.config ?? false} detailUser={listUser} dataListRule={dataRule} onEditUser={onEditUser}></ButtonModalUserEdit>
         </div>
         );
 
@@ -69,7 +71,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
           <div className="flex items-center gap-10" style={{
             placeSelf: "center",
           }}>
-            <ButtonModalUserDelete userId={listUser.personal_id} onDelete={onDeleteUser}></ButtonModalUserDelete>
+            <ButtonModalUserDelete disabled={rule.config ?? false} userId={listUser.personal_id} onDelete={onDeleteUser}></ButtonModalUserDelete>
         </div>
         );
 
@@ -80,7 +82,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
             placeSelf: "center",
           }}>
            
-            <ButtonModalUserUsing userId={listUser.personal_id } usable={listUser.usable} onSetUsable={onSetUsable}></ButtonModalUserUsing>
+            <ButtonModalUserUsing disabled={rule.config ?? false} userId={listUser.personal_id } usable={listUser.usable} onSetUsable={onSetUsable}></ButtonModalUserUsing>
         </div>
         );
       
@@ -132,7 +134,7 @@ const TableListUser: React.FC<TableProps> =  ({ listUser, dataRule, onDeleteUser
               {(item) => (
                 <TableRow key={item.personal_id}>
                   {(columnKey) => (
-                    <TableCell>{renderCell(item, dataRule, columnKey)} </TableCell>
+                    <TableCell>{renderCell(item, dataRule, columnKey, rule)} </TableCell>
                   )}
                 </TableRow>
               )}

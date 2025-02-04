@@ -4,11 +4,12 @@ import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface ButtonProps {
+  disabled: boolean
   userId: string;
   onDelete: (userId: string) => void;
 }
 
-const ButtonModalUserDelete: React.FC<ButtonProps> = ({ userId, onDelete }) => {
+const ButtonModalUserDelete: React.FC<ButtonProps> = ({disabled, userId, onDelete }) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
   const t = useTranslations("SettingPersonal");
@@ -29,7 +30,7 @@ const ButtonModalUserDelete: React.FC<ButtonProps> = ({ userId, onDelete }) => {
   return (
         <>
       <div className="flex flex-wrap gap-3">
-        <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
+        <Button isDisabled={!disabled} onPress={() => handleOpen()} className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15" endContent={
           <Trash2 width="25px" height="25px" />}>
         </Button>
       </div>

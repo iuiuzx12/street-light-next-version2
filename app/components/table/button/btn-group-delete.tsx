@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
 interface Props {
+    disabled : boolean;
     groupName : string;
     groupCode : string;
     onSendData: (
@@ -10,7 +11,7 @@ interface Props {
         dataGroupCode : string) => void;
 }
 
-const ButtonModelDelete: React.FC<Props> = ({groupName , groupCode, onSendData }) => {
+const ButtonModelDelete: React.FC<Props> = ({disabled, groupName , groupCode, onSendData }) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [isLoadingDelete, setLoadingDelete] = useState(false);
   const t = useTranslations("ControlGroup");
@@ -35,7 +36,7 @@ const ButtonModelDelete: React.FC<Props> = ({groupName , groupCode, onSendData }
       <Button
             style={{ float: "right" , cursor: groupName === "ALL" ? 'not-allowed ' : 'pointer' }}
             //isIconOnly
-            isDisabled={groupName === "ALL" ? true : false}
+            isDisabled={groupName === "ALL" ? true : !disabled}
             isLoading={isLoadingDelete}
             aria-label="delete group"
             

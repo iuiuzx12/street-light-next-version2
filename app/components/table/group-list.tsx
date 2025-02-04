@@ -28,6 +28,7 @@ import ButtonModelDelete from "./button/btn-group-delete";
 import ButtonModelListImsi from "./button/btn-group-add-imsi";
 import { ListLatLong } from "@/app/interface/map";
 import { useTranslations } from "next-intl";
+import { RuleUserItem } from "@/app/model/rule";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -38,6 +39,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 const INITIAL_VISIBLE_COLUMNS = ["group_name", "sub_district", "total_rtu", "actions"];
 
 interface TableProps {
+    dataRule : RuleUserItem;
     loading : boolean;
     listGroup: ListGroupAll[];
     onAddGroup : (dataGroupName: string) => void;
@@ -55,6 +57,7 @@ interface TableProps {
   
 
 const TableListGroup: React.FC<TableProps> = ({
+  dataRule,
   loading,
   listGroup,
   onAddGroup,
@@ -77,13 +80,13 @@ const TableListGroup: React.FC<TableProps> = ({
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [dataRuletest, setDataRule] = React.useState(dataRule);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "group_name",
     direction: "ascending",
   });
 
   const [page, setPage] = React.useState(1);
-  const [isLoaded, setIsLoaded] = React.useState(true);
   const t = useTranslations("ControlGroup");
 
   const columns = [
@@ -136,7 +139,7 @@ const TableListGroup: React.FC<TableProps> = ({
 
   const renderCell = React.useCallback(
     
-    (groupAll: ListGroupAll, columnKey: React.Key) => {
+    (groupAll: ListGroupAll, columnKey: React.Key , dataRule : RuleUserItem) => {
         
       const cellValue = groupAll[columnKey as keyof ListGroupAll];
 
@@ -160,6 +163,7 @@ const TableListGroup: React.FC<TableProps> = ({
               }}
             >
               <ButtonModelControl
+                disabled={dataRule.control ?? false}
                 groupName={groupAll.group_name}
                 groupCode={groupAll.group_code}
                 onDetail={onDetailGroup}
@@ -168,6 +172,7 @@ const TableListGroup: React.FC<TableProps> = ({
               />
 
               <ButtonModelListImsi
+                disabled={dataRule.config ?? false}
                 groupName={groupAll.group_name}
                 groupCode={groupAll.group_code}
                 onDetail={onDetailGroup}
@@ -178,6 +183,7 @@ const TableListGroup: React.FC<TableProps> = ({
               />
 
               <ButtonModelDelete
+                disabled={dataRule.config ?? false}
                 groupName={groupAll.group_name}
                 groupCode={groupAll.group_code}
                 onSendData={onDeleteGroup}
@@ -355,7 +361,7 @@ const TableListGroup: React.FC<TableProps> = ({
               {(item) => (
                 <TableRow key={item.group_code}>
                   {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    <TableCell>{renderCell(item, columnKey, dataRule)}</TableCell>
                   )}
                 </TableRow>
               )}

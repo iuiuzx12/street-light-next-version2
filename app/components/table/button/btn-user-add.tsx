@@ -6,6 +6,7 @@ import { UserPlus, Eye , EyeClosed} from 'lucide-react';
 import { useTranslations } from "next-intl";
 
 interface AProps {
+  rule : boolean
   dataRule : []
   onSendData: (
     personalId : string, 
@@ -17,7 +18,7 @@ interface AProps {
     type : string ) => void;
 }
 
-const ButtonModalUserAdd: React.FC<AProps> = ({ dataRule , onSendData }) => {
+const ButtonModalUserAdd: React.FC<AProps> = ({ rule,  dataRule , onSendData }) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [isLoadingSave, setLoadingSave] = useState(false);
   const [isInvalidUser, setInvalidUser] = useState(true);
@@ -113,7 +114,7 @@ const ButtonModalUserAdd: React.FC<AProps> = ({ dataRule , onSendData }) => {
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button  onPress={() => handleOpen()} className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" endContent={
+        <Button isDisabled={!rule} onPress={() => handleOpen()} className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15" endContent={
           <UserPlus width="25px" height="25px" />}>
           {t(`btn-add-user`)}
         </Button>

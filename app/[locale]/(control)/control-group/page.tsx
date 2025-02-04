@@ -5,10 +5,13 @@ import { ListGroupAll, ListDevice, ListImsi } from "@/app/interface/control";
 import { useEffect, useState } from "react";
 import TableListGroup from "@/app/components/table/group-list";
 import { ListLatLong } from "@/app/interface/map";
+import { RuleUserItem } from "@/app/model/rule";
+import { config } from "process";
 
 const controlGroup: React.FC = () => {
   const t = useTranslations("ControlGroup");
   const [dataListGroup, setListGroup] = useState<ListGroupAll[]>([]);
+  const [dataRule, setDataRule] = useState<RuleUserItem>({});
   const [loading, setLoading] = useState(true);
   const fetchGroupAll = async (): Promise<ListGroupAll[]> => {
     setLoading(true);
@@ -324,15 +327,43 @@ const controlGroup: React.FC = () => {
 
   };
 
+  const fetchRule = async () : Promise<RuleUserItem> => {
+    const res = await fetch("/api/service/get-data-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "API-Key": "1234",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const result = await res.json();
+    if (res.status == 200) {
+      const data: RuleUserItem = {config : result.data.groupConfig[1] === 1 ? true : false , control : result.data.groupConfig[2] === 1 ? true : false};
+      setDataRule(data);
+      return data;
+    } else {
+      const dataFalse: RuleUserItem = {config : false , control : false};
+      setDataRule(dataFalse);
+      return dataFalse
+    }
+  };
+
   useEffect(() => {
+    fetchRule();
     fetchGroupAll();
     fetchImsiAll();
+    
   }, []);
 
 
   return (
     <div className="w-full h-auto p-1">
         <TableListGroup 
+          dataRule={dataRule}
           loading={loading}
           listGroup={dataListGroup}
           onAddGroup={fetchPushDataGroup} 

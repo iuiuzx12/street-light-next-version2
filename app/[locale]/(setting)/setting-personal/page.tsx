@@ -5,12 +5,14 @@ import { ListUser } from "@/app/interface/personal";
 import TableListUser from "@/app/components/table/user-list";
 import ButtonModalUserAdd from "@/app/components/table/button/btn-user-add";
 import ServerErrorNotification from "@/app/components/server-error";
+import { RuleUserItem } from "@/app/model/rule";
 
 const settingPersonal: React.FC = () => {
   const t = useTranslations("SettingPersonal");
   const [dataListUser, setListUser] = useState<ListUser[]>([]);
   const [dataListRole, setListRole] = useState<[]>([]);
   const [data, setData] = useState<ListUser[]>([]);
+  const [dataRule, setDataRule] = useState<RuleUserItem>({});
 
   const fetchListUser = async (): Promise<ListUser[]> => {
     try {
@@ -18,21 +20,6 @@ const settingPersonal: React.FC = () => {
         method: "POST",
         body: JSON.stringify({}),
       });
-
-      
-      // if (!response.ok) {
-      //   throw new Error("Network response was not ok");
-      // }
-
-      // if(response.status === 500){
-      //   <ServerErrorNotification></ServerErrorNotification>
-      //   throw new Error("Network response was not ok");
-      // }
-      // else if (!response.ok) {
-      //   throw new Error("Network response was not ok");
-      // }else{
-
-      // }
       
       const res = await response.json();
       const data: ListUser[] = res.dataListUser;
@@ -135,7 +122,34 @@ const settingPersonal: React.FC = () => {
     }
   };
 
+  const fetchRule = async () : Promise<RuleUserItem> => {
+          const res = await fetch("/api/service/get-data-user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "API-Key": "1234",
+            },
+            body: JSON.stringify({}),
+          });
+      
+          if (!res.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const result = await res.json();
+          if (res.status == 200) {
+            const data: RuleUserItem = {config : result.data.personal[1] === 1 ? true : false , control : result.data.personal[2] === 1 ? true : false};
+            setDataRule(data);
+            console.log(data)
+            return data;
+          } else {
+            const dataFalse: RuleUserItem = {config : false , control : false};
+            setDataRule(dataFalse);
+            return dataFalse
+          }
+        };
+
   useEffect(() => {
+    fetchRule();
     fetchListUser();
   }, []);
 
@@ -144,6 +158,7 @@ const settingPersonal: React.FC = () => {
       <div className="w-full h-auto">
           <div className="p-2">
             <ButtonModalUserAdd
+              rule={dataRule.config ?? false}
               dataRule={dataListRole}
               onSendData={fetchSaveDataUser}
             ></ButtonModalUserAdd>
@@ -152,6 +167,7 @@ const settingPersonal: React.FC = () => {
 
           <div className="w-full h-auto p-1">
             <TableListUser
+              rule={dataRule}
               listUser={dataListUser}
               dataRule={dataListRole}
               onSetUsable={fetchSetUserUsable}

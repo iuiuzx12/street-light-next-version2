@@ -5,11 +5,12 @@ import { Trash , CheckCheck, Loader, CircleX } from "lucide-react";
 
 interface Props {
   value : string
+  disabled : boolean
   onClick: (confirmed: boolean) => void; 
   onConfirm: (confirmed: boolean, value : string) => void; 
 }
 
-const ButtonConfirm: React.FC<Props> = ({ onClick, onConfirm , value }) => {
+const ButtonConfirm: React.FC<Props> = ({ disabled, onClick, onConfirm , value }) => {
   const [isConfirming, setIsConfirming] = useState(false);
 
   const handleClick = () => {
@@ -31,6 +32,7 @@ const ButtonConfirm: React.FC<Props> = ({ onClick, onConfirm , value }) => {
     <div className="grid grid-flow-col auto-cols-max gap-1">
       <Button 
         isIconOnly 
+        isDisabled={!disabled}
         onClick={handleClick}
         aria-label="Confirming Delete"
         size="md"

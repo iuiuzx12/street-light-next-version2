@@ -14,13 +14,14 @@ import {
 import {MoonIcon, SunIcon , Power, SendIcon, StopCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 interface Props {
+  disabled: boolean;
   gatewayId: string;
   deviceId: string;
   command: string;
   brightness: number;
 }
 
-const ButtonModelIndividualCommand: React.FC<Props> = ({gatewayId, deviceId ,command , brightness}) => {
+const ButtonModelIndividualCommand: React.FC<Props> = ({disabled , gatewayId, deviceId ,command , brightness}) => {
   const t = useTranslations("ControlIndividual");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCommand, setCommand] = useState(command);
@@ -152,6 +153,7 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({gatewayId, deviceId ,com
         </Button>
         <Button
           isIconOnly
+          isDisabled={!disabled}
           onClick={() => handleOpenDetail()}
           className={isCommand === '0' ? "bg-gradient-to-tr text-white shadow-lg -m-15 from-gray-500 to-gray-300" : "bg-gradient-to-tr text-white shadow-lg -m-15 from-green-500 to-green-300"}
         >

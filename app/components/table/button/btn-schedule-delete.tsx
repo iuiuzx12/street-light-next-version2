@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
 import { SaveSchedule } from "@/app/interface/schedule";
 interface Props {
+  disabled: boolean;
   nameSchedule: string;
   groupCode: string;
   nameCode : string;
@@ -19,6 +20,7 @@ interface Props {
   onSaveData: ( data : SaveSchedule) => void;
 }
 const ButtonModelDeleteSchedule: React.FC<Props> = ({
+  disabled,
   nameSchedule,
   groupCode,
   nameCode,
@@ -56,6 +58,7 @@ const ButtonModelDeleteSchedule: React.FC<Props> = ({
     <>
       <Button
         isIconOnly
+        isDisabled={!disabled}
         isLoading={isLoadingDelete}
         aria-label="delete Schedule"
         size="md"
