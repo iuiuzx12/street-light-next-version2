@@ -12,6 +12,8 @@
     "map-disconnect" : "ขาดการเชื่อมต่อ",
     "setting" : "ตั้งค่า",
     "setting-personal" : "จัดการผู้ใช้งาน",
+    "setting-menu" : "ตั้งค่าเมนู",
+    "setting-alert" : "ตั้งค่าแจ้งเตือน",
     "logout": "ออกระบบ"
   }
 }

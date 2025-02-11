@@ -13,7 +13,6 @@ export default function mapTotal(props: any) {
   const [dataRule, setDataRule] = useState<RuleUserItem>({});
   const handleSendData = (newData: ListLatLong[]) => {
     setData(newData);
-    //console.log(newData)
   };
 
   const fetchRule = async (): Promise<RuleUserItem> => {
@@ -36,7 +35,6 @@ export default function mapTotal(props: any) {
         control: result.data.mapGlobal[2] === 1 ? true : false,
       };
       setDataRule(data);
-      console.log(data)
       return data;
     } else {
       const dataFalse: RuleUserItem = { config: false, control: false };

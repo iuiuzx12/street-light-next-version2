@@ -1,6 +1,7 @@
 import {withAuth} from 'next-auth/middleware';
 import createIntlMiddleware from 'next-intl/middleware';
 import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
+import { ListAuth } from './app/interface/auth';
 
 const locales = ['en', 'th'];
 
@@ -11,7 +12,6 @@ const intlMiddleware = createIntlMiddleware({
 
 const authMiddleware = withAuth(
   function onSuccess(req) {
-    console.log("onSuccess")
     return intlMiddleware(req);
   },
   {
@@ -43,7 +43,7 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
 
   if (responseUser.status === 200) {
     publicPages = ['/', '/login', '/logout', '/not-auth'];
-    var DataUser = await responseUser.json().finally();
+    var DataUser : ListAuth = await responseUser.json().finally();
 
     DataUser.dashboard[0] === 1 && publicPages.push("/dashboard-period");
     DataUser.groupDashboard[0] === 1 && publicPages.push("/dashboard-daily");
@@ -53,6 +53,8 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
     DataUser.mapGlobal[0] === 1 && publicPages.push("/map-total");
     DataUser.mapDisconnect[0] === 1 && publicPages.push("/map-disconnect");
     DataUser.personal[0] === 1 &&  publicPages.push("/setting-personal");
+    DataUser.settingMenu[0] === 1 &&  publicPages.push("/setting-menu");
+    DataUser.alertStreetLight[0] === 1 &&  publicPages.push("/setting-alert");
 
   }
 
@@ -65,14 +67,7 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
   );
   
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-  console.log(isPublicPage);
-  console.log("publicPages")
-    
-    
-  console.log(req.nextUrl.pathname);
   
-  console.log(publicPages)
-
   if (isPublicPage) {
     return intlMiddleware(req);
   } else {

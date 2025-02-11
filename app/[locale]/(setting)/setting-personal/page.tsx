@@ -83,7 +83,6 @@ const settingPersonal: React.FC = () => {
 
     const result = await res.json();
     if (res.status == 200) {
-      console.log(result.data);
       fetchListUser();
       if (result.data == true) {
         return true;
@@ -110,7 +109,6 @@ const settingPersonal: React.FC = () => {
 
     const result = await res.json();
     if (res.status == 200) {
-      console.log(result.data);
       fetchListUser();
       if (result.data == "1") {
         return true;
@@ -139,7 +137,6 @@ const settingPersonal: React.FC = () => {
           if (res.status == 200) {
             const data: RuleUserItem = {config : result.data.personal[1] === 1 ? true : false , control : result.data.personal[2] === 1 ? true : false};
             setDataRule(data);
-            console.log(data)
             return data;
           } else {
             const dataFalse: RuleUserItem = {config : false , control : false};

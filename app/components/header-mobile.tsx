@@ -58,8 +58,8 @@ export function HeaderMobile(data : any) {
         variants={variants}
         className="absolute grid w-full gap-3 px-10 py-16 max-h-screen overflow-y-auto"
       >
-        {AuthRules(data).map((item, idx) => {
-          const isLastItem = idx === AuthRules(data).length - 1; // Check if it's the last item
+        {AuthRules(data.data).map((item, idx) => {
+          const isLastItem = idx === AuthRules(data.data).length - 1; // Check if it's the last item
 
           return (
             <div key={idx}>

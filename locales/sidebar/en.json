@@ -12,6 +12,8 @@
     "map-disconnect" : "Map Disconnect",
     "setting" : "Setting",
     "setting-personal" : "Setting Personal",
+    "setting-menu" : "Setting Menu",
+    "setting-alert" : "Setting Alert",
     "logout" : "Logout"
   }
 }

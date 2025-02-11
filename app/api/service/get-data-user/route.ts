@@ -20,20 +20,16 @@ export async function GET(req : any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request , res : Response) {
   try {
     var token = cookies().get("token");
-    console.log("GetDAtaUSER")
-    console.log(token)
-    //const data = await req.json();
+    
     const response = await fetch (process.env.API_URL +'/StreetLight/getDataUser' , {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
         "Authorization" : "Bearer " + token?.value
       },
-      //body: JSON.stringify(data)
     });
 
     const dataResponse = await response.json();
@@ -43,14 +39,8 @@ export async function POST(req: Request , res : Response) {
       });
     }else{
 
-      // const transformedArray = dataResponse.dataReturn.map((num : any, index : any) => ({
-      //   key: index,
-      //   value: num
-      // }));
-
       return NextResponse.json( 
         {
-            //data: transformedArray },
             data: dataResponse },
         {
             status: 200 }

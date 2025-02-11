@@ -23,6 +23,7 @@ import { ListDevice } from "@/app/interface/control";
 import { ListLatLong } from "@/app/interface/map";
 import StaticMapXYZComponent from "../map/map-xyz";
 import { useTranslations } from "next-intl";
+import { RuleUserItem } from "@/app/model/rule";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "street_light_name",
@@ -35,6 +36,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 interface TableProps {
+  dataRule : RuleUserItem;
   groupName: string;
   groupCode: string;
   listDevice: ListDevice[];
@@ -48,6 +50,7 @@ interface TableProps {
 }
 
 const TableControlGroup: FC<TableProps> = ({
+  dataRule,
   groupName,
   groupCode,
   listDevice,
@@ -115,7 +118,6 @@ const TableControlGroup: FC<TableProps> = ({
       setSeconds((prev) => prev + 1);
     }, 1000);
     setIntervalId(id);
-    console.log(id);
     return id;
   }, [intervalId, isRunning]);
 
@@ -160,8 +162,6 @@ const TableControlGroup: FC<TableProps> = ({
     });
     setResponse(open)
     setNotResponse(close)
-    //console.log(open);
-    //console.log(close);
   };
 
   const onReloadDataLatLong = useCallback(async () => {
@@ -346,7 +346,6 @@ const TableControlGroup: FC<TableProps> = ({
     const command = isValueSlider === 0 ? 0 : 1;
 
     const entriesArray = Array.from(selectedKeys);
-    console.log(entriesArray)
     if (
       entriesArray[0] === "a" &&
       entriesArray[1] === "l" &&
@@ -616,6 +615,7 @@ const TableControlGroup: FC<TableProps> = ({
           <StaticMapXYZComponent
             high="h-[calc(100vh-490px)]"
             data={data}
+            dataRule={dataRule}
           ></StaticMapXYZComponent>
           <Button
             aria-label="back"

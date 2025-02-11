@@ -5,13 +5,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Paginat
 import useSWR from "swr";
 import moment from 'moment';
 
-//const fetcher = (...args : [RequestInfo, RequestInit?]) => fetch(...args).then((res) => res.json());
-
-
-
 const fetcher = (url: string, data: object) => {
-  console.log(url)
-  console.log(data)
   return fetch(url[0], {
     method: 'POST',
     headers: {
@@ -42,10 +36,6 @@ export default function TableLogUser() {
     page_size : pageSize.toString(),
     draw : page.toString()
    };
-
-  // const {data, isLoading} = useSWR(`https://swapi.py4e.com/api/people?page=${page}`, fetcher, {
-  //   keepPreviousData: true,
-  // });
 
   const [searchTerm, setSearchTerm] = useState('');
   

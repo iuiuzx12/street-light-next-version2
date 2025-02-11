@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 import { RuleUserItem } from "@/app/model/rule";
 
 interface Props {
-  disabled : boolean | false;
+  rule : RuleUserItem;
   groupName: string;
   groupCode: string;
   onReloadLatLong : (typeSearch : string, dataSearch : string) => Promise<ListLatLong[]>;
@@ -24,7 +24,7 @@ interface Props {
   onSendCommand : (typeOpen : string , value : string, commandType : string , dimPercent : string) => Promise<ListLatLong[]>;
 }
 
-const ButtonModelControl: React.FC<Props> = ({disabled, groupName, groupCode, onDetail , onSendCommand, onReloadLatLong}) => {
+const ButtonModelControl: React.FC<Props> = ({rule, groupName, groupCode, onDetail , onSendCommand, onReloadLatLong}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [dataListDevice, setListDevice] = useState<ListDevice[]>([]);
   const t = useTranslations("ControlGroup");
@@ -41,7 +41,7 @@ const ButtonModelControl: React.FC<Props> = ({disabled, groupName, groupCode, on
       <Button
             style={{ float: "right" }}
             aria-label="control group"
-            isDisabled={!disabled}
+            isDisabled={!rule.control}
             size="md"
             radius="md"
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
@@ -61,6 +61,7 @@ const ButtonModelControl: React.FC<Props> = ({disabled, groupName, groupCode, on
                       {t(`control`)}
                         <div className="col-span-full">
                           <TableControlGroup
+                            dataRule={rule}
                             groupName={groupName}
                             groupCode={groupCode}
                             listDevice={dataListDevice}

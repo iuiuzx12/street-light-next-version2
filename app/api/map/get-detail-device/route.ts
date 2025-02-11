@@ -20,7 +20,6 @@ export async function GET(req : any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request , res : Response) {
   try {
     var token = cookies().get("token");

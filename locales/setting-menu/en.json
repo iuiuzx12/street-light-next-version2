@@ -1,0 +1,38 @@
+{
+  "SettingMenu": {
+    "title": "Setting Menu",
+    "description": "Setting Menu Control",
+    "admin-management": "Admin Management",
+    "privilege": "Privilege",
+    "admin": "Admin",
+    "management": "Management",
+    "operator": "Operator",
+    "total-menu": "Total Menu",
+    "rows-per-page": "Rows per page :",
+    "previous": "Previous",
+    "next": "Next",
+    "menu-not-found": "Menu not found",
+    "select-role": "Select Role",
+    "search-by-name-menu": "Search by Menu",
+    "menu-name" : "Menu Name",
+    "show-menu" : "Show Menu",
+    "config" : "Config",
+    "control" : "Control",
+    
+    "V_Dashboard": "Dashboard Daily",
+    "V_GroupDashboard": "Dashboard Period",
+    "V_GroupConfig": "Control Group",
+    "V_SettingSchedule": "Control Schedule",
+    "V_StreetLight": "Schedule Individual",
+    "V_MapGlobal": "Map Total",
+    "V_MapDisconnect": "Map Disconnect",
+    "V_SettingMenu": "Setting Menu",
+    "V_Personal": "Setting Personal",
+    "V_AlertStreetLight": "Setting Alert",
+
+    "V_MaintenanceConfig": "Not available",
+    "V_MaintenanceDashboard": "Not available",
+    "V_MaintenanceDetail": "Not available",
+    "V_MapChangeLamp": "Not available"
+  }
+}

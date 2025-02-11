@@ -43,7 +43,6 @@ const ButtonModalUserAdd: React.FC<AProps> = ({ rule,  dataRule , onSendData }) 
     setRole('');
     setInvalidPass(true)
     setInvalidUser(true)
-    console.log(dataRule)
   }
 
   const handleSave = async () => {
@@ -95,7 +94,6 @@ const ButtonModalUserAdd: React.FC<AProps> = ({ rule,  dataRule , onSendData }) 
 
     const result = await res.json();
     if (res.status == 200) {
-      console.log(result.data)
       if(result.data == "0"){
         setInvalidUser(false)
         return true;

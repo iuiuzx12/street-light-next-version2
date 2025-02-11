@@ -25,7 +25,7 @@ export async function POST(req: Request, res: Response) {
     var token = cookies().get("token");
     const data = await req.json();
     const response = await fetch(
-      process.env.API_URL + "/StreetLight/deleteSettingSchedule",
+      process.env.API_URL + "/StreetLight/getDataMenu",
       {
         method: "POST",
         headers: {

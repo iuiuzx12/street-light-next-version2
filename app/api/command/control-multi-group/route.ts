@@ -20,7 +20,6 @@ export async function GET(req : any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request , res : Response) {
   try {
     var token = cookies().get("token");
@@ -35,7 +34,6 @@ export async function POST(req: Request , res : Response) {
     });
 
     const dataResponse = await response.json();
-    console.log(dataResponse)
     if(dataResponse.result === false){
       return NextResponse.json("401", {
         status: 401,

@@ -7,7 +7,7 @@ const Logout = async () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchGroupAll = async (): Promise<boolean> => {
+  const fetchLogout = async (): Promise<boolean> => {
     try {
       const response = await fetch('/api/logout' ,
         {
@@ -21,7 +21,7 @@ const Logout = async () => {
       const res = await response.json();
       setIsLoading(false);
       setError("สำเร็จ");
-      router.push("/login");
+      router.push("/");
       router.refresh();
     
       //users.push(newUser);
@@ -34,7 +34,7 @@ const Logout = async () => {
   };
 
   useEffect(() => {
-    fetchGroupAll();
+    fetchLogout();
   }, []);
   
 

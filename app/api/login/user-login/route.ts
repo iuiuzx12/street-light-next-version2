@@ -20,7 +20,6 @@ export async function GET(req : any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request , res : Response) {
   try {
     const data = await req.json();
@@ -33,7 +32,6 @@ export async function POST(req: Request , res : Response) {
     });
 
     const dataResponse = await response.json();
-    console.log(dataResponse.dataReturn);
     if(dataResponse.result === false){
       return NextResponse.json("401", {
         status: 401,

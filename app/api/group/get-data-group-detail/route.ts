@@ -55,9 +55,6 @@ export async function POST(req: Request, res: Response) {
         }),
       }
     );
-
-    console.log(data.group_name)
-
     const dataResponse = await response.json();
     const dataLatLong = await responseLatLong.json();
     if (dataResponse.result === false) {

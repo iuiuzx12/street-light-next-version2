@@ -79,10 +79,8 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({disabled , gatewayId, de
     //setData([]);
     const id = setInterval(() => {
       setSeconds((prev) => prev + 10);
-      //console.log(seconds)
     }, 1000);
     setIntervalId(id);
-    //console.log(id);
     return id;
   }, [intervalId, isRunning, seconds, isValueSlider]);
 

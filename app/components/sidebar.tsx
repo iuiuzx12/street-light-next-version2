@@ -19,7 +19,7 @@ export function SideNav(data : any) {
         </Link>
 
         <div className="flex flex-col space-y-1 md:px-2 ">
-          {AuthRules(data).map((item, idx) => {
+          {AuthRules(data.data).map((item, idx) => {
             return <MenuItem key={idx} item={item} />;
           })}
         </div>

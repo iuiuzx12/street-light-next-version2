@@ -5,9 +5,6 @@ const locales: string[] = ['en', 'th'];
 
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as any)) notFound();
-  
-  //console.log("ddddddddddlocale")
-  //console.log(locale)
 
   return {
     messages: {
@@ -22,6 +19,8 @@ export default getRequestConfig(async ({ locale }) => {
       ...(await import(`./locales/map-total/${locale}.json`)).default,
       ...(await import(`./locales/map-disconnect/${locale}.json`)).default,
       ...(await import(`./locales/setting-personal/${locale}.json`)).default,
+      ...(await import(`./locales/setting-menu/${locale}.json`)).default,
+      ...(await import(`./locales/setting-alert/${locale}.json`)).default,
       ...(await import(`./locales/error/${locale}.json`)).default
       
     }

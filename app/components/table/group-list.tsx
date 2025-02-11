@@ -163,7 +163,7 @@ const TableListGroup: React.FC<TableProps> = ({
               }}
             >
               <ButtonModelControl
-                disabled={dataRule.control ?? false}
+                rule={dataRule}
                 groupName={groupAll.group_name}
                 groupCode={groupAll.group_code}
                 onDetail={onDetailGroup}

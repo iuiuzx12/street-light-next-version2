@@ -160,7 +160,6 @@ const controlGroup: React.FC = () => {
     }
 
     const result = await res.json();
-    console.log(result)
     if (res.status == 200) {
       fetchGroupAll();
     } else {
@@ -189,7 +188,6 @@ const controlGroup: React.FC = () => {
     }
 
     const result = await res.json();
-    console.log(result)
     if (res.status == 200) {
       return fetchDataGroupDetail(dataGroupName);
       

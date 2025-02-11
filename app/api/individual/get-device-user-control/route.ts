@@ -20,7 +20,6 @@ export async function GET(req: any) {
   }
 }
 
-// Notice the function definition:
 export async function POST(req: Request, res: Response) {
   try {
     var token = cookies().get("token");
@@ -43,11 +42,6 @@ export async function POST(req: Request, res: Response) {
         status: 401,
       });
     } else {
-
-      // var dataArrayWithId = Object.entries(dataResponse.dataReturn).map(([id, value] : any) => ({
-      //   id: parseInt(id),
-      //   ...value
-      // }));
 
       var dataArrayWithId = Object.entries(dataResponse.dataReturn).map(([id, value] : any) => ({
         id: id,

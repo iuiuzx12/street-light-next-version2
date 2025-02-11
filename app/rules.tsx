@@ -5,14 +5,14 @@ import { cookies } from "next/headers";
 import { title } from 'process';
 import path from 'path';
 import { icons } from 'lucide-react';
+import { ListAuth } from './interface/auth';
 
-  export let AuthRules = (res : any) => {
+  export let AuthRules = (res : ListAuth) => {
 
     let transformedData: SideNavItem[] = [];
     try {
-
          transformedData = [
-            ...(res.data.dashboard[0] === 1 || res.data.groupDashboard[0] === 1 ? [
+            ...(res.dashboard[0] === 1 || res.groupDashboard[0] === 1 ? [
               {
                 title: 'dashboard',
                 path: '/dashboard',
@@ -22,17 +22,17 @@ import { icons } from 'lucide-react';
                   { title: 'dashboard-period', 
                     path: '/dashboard-period', 
                     icon: '/icon/sidebar/dashboard-choose.svg' , 
-                    status : res.data.dashboard[0] === 1 ? true : false 
+                    status : res.dashboard[0] === 1 ? true : false 
                   },
                   { title: 'dashboard-daily', 
                     path: '/dashboard-daily', 
                     icon: '/icon/sidebar/dashboard-daily.svg', 
-                    status : res.data.groupDashboard[0] === 1 ? true : false },
+                    status : res.groupDashboard[0] === 1 ? true : false },
                 ]
               }
             ] : []),
             
-            ...(res.data.groupConfig[0] === 1 || res.data.settingSchedule[0] === 1 || res.data.streetLight[0] === 1 ? [
+            ...(res.groupConfig[0] === 1 || res.settingSchedule[0] === 1 || res.streetLight[0] === 1 ? [
               {
                 title: 'control',
                 path: '/control',
@@ -42,22 +42,22 @@ import { icons } from 'lucide-react';
                   { title: 'control-group', 
                     path: '/control-group', 
                     icon: '/icon/sidebar/control-group.svg', 
-                    status : res.data.groupConfig[0] === 1 ? true  : false
+                    status : res.groupConfig[0] === 1 ? true  : false
                   },
                   { title: 'control-schedule', 
                     path: '/control-schedule', 
                     icon: '/icon/sidebar/control-schedule.svg', 
-                    status : res.data.settingSchedule[0] === 1 ? true : false
+                    status : res.settingSchedule[0] === 1 ? true : false
                   },
                   { title: 'control-individual', 
                     path: '/control-individual', 
                     icon: '/icon/sidebar/control-individual.svg' , 
-                    status : res.data.streetLight[0] ? true : false },
+                    status : res.streetLight[0] ? true : false },
                 ]
               }
             ] : []),
           
-            ...(res.data.mapGlobal[0] === 1 || res.data.mapDisconnect[0] === 1 ? [
+            ...(res.mapGlobal[0] === 1 || res.mapDisconnect[0] === 1 ? [
               {
                 title: 'map',
                 path: '/map',
@@ -67,17 +67,17 @@ import { icons } from 'lucide-react';
                   { title: 'map-total', 
                     path: '/map-total', 
                     icon: '/icon/sidebar/map-marker.svg', 
-                    status : res.data.mapGlobal[0] === 1 ? true : false
+                    status : res.mapGlobal[0] === 1 ? true : false
                   },
                   { title: 'map-disconnect', 
                     path: '/map-disconnect', 
                     icon: '/icon/sidebar/map-disconnect.svg', 
-                    status : res.data.mapDisconnect[0] === 1 ? true : false },
+                    status : res.mapDisconnect[0] === 1 ? true : false },
                 ]
               }
             ] : []),
           
-            ...(res.data.personal[0] === 1 ? [
+            ...(res.personal[0] === 1 || res.settingMenu[0] === 1 || res.alertStreetLight[0] === 1 ? [
               {
                 title: 'setting',
                 path: '/setting',
@@ -87,24 +87,24 @@ import { icons } from 'lucide-react';
                   { title: 'setting-personal', 
                     path: '/setting-personal', 
                     icon: '/icon/sidebar/setting-user.svg', 
-                    status : true 
+                    status : res.personal[0] === 1 ? true : false 
                   },
-                  { title: 'setting-personal', 
-                    path: '/setting-personal', 
-                    icon: '/icon/sidebar/setting-user.svg', 
-                    status : false 
+                  { title: 'setting-menu', 
+                    path: '/setting-menu', 
+                    icon: '/icon/sidebar/user-authentication.svg', 
+                    status : res.settingMenu[0] === 1 ? true : false 
                   },
-                  { title: 'setting-personal', 
-                    path: '/setting-personal', 
-                    icon: '/icon/sidebar/setting-user.svg', 
-                    status : false 
+                  { title: 'setting-alert', 
+                    path: '/setting-alert', 
+                    icon: '/icon/sidebar/setting-alert.svg', 
+                    status : res.alertStreetLight[0] === 1 ? true : false 
                   },
                   
                 ]
               }
             ] : []),
           
-            ...(res.data.countLogin === null ? [
+            ...(res.countLogin === null ? [
               {
                 title: 'logout',
                 path: '/logout',
@@ -114,7 +114,6 @@ import { icons } from 'lucide-react';
               }
             ] : [])
           ];
-        //console.log(transformedData)
 
        
         

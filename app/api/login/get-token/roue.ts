@@ -20,7 +20,7 @@ export async function POST(req : any) {
   }
 }
 
-// Notice the function definition:
+
 export async function GET(req: Request , res : Response) {
   try {
     var token = cookies().get("token");
@@ -29,12 +29,10 @@ export async function GET(req: Request , res : Response) {
       headers: {
         "Authorization" : "Bearer " + token?.value
       },
-      //body: JSON.stringify(data)
+
     });
 
     const dataResponse = await response.json();
-    console.log(dataResponse);
-    //console.log(dataResponse.result);
     if(dataResponse.result === false){
       return NextResponse.json("401", {
         status: 401,

@@ -24,7 +24,6 @@ export default function dashboardPeriod() {
 
     const result = await res.json();
     if (res.status == 200) {
-      console.log(result.data);
       if (result.data == true) {
         fetchListSchedule();
         return true;
@@ -163,7 +162,6 @@ export default function dashboardPeriod() {
         if (res.status == 200) {
           const data: RuleUserItem = {config : result.data.settingSchedule[1] === 1 ? true : false , control : result.data.settingSchedule[2] === 1 ? true : false};
           setDataRule(data);
-          console.log(data)
           return data;
         } else {
           const dataFalse: RuleUserItem = {config : false , control : false};

@@ -22,8 +22,6 @@ const ButtonModelListIndividualLog: React.FC<Props> = ({ deviceId, onListLogDevi
   const handleOpenDetail = async () => {
     let dataListLogDevice = await onListLogDevice(deviceId, "1");
     setListLogDevice(dataListLogDevice)
-    //console.log(dataListLogDevice)
-    //console.log(averageWatt)
     onOpen();
   };
 

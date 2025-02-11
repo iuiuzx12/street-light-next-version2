@@ -1,0 +1,38 @@
+{
+  "SettingMenu": {
+    "title": "ตั้งค่าเมนู",
+    "description": "ตั้งค่าเมนูและการควบคุม",
+    "admin-management": "Admin Management",
+    "privilege": "Privilege",
+    "admin": "Admin",
+    "management": "Management",
+    "operator": "Operator",
+    "total-menu": "เมนูทั้งหมด",
+    "rows-per-page": "แถวต่อหน้า :",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "menu-not-found": "ไม่พบเมนู",
+    "select-role": "เลือกสิทธิ์การใช้งาน",
+    "search-by-name-menu": "ค้นหาด้วยชื่อเมนู",
+    "menu-name" : "ชื่อเมนู",
+    "show-menu" : "แสดงเมนู",
+    "config" : "ตั้งค่า",
+    "control" : "ควบคุม",
+
+    "V_Dashboard": "ภาพรวม รายวัน",
+    "V_GroupDashboard": "ภาพรวม ระยะเวลา",
+    "V_GroupConfig": "ควบคุม แบบกลุ่ม",
+    "V_SettingSchedule": "ควบคุม ตั้งเวลา",
+    "V_StreetLight": "ควบคุม รายโคม",
+    "V_MapGlobal": "แผนที่ ทั้งหมด",
+    "V_MapDisconnect": "แผนที่ ขาดการเชื่อมต่อ",
+    "V_SettingMenu": "ตั้งค่า เมนู",
+    "V_Personal": "ตั้งค่า จัดการผู้ใช้งาน",
+    "V_AlertStreetLight": "ตั้งค่า การแจ้งเตือน",
+
+    "V_MaintenanceConfig": "ไม่พร้อมใช้งาน",
+    "V_MaintenanceDashboard": "ไม่พร้อมใช้งาน",
+    "V_MaintenanceDetail": "ไม่พร้อมใช้งาน",
+    "V_MapChangeLamp": "ไม่พร้อมใช้งาน"
+  }
+}
