@@ -1,13 +1,20 @@
-import { useTranslations } from "next-intl";
+"use client"
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import Loading from "../loading";
 
 export default function Home() {
-  const t = useTranslations("MapTotal");
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/dashboard-period');
+  }, [router]);
 
   return (
-    <div >
-      <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-5">
-        
-          <p>Home</p>
+    <div className="flex justify-center items-center h-screen">
+      <div className="p-4">
+        <Loading/>
       </div>
     </div>
   );

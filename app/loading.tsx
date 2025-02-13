@@ -1,3 +1,5 @@
+import { Spinner } from "@nextui-org/react";
+
 export default function Loading() {
-    return <h2 className="global">Loading...</h2>;
-  }
+    return <Spinner color="primary" />;
+}

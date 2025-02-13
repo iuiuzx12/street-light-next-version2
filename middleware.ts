@@ -29,7 +29,9 @@ let publicPages = ['/', '/login', '/logout', '/not-auth'];
 
 export default async function middleware(req: NextRequest, event: NextFetchEvent) {
   
-  const cookies = req.cookies;
+  try {
+
+    const cookies = req.cookies;
   const authToken = cookies.get("token");
   const responseUser = await fetch(
     process.env.API_URL + "/StreetLight/getDataUser",
@@ -74,6 +76,12 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
     
     return (authMiddleware as any)(req);
   }
+    
+  } catch (error) {
+
+    return intlMiddleware(req);
+  }
+  
 }
 
 export const config = {

@@ -4,6 +4,9 @@
     "description": "Notify Error",
     "error-api": "SERVER API NOT WORKING",
     "error-api-description": "Please try again later or contact support.",
-    "btn-error-api-retry": "Retry"
+    "btn-error-api-retry": "Retry",
+    "not-auth-title": "Access Denied",
+    "not-auth-description": "You do not have permission to access this page. Please contact the administrator if you believe this is an error.",
+    "not-auth-close": "Close"
   }
 }

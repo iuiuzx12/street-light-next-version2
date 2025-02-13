@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 
 export default function settingAlert() {
-  const t = useTranslations("settingAlert");
+  const t = useTranslations("SettingAlert");
 
   // Extract the navigation object keys from the translations
   //const navigationKeys = Object.keys(t.raw("navigation"));

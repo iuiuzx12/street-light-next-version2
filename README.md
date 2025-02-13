@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next
 
 ## Getting Started
 
@@ -12,6 +12,27 @@ yarn dev
 pnpm dev
 # or
 bun dev
+```
+
+## Build Docker
+
+First, run the development server:
+
+```bash
+docker build -t street-light-nextjs:0.0.5 .
+```
+
+```bash
+NEXT_PUBLIC_PROJECT_ID=MYLOCAL
+NEXT_PUBLIC_PROJECT_FULL_NAME=MYLOCAL
+SECRET_KEY=mysecretkey
+API_URL=http://127.0.0.1:8080
+NEXT_PUBLIC_MAP_TYPE=mobile_pole_rtu
+NEXT_PUBLIC_MAP_URL=http://127.0.0.1:8080/data/thai/{z}/{x}/{y}.png
+NEXT_PUBLIC_MAP_LAT=00.617485099126284
+NEXT_PUBLIC_MAP_LONG=00.66207970634422
+NEXT_PUBLIC_MAP_ZOOM=12
+NEXT_PUBLIC_MAP_KM=20
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
