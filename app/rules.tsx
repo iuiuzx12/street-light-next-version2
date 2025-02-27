@@ -1,10 +1,4 @@
-import { Icon } from '@iconify/react';
 import { SideNavItem } from './model/side-nav-item';
-import { AuthItem } from './model/auth-item';
-import { cookies } from "next/headers";
-import { title } from 'process';
-import path from 'path';
-import { icons } from 'lucide-react';
 import { ListAuth } from './interface/auth';
 
   export let AuthRules = (res : ListAuth) => {

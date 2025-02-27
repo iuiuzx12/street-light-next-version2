@@ -14,26 +14,22 @@ import "@/app/styles/map.css"
 
 const StaticMapImgComponent: React.FC = () => {
   useEffect(() => {
-    // ขนาดของภาพในพิกเซล
-    const imageSize = [5000, 4354]; // เปลี่ยนตามขนาดภาพของคุณ
-    // ขอบเขตของภาพในพิกัด EPSG:3857
+    const imageSize = [5000, 4354];
     const imageExtent = [0, 0, 5000, 4354];
     const projection = new Projection({
       code: "EPSG:3857",
       units: "pixels",
       extent: imageExtent,
     });
-    // สร้างแผนที่
     const map = new Map({
-      target: "map", // ไอดีของ DOM ที่จะใช้แสดงแผนที่
+      target: "map",
       layers: [
         new ImageLayer({
           source: new ImageStatic({
-            url: "/img/map/map3.jpg", // URL ของภาพแผนที่ static ของคุณ
-            //imageSize: imageSize, // ขนาดของภาพในพิกเซล
+            url: "/img/map/map3.jpg", 
             attributions: '© <a href="https://openlayers.org">OpenLayers</a>',
-            projection: projection, // พิกัดที่ใช้สำหรับภาพ
-            imageExtent: imageExtent, // ขอบเขตของภาพในพิกัดของแผนที่
+            projection: projection,
+            imageExtent: imageExtent,
           }),
         }),
         new VectorLayer({
@@ -45,7 +41,7 @@ const StaticMapImgComponent: React.FC = () => {
                     [0.0027488447694057356, 0.005051900572524914],
                     "EPSG:3857"
                   )
-                ), // ตำแหน่งของหมุดในพิกัด EPSG:3857
+                ),
                 name: "Point 1",
                 date: "2024-08-02",
                 info1: "Info 1",
@@ -59,7 +55,7 @@ const StaticMapImgComponent: React.FC = () => {
                     [0.0027498447694077356, 0.006051900572534914],
                     "EPSG:3857"
                   )
-                ), // ตำแหน่งของหมุดในพิกัด EPSG:3857
+                ),
                 name: "Point 2",
                 date: "2024-08-02",
                 info1: "Info 1",
@@ -73,7 +69,7 @@ const StaticMapImgComponent: React.FC = () => {
                     [0.0027498447694077356, 0.007051900572534914],
                     "EPSG:3857"
                   )
-                ), // ตำแหน่งของหมุดในพิกัด EPSG:3857
+                ),
                 name: "Point 3",
                 date: "2024-08-02",
                 info1: "Info 1",
@@ -85,8 +81,8 @@ const StaticMapImgComponent: React.FC = () => {
           }),
           style: new OLStyle({
             image: new OLIcon({
-              src: "/icon/lamp/lamp-blue-a.png", // URL ของไอคอนหมุด
-              scale: 0.5, // ขนาดของไอคอน
+              src: "/icon/lamp/lamp-blue-a.png",
+              scale: 0.5,
               anchor: [0.5, 1],
             }),
           }),
@@ -94,13 +90,12 @@ const StaticMapImgComponent: React.FC = () => {
       ],
       view: new View({
         projection: projection,
-        center: getCenter(imageExtent), // ตำแหน่งกลางของแผนที่
+        center: getCenter(imageExtent),
         zoom: 3,
         maxZoom: 8,
       }),
     });
 
-    // สร้าง Overlay สำหรับ Popup
     const popupElement = document.createElement("div");
     popupElement.className = "ol-popup";
     //popupElement.className = "popup";
@@ -119,7 +114,6 @@ const StaticMapImgComponent: React.FC = () => {
     });
     map.addOverlay(popup);
 
-    // การจัดการเหตุการณ์คลิก
     map.on("click", function (event) {
       const pixel = map.getEventPixel(event.originalEvent);
       const feature = map.getFeaturesAtPixel(pixel)[0];
@@ -158,26 +152,24 @@ const StaticMapImgComponent: React.FC = () => {
         
         if (closeButton) {
           closeButton.addEventListener("click", () => {
-            popup.setPosition(undefined); // Hide the popup
+            popup.setPosition(undefined); 
           });
         }
       } else {
-        popup.setPosition(undefined); // ซ่อน popup ถ้าไม่คลิกที่หมุด
+        popup.setPosition(undefined);
       }
     });
 
-    // เพิ่ม Event Listener สำหรับการเลื่อนเมาส์
     map.getViewport().addEventListener("mousemove", (event) => {
       const pixel = map.getEventPixel(event);
       const feature = map.forEachFeatureAtPixel(pixel, (feature) => feature);
       if (feature) {
-        map.getViewport().style.cursor = "pointer"; // เปลี่ยนเคอร์เซอร์เมื่ออยู่บนฟีเจอร์
+        map.getViewport().style.cursor = "pointer"; 
       } else {
-        map.getViewport().style.cursor = ""; // รีเซ็ตเคอร์เซอร์เมื่อไม่อยู่บนฟีเจอร์
+        map.getViewport().style.cursor = ""; 
       }
     });
 
-    // การทำความสะอาดเมื่อ component ถูก unmount
     return () => {
       map.setTarget(undefined);
     };

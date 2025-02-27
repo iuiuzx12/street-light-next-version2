@@ -18,6 +18,7 @@ import ButtonModeAuto from "../button/btn-mode-auto";
 import Attribution from 'ol/control/Attribution';
 import { RuleUserItem } from "@/app/model/rule";
 
+
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
   const earthRadiusKm = 6371;
   const deltaLat = distanceKm / earthRadiusKm;
