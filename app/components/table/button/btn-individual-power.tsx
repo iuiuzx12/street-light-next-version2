@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   ButtonGroup,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { Lightbulb, RefreshCcw } from "lucide-react";
 import { escape } from "querystring";
@@ -96,7 +96,7 @@ const ButtonIndividualPower: React.FC<Props> = ({disabled ,gatewayId, deviceId ,
           isIconOnly
           isDisabled={!disabled}
           isLoading={isLoading}
-          onClick={() => fetchReadPower()}
+          onPress={() => fetchReadPower()}
           className="bg-gradient-to-tr text-white shadow-lg -m-15 from-blue-500 to-blue-300"
         >
           <RefreshCcw />

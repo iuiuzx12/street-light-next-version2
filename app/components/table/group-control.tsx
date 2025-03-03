@@ -17,7 +17,7 @@ import {
   Snippet,
   Slider,
   Progress,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Search, SendIcon } from "lucide-react";
 import { ListDevice } from "@/app/interface/control";
 import { ListLatLong } from "@/app/interface/map";
@@ -428,7 +428,7 @@ const TableControlGroup: FC<TableProps> = ({
             isDisabled={disCommand}
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15 self-center"
             size="lg"
-            onClick={() => handleSend()}
+            onPress={() => handleSend()}
           >
             <h1>{t(`send`)}</h1>
             <SendIcon> </SendIcon>
@@ -579,7 +579,7 @@ const TableControlGroup: FC<TableProps> = ({
                 </th>
                 <th >
                   <Button
-                    onClick={onReloadDataLatLong}
+                    onPress={onReloadDataLatLong}
                     size="md"
                     aria-label="refresh"
                     className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg w-full"
@@ -620,7 +620,7 @@ const TableControlGroup: FC<TableProps> = ({
           <Button
             aria-label="back"
             className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-            onClick={handleBack}
+            onPress={handleBack}
           >
             <CircleArrowLeft aria-label="img back" width="25px" height="25px" />
           </Button>

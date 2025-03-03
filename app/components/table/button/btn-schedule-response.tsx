@@ -14,7 +14,7 @@ import {
   TableCell,
   Table,
   Pagination,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { ListChecks } from "lucide-react";
 import { ListResponseSchedule } from "@/app/interface/schedule";
@@ -77,7 +77,7 @@ const ButtonModelResponseSchedule: React.FC<Props> = ({ type , groupCode , listR
         size="md"
         radius="md"
         className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-        onClick={() => handleOpenResponse()}
+        onPress={() => handleOpenResponse()}
       >
         <ListChecks />
       </Button>

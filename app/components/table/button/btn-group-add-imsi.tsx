@@ -7,7 +7,7 @@ import {
   Button,
   useDisclosure,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/dist/client/components/navigation";
 import { ListDevice, ListImsi } from "@/app/interface/control";
@@ -50,7 +50,7 @@ const ButtonModelListImsi: React.FC<Props> = ({disabled, groupName, groupCode, o
             radius="md"
             aria-label="add imsi"
             className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDetail()}
+            onPress={() => handleOpenDetail()}
           >
             {t(`add-imsi`)}
             <CirclePlus />

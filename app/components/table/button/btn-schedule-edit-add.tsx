@@ -21,7 +21,7 @@ import {
   Autocomplete,
   AutocompleteItem,
   Slider,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { Plus, Edit, Delete, Group, X } from "lucide-react";
 import { ListSchedule, SaveSchedule } from "@/app/interface/schedule";
@@ -332,7 +332,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
         size="md"
         radius={type === "edit" ? "md" : "md"}
         className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
-        onClick={() => handleOpenEdit()}
+        onPress={() => handleOpenEdit()}
       >
         {type === "edit" ? "" : t(`add`)}
         {type === "edit" ? <Edit /> : <Plus />}
@@ -369,7 +369,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                       defaultSelectedKeys={[selectedType]}
                     >
                       {(type) => (
-                        <SelectItem value={type.name} key={type.code}>
+                        <SelectItem textValue={type.name} key={type.code}>
                           {type.name}
                         </SelectItem>
                       )}
@@ -412,7 +412,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                     </Autocomplete>
                     <Button
                       isDisabled={selectedType == "time" ? false : true}
-                      onClick={handleAddTime}
+                      onPress={handleAddTime}
                       size="lg"
                       className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
                     >
@@ -445,7 +445,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                                 size="sm"
                                 className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
                                 isIconOnly
-                                onClick={() => handleDeleteGroup(row.code)}
+                                onPress={() => handleDeleteGroup(row.code)}
                               >
                                 <X />
                               </Button>
@@ -515,7 +515,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                                         isIconOnly
                                         size="sm"
                                         className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg"
-                                        onClick={() =>
+                                        onPress={() =>
                                           handleDeleteTime(row.key)
                                         }
                                       >

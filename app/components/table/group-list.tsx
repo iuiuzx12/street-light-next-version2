@@ -18,7 +18,7 @@ import {
   CardBody,
   ScrollShadow,
   Progress
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {Search} from 'lucide-react';
 
 import { ListGroupAll, ListDevice, ListImsi } from "@/app/interface/control";

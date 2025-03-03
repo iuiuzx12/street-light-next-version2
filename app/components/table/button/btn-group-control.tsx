@@ -7,7 +7,7 @@ import {
   Button,
   useDisclosure,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Power } from "lucide-react";
 import { ListDevice } from "@/app/interface/control";
 import TableControlGroup from "../group-control";
@@ -45,7 +45,7 @@ const ButtonModelControl: React.FC<Props> = ({rule, groupName, groupCode, onDeta
             size="md"
             radius="md"
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDetail()}
+            onPress={() => handleOpenDetail()}
           >
             {t(`control`)}
             <Power />

@@ -9,7 +9,7 @@ import {
   Slider,
   ButtonGroup,
   Progress,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import {MoonIcon, SunIcon , Power, SendIcon, StopCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -152,7 +152,7 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({disabled , gatewayId, de
         <Button
           isIconOnly
           isDisabled={!disabled}
-          onClick={() => handleOpenDetail()}
+          onPress={() => handleOpenDetail()}
           className={isCommand === '0' ? "bg-gradient-to-tr text-white shadow-lg -m-15 from-gray-500 to-gray-300" : "bg-gradient-to-tr text-white shadow-lg -m-15 from-green-500 to-green-300"}
         >
           {isCommand === '0' ? <MoonIcon/> : <SunIcon />}
@@ -195,11 +195,11 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({disabled , gatewayId, de
 
                     <Button
                       isLoading={isRunning}
-                      onClick={handleCommand}
+                      onPress={handleCommand}
                       aria-label="send"
                       className="col-start-1 col-end-3 bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg w-full"
                       size="md"
-                      //onClick={() => handleSend()}
+                      //onPress={() => handleSend()}
                     >
                       <h1>{t(`send`)}</h1>
                       <SendIcon> </SendIcon>
@@ -207,11 +207,11 @@ const ButtonModelIndividualCommand: React.FC<Props> = ({disabled , gatewayId, de
 
                     <Button
                       isDisabled={!isRunning}
-                      onClick={handleStop}
+                      onPress={handleStop}
                       aria-label="stop"
                       className="col-end-7 col-span-2 bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg w-full"
                       size="md"
-                      //onClick={() => handleSend()}
+                      //onPress={() => handleSend()}
                     >
                       <h1>{t(`stop`)}</h1>
                       <StopCircle> </StopCircle>

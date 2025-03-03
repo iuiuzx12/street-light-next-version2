@@ -7,7 +7,7 @@ import {
   Button,
   useDisclosure,
   Switch,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { X, Check, Power, PowerOff, Sunset, Timer, Hand } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -89,7 +89,8 @@ const ButtonModeAuto: React.FC<Props> = ({ disabled ,deviceId, typeMode, using }
       <Switch
         isSelected={selected}
         isDisabled={!disabled}
-        onClick={handleOpenDetail}
+        onChange={handleOpenDetail}
+        //onClick={}
         color="success"
         endContent={<PowerOff color="white" />}
         size="lg"
@@ -123,14 +124,14 @@ const ButtonModeAuto: React.FC<Props> = ({ disabled ,deviceId, typeMode, using }
                   <Button
                     isLoading={isLoading}
                     className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-                    onClick={handleConfirmChange}
+                    onPress={handleConfirmChange}
                   >
                     {" "}
                     {isLoading === true ? "" : <Check />}{" "}
                   </Button>
                   <Button
                     className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15 w-full"
-                    onClick={handleCancel}
+                    onPress={handleCancel}
                   >
                     <X />
                   </Button>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, Input} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Textarea, Input} from "@heroui/react";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 

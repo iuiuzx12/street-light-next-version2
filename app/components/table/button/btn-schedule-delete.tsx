@@ -7,7 +7,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
 import { SaveSchedule } from "@/app/interface/schedule";
@@ -64,7 +64,7 @@ const ButtonModelDeleteSchedule: React.FC<Props> = ({
         size="md"
         radius="md"
         className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
-        onClick={() => handleOpenDelete()}
+        onPress={() => handleOpenDelete()}
       >
         <Trash2 />
       </Button>

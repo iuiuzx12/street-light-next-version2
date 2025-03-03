@@ -7,7 +7,7 @@ import {
   Button,
   Autocomplete,
   AutocompleteItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { ListLatLong } from "@/app/interface/map";
 
@@ -96,7 +96,7 @@ const SeachDashboard: React.FC<AProps> = (
     setDataSearch(newValue);
   };
 
-  const onClick = async () => {
+  const onPress = async () => {
     setIsLoading(true)
     fetchLatLong();
   };
@@ -145,7 +145,7 @@ const SeachDashboard: React.FC<AProps> = (
             isLoading={isLoading}
             radius="full"
             className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg"
-            onClick={onClick}
+            onPress={onPress}
           >
             {t(`btn-search`)}
           </Button>

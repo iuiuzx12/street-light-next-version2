@@ -19,7 +19,7 @@ import {
   AutocompleteItem,
   Progress,
   Switch,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {
   Check,
   MousePointerClick,
@@ -157,7 +157,7 @@ const TableSettingMenu: React.FC<TableProps> = ({
             <Switch
               isSelected={listAuthMenu.readable === "1" ? true : false}
               isDisabled={!dataRule.config}
-              onClick={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable == "0" ? "1" : "0" , listAuthMenu.writeable , listAuthMenu.control)}
+              onChange={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable == "0" ? "1" : "0" , listAuthMenu.writeable , listAuthMenu.control)}
               color="success"
               size="md"
               thumbIcon={
@@ -175,7 +175,7 @@ const TableSettingMenu: React.FC<TableProps> = ({
               <Switch
                 isSelected={listAuthMenu.writeable === "1" ? true : false}
                 isDisabled={!dataRule.config}
-                onClick={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable , listAuthMenu.writeable  == "0" ? "1" : "0" , listAuthMenu.control)}
+                onChange={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable , listAuthMenu.writeable  == "0" ? "1" : "0" , listAuthMenu.control)}
                 color="success"
                 size="md"
                 thumbIcon={
@@ -193,7 +193,7 @@ const TableSettingMenu: React.FC<TableProps> = ({
               <Switch
                 isSelected={listAuthMenu.control === "1" ? true : false}
                 isDisabled={!dataRule.config}
-                onClick={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable , listAuthMenu.writeable , listAuthMenu.control == "0" ? "1" : "0")}
+                onChange={ () => handleSetting(id, listAuthMenu.menu_id , listAuthMenu.readable , listAuthMenu.writeable , listAuthMenu.control == "0" ? "1" : "0")}
                 color="success"
                 size="md"
                 thumbIcon={

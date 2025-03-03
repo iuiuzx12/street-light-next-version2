@@ -6,7 +6,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { Activity, CloudMoon } from "lucide-react";
 import { ListLogDeviceUserControl } from "@/app/interface/individual";
@@ -35,7 +35,7 @@ const ButtonModelListIndividualWorking: React.FC<Props> = ({ deviceId ,onListLog
             radius="md"
             aria-label="add imsi"
             className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDetail()}
+            onPress={() => handleOpenDetail()}
           >
             <Activity />
             

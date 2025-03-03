@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import { Card, CardBody, colors } from "@nextui-org/react";
+import { Card, CardBody, colors } from "@heroui/react";
 import React from "react";
 
 const MyChart: React.FC = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Autocomplete, AutocompleteItem} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Autocomplete, AutocompleteItem} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { ListUser } from "@/app/interface/personal";
 import { UserPlus, Eye , EyeClosed} from 'lucide-react';

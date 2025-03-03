@@ -1,4 +1,4 @@
-import { NextUIProvider } from '@nextui-org/react';
+import { HeroUIProvider } from '@heroui/react';
 import "@/app/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -97,7 +97,7 @@ export default async function RootLayout({
     <html lang="th">
       <body className={`bg-white${inter.className}`}>
         <NextIntlClientProvider messages={messages}>
-          <NextUIProvider>
+          <HeroUIProvider>
             {CHECK_LOGIN === true ? (
               <div className="flex">
                 <SideNav data={USER_RULE}></SideNav>
@@ -116,7 +116,7 @@ export default async function RootLayout({
                 </main>
               </div>
             )}
-          </NextUIProvider>
+          </HeroUIProvider>
         </NextIntlClientProvider>
       </body>
     </html>

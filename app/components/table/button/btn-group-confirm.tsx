@@ -1,16 +1,16 @@
 import React, {useState } from "react";
-import { Button} from "@nextui-org/react";
+import { Button} from "@heroui/react";
 import { Trash , CheckCheck, Loader, CircleX } from "lucide-react";
 
 
 interface Props {
   value : string
   disabled : boolean
-  onClick: (confirmed: boolean) => void; 
+  onPress: (confirmed: boolean) => void; 
   onConfirm: (confirmed: boolean, value : string) => void; 
 }
 
-const ButtonConfirm: React.FC<Props> = ({ disabled, onClick, onConfirm , value }) => {
+const ButtonConfirm: React.FC<Props> = ({ disabled, onPress, onConfirm , value }) => {
   const [isConfirming, setIsConfirming] = useState(false);
 
   const handleClick = () => {
@@ -19,13 +19,13 @@ const ButtonConfirm: React.FC<Props> = ({ disabled, onClick, onConfirm , value }
       setIsConfirming(false);
     } else {
       setIsConfirming(true);
-      onClick(true);
+      onPress(true);
     }
   };
 
   const handleCancel = () => {
     setIsConfirming(false);
-    onClick(false); 
+    onPress(false); 
   };
 
   return (
@@ -33,7 +33,7 @@ const ButtonConfirm: React.FC<Props> = ({ disabled, onClick, onConfirm , value }
       <Button 
         isIconOnly 
         isDisabled={!disabled}
-        onClick={handleClick}
+        onPress={handleClick}
         aria-label="Confirming Delete"
         size="md"
         radius="md"
@@ -46,7 +46,7 @@ const ButtonConfirm: React.FC<Props> = ({ disabled, onClick, onConfirm , value }
         <div>
           <Button 
             isIconOnly 
-            onClick={handleCancel}
+            onPress={handleCancel}
             aria-label="Confirming Delete"
             size="md"
             radius="md"

@@ -1,7 +1,7 @@
 
 "use client"
 import React, { useState } from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Spinner, getKeyValue, Input} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Spinner, getKeyValue, Input} from "@heroui/react";
 import useSWR from "swr";
 import moment from 'moment';
 

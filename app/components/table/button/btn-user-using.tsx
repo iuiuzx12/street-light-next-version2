@@ -1,5 +1,5 @@
 import { Check ,OctagonX , } from 'lucide-react';
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@heroui/react';
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 

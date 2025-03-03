@@ -6,7 +6,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { FileText } from "lucide-react";
 import { ListLogDevice } from "@/app/interface/individual";
@@ -35,7 +35,7 @@ const ButtonModelListIndividualLog: React.FC<Props> = ({ deviceId, onListLogDevi
             radius="md"
             aria-label="add imsi"
             className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDetail()}
+            onPress={() => handleOpenDetail()}
           >
             <FileText />
             

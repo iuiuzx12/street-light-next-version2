@@ -9,8 +9,8 @@ import { Style as OLStyle, Icon as OLIcon } from "ol/style";
 import "@/app/styles/map.css";
 import TileLayer from "ol/layer/Tile";
 import { XYZ } from "ol/source";
-import { Card, CardBody, Skeleton } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { Card, CardBody, Skeleton } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 import { ListLatLong } from "@/app/interface/map";
@@ -487,7 +487,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}
               size="sm"
               radius="md"
               className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
-              onClick={close}
+              onPress={close}
             >
               <Icon icon="lucide:circle-x" width="auto" height="auto" />
             </Button>
@@ -542,7 +542,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}
                   isDisabled={isDisabledOpen}
                   radius="md"
                   className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg"
-                  onClick={() => command("open", dataDetailImsi?.imsi)}
+                  onPress={() => command("open", dataDetailImsi?.imsi)}
                 >
                   {isLoadingOpen ? t(`btn-wait-open`) : t(`btn-open`)}
                 </Button>
@@ -551,7 +551,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}
                   isDisabled={isDisabledClose}
                   radius="md"
                   className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg mx-1"
-                  onClick={() => command("close", dataDetailImsi?.imsi)}
+                  onPress={() => command("close", dataDetailImsi?.imsi)}
                 >
                   {t(`btn-close`)}
                 </Button>
@@ -560,7 +560,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}
                   isDisabled={isDisabledRead}
                   radius="md"
                   className="bg-gradient-to-tr from-blue-500 to-blue-300 text-white shadow-lg"
-                  onClick={() => command("read", dataDetailImsi?.imsi)}
+                  onPress={() => command("read", dataDetailImsi?.imsi)}
                 >
                   {t(`btn-read`)}
                 </Button>

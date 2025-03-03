@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -29,7 +29,7 @@ const ServerErrorNotification = () => {
         </p>
         <Button
           className="mt-6 px-4 py-2 bg-gradient-to-tr from-red-600 to-red-200 text-white rounded-full hover:bg-red-700 focus:outline-none"
-          onClick={handleRetry}
+          onPress={handleRetry}
         >
           {t(`btn-error-api-retry`)}
         </Button>

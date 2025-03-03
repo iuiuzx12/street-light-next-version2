@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Skeleton, Card, CardBody} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Skeleton, Card, CardBody} from "@heroui/react";
 import ButtonModalUserDelete from "./button/btn-user-delete";
 import ButtonModalUserEdit from "./button/btn-user-edit";
 import ButtonModalUserUsing from "./button/btn-user-using";

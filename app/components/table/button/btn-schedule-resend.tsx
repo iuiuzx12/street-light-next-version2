@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Button, useDisclosure} from "@nextui-org/react";
+import {Button, useDisclosure} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { RefreshCcw } from "lucide-react";
 interface Props {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody } from "@heroui/react";
 
 export default function MenuItem({ item }: { item: SideNavItem }) {
   const pathname = usePathname();

@@ -17,7 +17,7 @@ import {
   CardBody,
   Progress,
   ButtonGroup
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {Edit2, Hand, Search, Sunset, Timer} from 'lucide-react';
 
 import { ListResponseSchedule, ListSchedule, SaveSchedule, } from "@/app/interface/schedule";

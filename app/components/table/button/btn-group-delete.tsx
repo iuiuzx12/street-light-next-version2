@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Tooltip} from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
 interface Props {
@@ -43,7 +43,7 @@ const ButtonModelDelete: React.FC<Props> = ({disabled, groupName , groupCode, on
             size="md"
             radius="md"
             className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
-            onClick={() => handleOpenDelete()}
+            onPress={() => handleOpenDelete()}
           >
             {t(`delete`)}
             <Trash2 />

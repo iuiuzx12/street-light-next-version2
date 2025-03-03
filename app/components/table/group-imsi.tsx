@@ -19,7 +19,7 @@ import {
   Snippet,
   Autocomplete,
   AutocompleteItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Search} from "lucide-react";
 
 import { ListDevice, ListImsi } from "@/app/interface/control";
@@ -236,8 +236,8 @@ const TableImsiGroup: FC<TableProps> = ({disabled, groupName ,groupCode ,listDev
               }}
             >
               
-              <ButtonConfirmEdit disabled={disabled} value={listDevice.imsi} onConfirm={handleConfirmationEdit} onClick={handleClick}></ButtonConfirmEdit>
-              <ButtonConfrim disabled={disabled} onClick={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>
+              <ButtonConfirmEdit disabled={disabled} value={listDevice.imsi} onConfirm={handleConfirmationEdit} onPress={handleClick}></ButtonConfirmEdit>
+              <ButtonConfrim disabled={disabled} onPress={handleClick} value={listDevice.imsi} onConfirm={handleConfirmation}></ButtonConfrim>
               
             </div>
           );
@@ -370,7 +370,7 @@ const TableImsiGroup: FC<TableProps> = ({disabled, groupName ,groupCode ,listDev
             size="lg"
             isLoading={isAddDeviceLoading}
             className="bg-gradient-to-tr from-green-500 to-green-300 text-white shadow-lg -m-15 self-center"
-            onClick={() => handleSend()}
+            onPress={() => handleSend()}
           >
             {t(`add-imsi`)}
             <Icon icon="lucide:plus" width="auto" height="auto" />

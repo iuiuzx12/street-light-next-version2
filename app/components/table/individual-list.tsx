@@ -25,7 +25,7 @@ import {
   PopoverContent,
   Spinner,
   Progress
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {MousePointerClick, Search,} from 'lucide-react';
 
 import { ListGroupAll } from "@/app/interface/control";

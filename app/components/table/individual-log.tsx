@@ -18,7 +18,7 @@ import {
   Autocomplete,
   AutocompleteItem,
   ButtonGroup,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { MailIcon, Search, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ListLogDevice, ListLogDeviceNotAverage } from "@/app/interface/individual";
