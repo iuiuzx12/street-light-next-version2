@@ -17,6 +17,7 @@ import { ListLatLong } from "@/app/interface/map";
 import ButtonModeAuto from "../button/btn-mode-auto";
 import Attribution from 'ol/control/Attribution';
 import { RuleUserItem } from "@/app/model/rule";
+import { CircleX } from "lucide-react";
 
 
 function calculateNewCoordinates(lat: any, long: any, distanceKm: any) {
@@ -489,7 +490,7 @@ const StaticMapXYZComponent: React.FC<InputDataMap> = ( {data , high , dataRule}
               className="bg-gradient-to-tr from-red-500 to-red-300 text-white shadow-lg -m-15"
               onPress={close}
             >
-              <Icon icon="lucide:circle-x" width="auto" height="auto" />
+              <CircleX color="gray"/> 
             </Button>
             <div className="space-y-3">
               

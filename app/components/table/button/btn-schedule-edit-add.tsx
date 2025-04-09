@@ -553,7 +553,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                                     <TableCell>
                                       <Slider
                                         className="min-w-16"
-                                        defaultValue={parseInt(row.lux)}
+                                        defaultValue={parseInt(row.lux ?? 0)}
                                         step={100}
                                         onChange={(value) =>
                                           handleChangeLuxSetDaylight(
@@ -572,7 +572,7 @@ const ButtonModelEditAddSchedule: React.FC<Props> = ({
                                     <TableCell>
                                       <Slider
                                         className="min-w-16"
-                                        defaultValue={parseInt(row.percent)}
+                                        defaultValue={parseInt(row.percent ?? 0)}
                                         step={5}
                                         onChange={(value) =>
                                           handleChangeDimSetDaylight(

@@ -7,6 +7,7 @@ import {
   Button,
   Autocomplete,
   AutocompleteItem,
+  DatePicker,
 } from "@heroui/react";
 import { useTranslations } from "next-intl";
 import { ListLatLong } from "@/app/interface/map";
@@ -23,12 +24,13 @@ const SeachDashboard: React.FC<AProps> = (
   const [typeSearch, setTypeSearch] = useState("group");
   const [typeSearchLabel, setTypeSearchLabel] = useState(t(`select-group`));
   const [typeStatus, setTypeStatus] = useState("all");
-  const [dataType, setDataType] = useState([]);
+  const [dataGroup, setDataGroup] = useState([]);
+  const [dataType, setDataType] = useState([{}]);
   const [dataSearch, setDataSearch] = useState("ALL");
   const [isLoading, setIsLoading] = useState(false);
   
-  const fetchType = async (type: any) => {
-    const res = await fetch("/api/service/get-data-" + type, {
+  const fetchGroup = async () => {
+    const res = await fetch("/api/service/get-data-group", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,35 +45,21 @@ const SeachDashboard: React.FC<AProps> = (
     } else {
     }
     const result = await res.json();
-    setDataType(result.data || []);
+    setDataGroup(result.data || []);
   };
 
-  const fetchLatLong = async () => {
-    const res = await fetch("/api/map/get-lat-long", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "API-Key": "1234",
-      },
-      body: JSON.stringify({
-        type_search: typeSearch,
-        list_value: JSON.stringify([dataSearch]),
-        status_lamp: typeStatus,
-        type_gps: process.env.NEXT_PUBLIC_MAP_TYPE,
-      }),
-    });
-
-    const result = await res.json();
-    if (res.status == 200) {
-      //onSendData(result.data)
-      setIsLoading(false)
-    } else {
-
-    }
-  };
+  
 
   useEffect(() => {
-    fetchType("group");
+    fetchGroup();
+    setDataType([
+      {"key" : "current" , "value" : "ล่าสุด"},
+      {"key" : "day" , "value" : "รายวัน"},
+      {"key" : "week" , "value" : "รายอาทิตย์"},
+      {"key" : "month" , "value" : "รายเดือน"},
+      {"key" : "quarter" , "value" : "ไตรมาส"},
+      {"key" : "year" , "value" : "รายปี"}
+    ])
   }, []);
 
   const handleChange = async (newValue: any) => {
@@ -85,7 +73,7 @@ const SeachDashboard: React.FC<AProps> = (
     }else{
 
     }
-    await fetchType(newValue.target.defaultValue);
+    //await fetchType(newValue.target.defaultValue);
   };
 
   const handleChangeStatus = async (newValue: any) => {
@@ -98,7 +86,6 @@ const SeachDashboard: React.FC<AProps> = (
 
   const onPress = async () => {
     setIsLoading(true)
-    fetchLatLong();
   };
 
 
@@ -106,27 +93,21 @@ const SeachDashboard: React.FC<AProps> = (
     <Card className="m-1">
       <CardBody >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-          <RadioGroup
-            label={t(`select-type`)}
-            orientation="horizontal"
-            value={typeSearch}
-            onChange={handleChange}
-          >
-            <Radio value="group">{t(`select-group`)}</Radio>
-            <Radio value="imsi">{t(`select-imsi`)}</Radio>
-            <Radio value="street-name">{t(`select-street-name`)}</Radio>
-          </RadioGroup>
+          
 
-          <RadioGroup
-            label={t(`select-status`)}
-            orientation="horizontal"
-            value={typeStatus}
-            onChange={handleChangeStatus}
+          <Autocomplete
+            
+            label={typeSearchLabel}
+            placeholder={t(`btn-search`)}
+            className="max-w-xs"
+            value={dataSearch}
+            onInputChange={handleChangeType}
+            
           >
-            <Radio value="all">{t(`select-all`)}</Radio>
-            <Radio value="4">{t(`select-broken`)}</Radio>
-            <Radio value="5">{t(`select-disconnection`)}</Radio>
-          </RadioGroup>
+            {dataGroup.map((data: any) => (
+              <AutocompleteItem key={data.key} textValue={data.value}>{data.value}</AutocompleteItem>
+            ))}
+          </Autocomplete>
 
           <Autocomplete
             
@@ -138,9 +119,12 @@ const SeachDashboard: React.FC<AProps> = (
             
           >
             {dataType.map((data: any) => (
-              <AutocompleteItem key={data.key}>{data.value}</AutocompleteItem>
+              <AutocompleteItem key={data.key} textValue={data.value}>{data.value}</AutocompleteItem>
             ))}
           </Autocomplete>
+
+          <DatePicker className="max-w-[284px]" label="Birth date" />
+
           <Button
             isLoading={isLoading}
             radius="full"

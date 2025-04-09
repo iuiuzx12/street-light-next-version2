@@ -20,7 +20,7 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@heroui/react";
-import { Search} from "lucide-react";
+import { Plus, Search} from "lucide-react";
 
 import { ListDevice, ListImsi } from "@/app/interface/control";
 import ButtonConfrim from "./button/btn-group-confirm";
@@ -373,7 +373,7 @@ const TableImsiGroup: FC<TableProps> = ({disabled, groupName ,groupCode ,listDev
             onPress={() => handleSend()}
           >
             {t(`add-imsi`)}
-            <Icon icon="lucide:plus" width="auto" height="auto" />
+            <Plus />
           </Button>
 
           <Input
