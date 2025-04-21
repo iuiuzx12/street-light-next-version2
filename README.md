@@ -18,6 +18,11 @@ bun dev
 
 First, run the development server:
 
+## Run windows
+
+cp .next/static to .next/standalone/.next/static
+cp .env to .next/standalone/.env
+
 ```bash
 docker build -t street-light-nextjs:0.0.5 .
 ```
