@@ -178,7 +178,7 @@ const TableListSchedule: React.FC<TableProps> = ({
                   className="w-32 justify-start"
                   radius="md"
                 >
-                  {t(cellValue)}
+                  {t(Array.isArray(cellValue) ? (cellValue.length > 0 ? String(cellValue[0]) : '') : String(cellValue))}
                 </Button>
                 <Button
                   isIconOnly

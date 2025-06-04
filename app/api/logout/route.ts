@@ -20,9 +20,9 @@ export async function GET(req : any) {
   }
 }
 
-export async function POST(req: Request , res : Response) {
+export async function POST(req: Request) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set('token', '', {
       maxAge: -1,
       path: '/',

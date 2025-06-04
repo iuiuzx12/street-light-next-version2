@@ -1,4 +1,4 @@
-import { SideNavItem } from "../model/side-nav-item";
+import { SideNavItem } from "../model/side-nav-Item";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";

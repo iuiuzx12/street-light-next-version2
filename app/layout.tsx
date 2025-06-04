@@ -31,7 +31,8 @@ export default async function RootLayout({
   var CHECK_LOGIN = true;
   var USER_RULE;
   const messages = await getMessages();
-  var token = cookies().get("token");
+  const cookieStore = await cookies();
+  var token = cookieStore.get("token");
   try {
     const response = await fetch(
       process.env.API_URL + "/StreetLight/checkLogin",

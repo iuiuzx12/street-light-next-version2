@@ -22,10 +22,11 @@ export async function GET(req: any) {
   }
 }
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     const timestamp = Math.floor(Date.now() / 1000);
-    var token = cookies().get("token");
+    const cookieStore = await cookies();
+    var token = cookieStore.get("token");
     const data = await req.json();
     const response = await fetch(
       process.env.API_URL + "/StreetLight/getListDataGroupDetail",

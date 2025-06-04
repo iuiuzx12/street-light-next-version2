@@ -1,4 +1,4 @@
-import { SideNavItem } from './model/side-nav-item';
+import { SideNavItem } from './model/side-nav-Item';
 import { ListAuth } from './interface/auth';
 import IconDashboardMonitor from "/public/icon/sidebar/dashboard-monitor.svg";
 import IconDashboardChoose from "/public/icon/sidebar/dashboard-choose.svg";

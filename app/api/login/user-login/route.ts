@@ -20,8 +20,9 @@ export async function GET(req : any) {
   }
 }
 
-export async function POST(req: Request , res : Response) {
+export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies(); // Added this line
     const data = await req.json();
     const response = await fetch (process.env.API_URL + '/StreetLight/accountLogin' , {
       method: 'POST',
@@ -38,7 +39,7 @@ export async function POST(req: Request , res : Response) {
       });
     }else{
       const oneDay = 24 * 60 * 60 * 1000
-      cookies().set('token', dataResponse.dataReturn, { expires: Date.now() + oneDay })
+      cookieStore.set('token', dataResponse.dataReturn, { expires: Date.now() + oneDay }) // Removed comment
       return NextResponse.json("200", {
         status: 200,
       });

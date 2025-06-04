@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AuthRules } from '@/app/rules';
-import { SideNavItem } from '@/app/model/side-nav-item';
+import { SideNavItem } from '@/app/model/side-nav-Item';
 import { Icon } from '@iconify/react';
 import { motion, useCycle } from 'framer-motion';
 import { useTranslations } from "next-intl";

@@ -21,9 +21,10 @@ export async function POST(req : any) {
 }
 
 
-export async function GET(req: Request , res : Response) {
+export async function GET(req: Request) {
   try {
-    var token = cookies().get("token");
+    const cookieStore = await cookies();
+    var token = cookieStore.get("token");
     const response = await fetch (process.env.API_URL + '/StreetLight/checkLogin' , {
       method: 'POST',
       headers: {
