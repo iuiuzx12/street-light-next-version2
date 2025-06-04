@@ -17,6 +17,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [heroui()],
+  plugins: [heroui(), require("tailwindcss-animate")],
 };
 export default config;
